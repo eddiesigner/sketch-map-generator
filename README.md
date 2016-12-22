@@ -12,7 +12,7 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 #### With Sketch Toolbox
 
-1. Look for "Map Generator" in Sketch Toolbox
+1. Look for "Sketch Map Generator" in Sketch Toolbox
 2. Click on "Install"
 
 #### Manual
