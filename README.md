@@ -1,2 +1,36 @@
-# sketch-map-generator
-Plugin to fill a layer with a map generated from a location (Powered by Google Maps)
+# Map Generator Sketch Plugin
+
+A plugin to fill a layer with a map generated from a location (Powered by Google Maps).
+
+With this plugin you can design quickly a map view for a mobile application or a web site. You only need to write some location and the plugin will do the rest!
+
+## Demo
+
+![Plugin Demo](/assets/demo.gif?raw=true "Map Generator Sketch Plugin Demo")
+
+## Installation
+
+#### With Sketch Toolbox
+
+1. Look for "Map Generator" in Sketch Toolbox
+2. Click on "Install"
+
+#### Manual
+
+1. [Download the Zip](https://github.com/eddiesigner/sketch-map-generator/archive/master.zip) and unzip the package
+2. Double click on `Map Generator.sketchplugin` for auto installation
+
+## Usage
+
+1. Create one shape and select it
+2. Run the plugin from the plugins menu (Plugins > Map Generator > Generate a Map) or you can use the shortcut `shift` + `cmd` + `m`
+3. Write some place or location and choose a zoom level
+4. Press the OK button and that's it! Your shape will become filled with the location map
+
+## Compatibility
+
+The plugin is compatible with Sketch 4.
+
+## Questions?
+
+You can writ me questions about the plugin on Twitter: [@_edev](https://twitter.com/_edev)
