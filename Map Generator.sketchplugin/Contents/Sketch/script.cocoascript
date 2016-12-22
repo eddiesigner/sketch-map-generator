@@ -1,0 +1,148 @@
+var onRun = function(context) {
+  var app            = NSApplication.sharedApplication();
+  var sketch         = context.api()
+  var doc            = context.document;
+  var selectedLayers = context.selection;
+  var selectedCount  = selectedLayers.count();
+  var imageUrl       = '';
+  var layer          = null;
+  var layerSizes     = null;
+  var apiKey         = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
+  var zoomLevels     = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
+
+
+  // Stop the program if nothing is selected
+  if (selectedCount != 1) {
+    app.displayDialog_withTitle("You have to select 1 shape layer.", "Wrong shape layer selection");
+
+    return 0;
+  }
+  else {
+    var layer = selectedLayers[0];
+
+    // The plugin only supports Shape Layer objects.
+    if ([layer class] != MSShapeGroup) {
+      app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
+    }
+    else {
+      var dialog = buildDialog();
+
+      var settings = handleAlertResponse(dialog, dialog.runModal());
+
+      if (settings != null) {
+        if (settings.address.length() > 0) {
+          layerSizes = layer.frame();
+
+          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=roadmap&key=" + apiKey;
+
+          fillLayerWithImage(imageUrl, layer);
+        }
+        else {
+          app.displayDialog_withTitle('Please enter a valid address.', 'Error');
+
+          dialog.runModal();
+        }
+      }
+    }
+  }
+
+  /**
+   * Build the dialog window
+   * @return {COSAlertWindow}
+   */
+  function buildDialog() {
+    var dialogWindow = COSAlertWindow.new();
+
+    dialogWindow.setMessageText('Maps Generator');
+
+    dialogWindow.setInformativeText('Write an address and choose a zoom option.');
+
+    dialogWindow.addTextLabelWithValue('Enter an address or a place');
+
+    dialogWindow.addTextFieldWithValue('');
+
+    dialogWindow.addTextLabelWithValue(' ');
+
+    dialogWindow.addTextLabelWithValue('Please choose a zoom level');
+
+    dialogWindow.addTextLabelWithValue('(A higher value increases the zoom level)');
+
+    var zoomSelect = createSelect(zoomLevels, 15);
+
+    dialogWindow.addAccessoryView(zoomSelect);
+
+    dialogWindow.addButtonWithTitle('OK');
+
+  	dialogWindow.addButtonWithTitle('Cancel');
+
+    return dialogWindow;
+  }
+
+  /**
+   * Create Select Box for a dialog window
+   * @param  {Array}      options
+   * @param  {Int}        selectedItemIndex
+   * @return {NSComboBox}
+   */
+  function createSelect(options, selectedItemIndex) {
+  	selectedItemIndex = selectedItemIndex || 0;
+
+  	var select = NSComboBox.alloc().initWithFrame(NSMakeRect(0,0,100,25));
+
+  	select.addItemsWithObjectValues(options);
+
+  	select.selectItemAtIndex(selectedItemIndex);
+
+  	return select;
+  }
+
+  /**
+   * Get the user input from the dialog window
+   * @param  {COSAlertWindow} dialog
+   * @param  {Int}            responseCode
+   * @return {Object}
+   */
+  function handleAlertResponse(dialog, responseCode) {
+    if (responseCode == "1000") {
+      return {
+        address: dialog.viewAtIndex(1).stringValue(),
+        zoom: dialog.viewAtIndex(5).stringValue()
+      };
+    }
+
+    return null;
+  }
+
+  /**
+   * Fill a layer with a image data from Internet
+   * @param  {String}       imageUrl
+   * @param  {MSShapeGroup} layer
+   */
+  function fillLayerWithImage(imageUrl, layer) {
+    var imageData = NSImage.alloc().initWithData(get(imageUrl));
+
+    var fill = layer.style().fills().firstObject();
+
+    fill.setFillType(4);
+
+    fill.setImage(MSImageData.alloc().initWithImage_convertColorSpace(imageData, false));
+
+    fill.setPatternFillType(1);
+
+    doc.showMessage("Map generated!");
+  }
+
+  /**
+   * Get data based on a url string
+   * @param  {String}        url
+   * @return {NSURLResponse}
+   */
+  function get(url) {
+    var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
+
+    var response = NSURLConnection.sendSynchronousRequest_returningResponse_error(request, null, null);
+
+    return response;
+  }
+
+};
