@@ -33,4 +33,4 @@ The plugin is compatible with Sketch 4.
 
 ## Questions?
 
-You can writ me questions about the plugin on Twitter: [@_edev](https://twitter.com/_edev)
+You can write me questions about the plugin on Twitter: [@_edev](https://twitter.com/_edev)
