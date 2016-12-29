@@ -75,6 +75,12 @@ var onRun = function(context) {
 
   	dialogWindow.addButtonWithTitle('Cancel');
 
+    var addressTextBox = dialogWindow.viewAtIndex(1)
+    var zoomTextBox = dialogWindow.viewAtIndex(5)
+
+    dialogWindow.alert().window().setInitialFirstResponder(addressTextBox)
+    addressTextBox.setNextKeyView(zoomTextBox)
+
     return dialogWindow;
   }
 
