@@ -27,6 +27,11 @@ With this plugin you can design quickly a map view for a mobile application or a
 3. Write some place or location and choose a zoom level
 4. Press the OK button and that's it! Your shape will become filled with the location map
 
+## Improvements
+
+- [x] The quality of the maps has been improved (2x)
+- [x] Added switch focus between text fields to keep your hands on keyboard
+
 ## Compatibility
 
 The plugin is compatible with Sketch 4.
