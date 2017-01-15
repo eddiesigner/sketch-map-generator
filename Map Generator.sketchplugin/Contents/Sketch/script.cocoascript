@@ -33,7 +33,7 @@ var onRun = function(context) {
         if (settings.address.length() > 0) {
           layerSizes = layer.frame();
 
-          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=roadmap&key=" + apiKey;
+          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=roadmap&scale=2&key=" + apiKey;
 
           fillLayerWithImage(imageUrl, layer);
         }
