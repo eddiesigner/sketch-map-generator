@@ -29,6 +29,7 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 ## Improvements
 
+- [x] You can choose a different map type
 - [x] The quality of the maps has been improved (2x)
 - [x] Added switch focus between text fields to keep your hands on keyboard
 
