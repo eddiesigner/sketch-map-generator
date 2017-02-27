@@ -9,6 +9,7 @@ var onRun = function(context) {
   var layerSizes     = null;
   var apiKey         = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
   var zoomLevels     = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
+  var mapTypes       = ['roadmap', 'satellite', 'hybrid', 'terrain'];
 
 
   // Stop the program if nothing is selected
@@ -33,7 +34,7 @@ var onRun = function(context) {
         if (settings.address.length() > 0) {
           layerSizes = layer.frame();
 
-          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=roadmap&scale=2&key=" + apiKey;
+          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=" + settings.type + "&scale=2&key=" + apiKey;
 
           fillLayerWithImage(imageUrl, layer);
         }
@@ -54,32 +55,33 @@ var onRun = function(context) {
     var dialogWindow = COSAlertWindow.new();
 
     dialogWindow.setMessageText('Maps Generator');
-
     dialogWindow.setInformativeText('Write an address and choose a zoom option.');
-
     dialogWindow.addTextLabelWithValue('Enter an address or a place');
-
     dialogWindow.addTextFieldWithValue('');
-
     dialogWindow.addTextLabelWithValue(' ');
-
     dialogWindow.addTextLabelWithValue('Please choose a zoom level');
-
     dialogWindow.addTextLabelWithValue('(A higher value increases the zoom level)');
 
     var zoomSelect = createSelect(zoomLevels, 15);
 
     dialogWindow.addAccessoryView(zoomSelect);
+    dialogWindow.addTextLabelWithValue(' ');
+    dialogWindow.addTextLabelWithValue('You can choose a map type as well');
 
+    var typeSelect = createSelect(mapTypes, 0);
+
+    dialogWindow.addAccessoryView(typeSelect);
+    dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addButtonWithTitle('OK');
-
-  	dialogWindow.addButtonWithTitle('Cancel');
+    dialogWindow.addButtonWithTitle('Cancel');
 
     var addressTextBox = dialogWindow.viewAtIndex(1);
-    var zoomTextBox = dialogWindow.viewAtIndex(5);
 
     dialogWindow.alert().window().setInitialFirstResponder(addressTextBox);
-    addressTextBox.setNextKeyView(zoomTextBox);
+
+    addressTextBox.setNextKeyView(zoomSelect);
+
+    zoomSelect.setNextKeyView(typeSelect);
 
     return dialogWindow;
   }
@@ -91,15 +93,14 @@ var onRun = function(context) {
    * @return {NSComboBox}
    */
   function createSelect(options, selectedItemIndex) {
-  	selectedItemIndex = selectedItemIndex || 0;
+    selectedItemIndex = selectedItemIndex || 0;
 
-  	var select = NSComboBox.alloc().initWithFrame(NSMakeRect(0,0,100,25));
+    var select = NSComboBox.alloc().initWithFrame(NSMakeRect(0,0,100,25));
 
-  	select.addItemsWithObjectValues(options);
+    select.addItemsWithObjectValues(options);
+    select.selectItemAtIndex(selectedItemIndex);
 
-  	select.selectItemAtIndex(selectedItemIndex);
-
-  	return select;
+    return select;
   }
 
   /**
@@ -112,7 +113,8 @@ var onRun = function(context) {
     if (responseCode == "1000") {
       return {
         address: dialog.viewAtIndex(1).stringValue(),
-        zoom: dialog.viewAtIndex(5).stringValue()
+        zoom: dialog.viewAtIndex(5).stringValue(),
+        type: dialog.viewAtIndex(8).stringValue()
       };
     }
 
@@ -130,9 +132,7 @@ var onRun = function(context) {
     var fill = layer.style().fills().firstObject();
 
     fill.setFillType(4);
-
     fill.setImage(MSImageData.alloc().initWithImage_convertColorSpace(imageData, false));
-
     fill.setPatternFillType(1);
 
     doc.showMessage("Map generated!");
