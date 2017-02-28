@@ -27,14 +27,13 @@ var onRun = function(context) {
     }
     else {
       var dialog = buildDialog();
-
       var settings = handleAlertResponse(dialog, dialog.runModal());
 
       if (settings != null) {
         if (settings.address.length() > 0) {
           layerSizes = layer.frame();
 
-          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=" + settings.type + "&scale=2&key=" + apiKey;
+          imageUrl = "https://maps.googleapis.com/maps/api/staticmap?center=" + encodeURIComponent(settings.address) + "&zoom=" + settings.zoom + "&size=" + parseInt([layerSizes width]) + "x" + parseInt([layerSizes height]) + "&maptype=" + settings.type + "&scale=2" + settings.style + "&key=" + apiKey;
 
           fillLayerWithImage(imageUrl, layer);
         }
@@ -72,16 +71,22 @@ var onRun = function(context) {
 
     dialogWindow.addAccessoryView(typeSelect);
     dialogWindow.addTextLabelWithValue(' ');
+    dialogWindow.addTextLabelWithValue('(Optional) Paste a Snazzy Maps style code');
+    dialogWindow.addTextFieldWithValue('');
+    dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addButtonWithTitle('OK');
     dialogWindow.addButtonWithTitle('Cancel');
 
     var addressTextBox = dialogWindow.viewAtIndex(1);
+    var styleTextBox = dialogWindow.viewAtIndex(11);
 
     dialogWindow.alert().window().setInitialFirstResponder(addressTextBox);
 
     addressTextBox.setNextKeyView(zoomSelect);
 
     zoomSelect.setNextKeyView(typeSelect);
+
+    typeSelect.setNextKeyView(styleTextBox);
 
     return dialogWindow;
   }
@@ -106,7 +111,7 @@ var onRun = function(context) {
   /**
    * Get the user input from the dialog window
    * @param  {COSAlertWindow} dialog
-   * @param  {Int}            responseCode
+   * @param  {String}            responseCode
    * @return {Object}
    */
   function handleAlertResponse(dialog, responseCode) {
@@ -114,7 +119,8 @@ var onRun = function(context) {
       return {
         address: dialog.viewAtIndex(1).stringValue(),
         zoom: dialog.viewAtIndex(5).stringValue(),
-        type: dialog.viewAtIndex(8).stringValue()
+        type: dialog.viewAtIndex(8).stringValue(),
+        style: parse(dialog.viewAtIndex(11).stringValue())
       };
     }
 
@@ -128,7 +134,6 @@ var onRun = function(context) {
    */
   function fillLayerWithImage(imageUrl, layer) {
     var imageData = NSImage.alloc().initWithData(get(imageUrl));
-
     var fill = layer.style().fills().firstObject();
 
     fill.setFillType(4);
@@ -145,10 +150,82 @@ var onRun = function(context) {
    */
   function get(url) {
     var request = NSURLRequest.requestWithURL(NSURL.URLWithString(url));
-
     var response = NSURLConnection.sendSynchronousRequest_returningResponse_error(request, null, null);
 
     return response;
   }
 
+  /**
+   * Check if a item style is a color
+   * @param  {String}  value 
+   * @return {Boolean}       
+   */
+  function isColor(value) {
+    return /^#[0-9a-f]{6}$/i.test(value.toString());
+  }
+
+  /**
+   * Transform a color to a hex code color
+   * @param  {String} value 
+   * @return {String}       
+   */
+  function toColor(value) {
+    return '0x' + value.slice(1);
+  }
+
+  /**
+   * Transform a Snazzy Maps json object to a url string
+   * Thanks to: http://jsfiddle.net/s6Dyp/ :)
+   * @param  {String} jsonString 
+   * @return {String}            
+   */
+  function parse(jsonString) {
+    var json;
+    var items = [];
+    var separator = '%7C';
+    var parameters = '';
+
+    try {
+      json = JSON.parse(jsonString);
+    } catch (e) {
+      doc.showMessage("The style cannot be applied :(");
+
+      return '';
+    }
+
+    items.length = 0;
+
+    for (var i = 0; i < json.length; i++) {
+      var item = json[i];
+      var hasFeature = item.hasOwnProperty('featureType');
+      var hasElement = item.hasOwnProperty('elementType');
+      var stylers = item.stylers;
+      var target = '';
+      var style = '';
+
+      if (!hasFeature && !hasElement) {
+        target = 'feature:all';
+      } else {
+        if (hasFeature) {
+          target = 'feature:' + item.featureType;
+        }
+        if (hasElement) {
+          target = (target) ? target + separator : '';
+          target += 'element:' + item.elementType;
+        }
+      }
+
+      for (var s = 0; s < stylers.length; s++) {
+        var styleItem = stylers[s];
+        var key = Object.keys(styleItem)[0];
+
+        style = (style) ? style + separator : '';
+        style += key + ':' + (isColor(styleItem[key]) ? toColor(styleItem[key]) : styleItem[key]);
+      }
+
+      items.push(target + separator + style);
+    }
+
+    return '&style=' + items.join('&style=');
+  }
 };
