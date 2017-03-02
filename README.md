@@ -8,6 +8,10 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 ![Plugin Demo](/assets/demo.gif?raw=true "Map Generator Sketch Plugin Demo")
 
+## New Version Screenshot
+
+![New version](/assets/new-version.png?raw=true "Map Generator Sketch Plugin Screenshot")
+
 ## Installation
 
 #### With Sketch Toolbox
