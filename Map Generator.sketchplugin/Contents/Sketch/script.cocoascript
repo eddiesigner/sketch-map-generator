@@ -72,7 +72,10 @@ var onRun = function(context) {
     dialogWindow.addAccessoryView(typeSelect);
     dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addTextLabelWithValue('(Optional) Paste a Snazzy Maps style code');
-    dialogWindow.addTextFieldWithValue('');
+    
+    var styleField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,150));
+    
+    dialogWindow.addAccessoryView(styleField);
     dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addButtonWithTitle('OK');
     dialogWindow.addButtonWithTitle('Cancel');
