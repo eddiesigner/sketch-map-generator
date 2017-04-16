@@ -14,6 +14,8 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 ## Installation
 
+[![Install PLUGIN NAME with Sketchpacks](http://sketchpacks-com.s3.amazonaws.com/assets/badges/sketchpacks-badge-install.png "Install PLUGIN NAME with Sketchpacks")](https://sketchpacks.com/YOUR_NAME/PLUGIN_NAME/install)
+
 #### With Sketch Toolbox
 
 1. Look for "Sketch Map Generator" in Sketch Toolbox
