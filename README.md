@@ -16,6 +16,11 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 [![Install Sketch Map Generator with Sketchpacks](http://sketchpacks-com.s3.amazonaws.com/assets/badges/sketchpacks-badge-install.png "Install Sketch Map Generator with Sketchpacks")](https://sketchpacks.com/eddiesigner/sketch-map-generator/install)
 
+#### Installation via [Sketch Plugin Manager](https://mludowise.github.io/Sketch-Plugin-Manager/):
+
+1. In the 'Catalog' tab of the Sketch Plugin Manager window, click in the 'Search' field and type 'Map Generator', to filter the list.
+2. You will see the 'Sketch Map Generator' plugin listed at the top of the list. Click the 'Install' button inside it.
+
 #### With Sketch Toolbox
 
 1. Look for "Sketch Map Generator" in Sketch Toolbox
