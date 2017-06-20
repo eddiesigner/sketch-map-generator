@@ -40,6 +40,7 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 ## Improvements
 
+- [x] Now you can save the address, zoom, map type and the Snazzy styles to use them later
 - [x] Snazzy Maps integration
 - [x] You can choose a different map type (roadmap, satellite, hybrid, terrain)
 - [x] The quality of the maps has been improved (2x)

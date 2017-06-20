@@ -21,7 +21,7 @@
   "compatibleVersion" : 4,
   "homepage" : "https://github.com/eddiesigner/sketch-map-generator",
   "identifier" : "io.eduardogomez.sketch.map-generator",
-  "version" : "1.0.2",
+  "version" : "1.0.3",
   "description" : "Plugin to fill a layer with a map generated from a location (Powered by Google Maps)",
   "authorEmail" : "this.eduardo@gmail.com",
   "name" : "Map Generator"

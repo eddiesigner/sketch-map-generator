@@ -1,16 +1,16 @@
 var onRun = function(context) {
-  var app            = NSApplication.sharedApplication();
-  var sketch         = context.api()
-  var doc            = context.document;
-  var selectedLayers = context.selection;
-  var selectedCount  = selectedLayers.count();
-  var imageUrl       = '';
-  var layer          = null;
-  var layerSizes     = null;
-  var apiKey         = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
-  var zoomLevels     = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
-  var mapTypes       = ['roadmap', 'satellite', 'hybrid', 'terrain'];
-
+  var app              = NSApplication.sharedApplication();
+  var sketch           = context.api()
+  var doc              = context.document;
+  var selectedLayers   = context.selection;
+  var selectedCount    = selectedLayers.count();
+  var imageUrl         = '';
+  var layer            = null;
+  var layerSizes       = null;
+  var apiKey           = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
+  var zoomLevels       = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20'];
+  var mapTypes         = ['roadmap', 'satellite', 'hybrid', 'terrain'];
+  var pluginIdentifier = "io.eduardogomez.sketch.map-generator";
 
   // Stop the program if nothing is selected
   if (selectedCount != 1) {
@@ -56,24 +56,25 @@ var onRun = function(context) {
     dialogWindow.setMessageText('Maps Generator');
     dialogWindow.setInformativeText('Write an address and choose a zoom option.');
     dialogWindow.addTextLabelWithValue('Enter an address or a place');
-    dialogWindow.addTextFieldWithValue('');
+    dialogWindow.addTextFieldWithValue(getPreferences("remember") == 0 ? '' : getPreferences("address"));
     dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addTextLabelWithValue('Please choose a zoom level');
     dialogWindow.addTextLabelWithValue('(A higher value increases the zoom level)');
 
-    var zoomSelect = createSelect(zoomLevels, 15);
+    var zoomSelect = createSelect(zoomLevels, getPreferences("remember") == 0 ? 15 : getPreferences("zoom"));
 
     dialogWindow.addAccessoryView(zoomSelect);
     dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addTextLabelWithValue('You can choose a map type as well');
 
-    var typeSelect = createSelect(mapTypes, 0);
+    var typeSelect = createSelect(mapTypes, getPreferences("remember") == 0 ? 0 : getPreferences("type"));
 
     dialogWindow.addAccessoryView(typeSelect);
     dialogWindow.addTextLabelWithValue(' ');
     dialogWindow.addTextLabelWithValue('(Optional) Paste a Snazzy Maps style code');
     
     var styleField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,150));
+    styleField.setStringValue(getPreferences("remember") == 0 ? '' : getPreferences("style"));
     
     dialogWindow.addAccessoryView(styleField);
     dialogWindow.addTextLabelWithValue(' ');
@@ -90,6 +91,14 @@ var onRun = function(context) {
     zoomSelect.setNextKeyView(typeSelect);
 
     typeSelect.setNextKeyView(styleTextBox);
+
+    var checkbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,200,23))
+    checkbox.setButtonType(NSSwitchButton)
+    checkbox.setBezelStyle(0)
+    checkbox.setTitle("Save the data to load it later")
+    checkbox.setState(getPreferences("remember") == 0 ? NSOffState : NSOnState)
+
+    dialogWindow.addAccessoryView(checkbox)
 
     return dialogWindow;
   }
@@ -118,6 +127,8 @@ var onRun = function(context) {
    * @return {Object}
    */
   function handleAlertResponse(dialog, responseCode) {
+    saveData(dialog);
+
     if (responseCode == "1000") {
       return {
         address: dialog.viewAtIndex(1).stringValue(),
@@ -230,5 +241,61 @@ var onRun = function(context) {
     }
 
     return '&style=' + items.join('&style=');
+  }
+
+  /**
+   * Save the settings data
+   * @param  {COSAlertWindow} dialog 
+   */
+  function saveData(dialog) {
+    setPreferences("address", dialog.viewAtIndex(1).stringValue());
+    setPreferences("zoom", dialog.viewAtIndex(5).indexOfSelectedItem());
+    setPreferences("type", dialog.viewAtIndex(8).indexOfSelectedItem());
+    setPreferences("style", dialog.viewAtIndex(11).stringValue());
+    setPreferences("remember", dialog.viewAtIndex(13).stringValue());
+  }
+
+  /**
+   * Get user preferences by key
+   * @param  {String} key 
+   * @return {Object}     
+   */
+  function getPreferences(key) {
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+
+    if (!userDefaults.dictionaryForKey(pluginIdentifier)) {
+      var defaultPreferences = NSMutableDictionary.alloc().init();
+
+      defaultPreferences.setObject_forKey("", "address");
+      defaultPreferences.setObject_forKey(zoomLevels[15], "zoom");
+      defaultPreferences.setObject_forKey(mapTypes[0], "type");
+      defaultPreferences.setObject_forKey("", "style");
+      defaultPreferences.setObject_forKey(0, "remember");
+
+      userDefaults.setObject_forKey(defaultPreferences, pluginIdentifier);
+      userDefaults.synchronize();
+    }
+
+    return userDefaults.dictionaryForKey(pluginIdentifier).objectForKey(key);
+  }
+
+  /**
+   * Set user preferences by key
+   * @param {String} key   
+   * @param {String} value 
+   */
+  function setPreferences(key, value) {
+    var userDefaults = NSUserDefaults.standardUserDefaults();
+
+    if (!userDefaults.dictionaryForKey(pluginIdentifier)) {
+        var preferences = NSMutableDictionary.alloc().init();
+    } else {
+        var preferences = NSMutableDictionary.dictionaryWithDictionary(userDefaults.dictionaryForKey(pluginIdentifier));
+    }
+
+    preferences.setObject_forKey(value, key);
+
+    userDefaults.setObject_forKey(preferences, pluginIdentifier);
+    userDefaults.synchronize();
   }
 };
