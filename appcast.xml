@@ -16,5 +16,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v1.0.4.zip" sparkle:version="1.0.4" />
       </item>
+      <item>
+        <title>Version 1.0.5</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Now you can save the address, zoom, map type and the Snazzy styles to use them later v1.0.5</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v1.0.5.zip" sparkle:version="1.0.5" />
+      </item>
   </channel>
 </rss>

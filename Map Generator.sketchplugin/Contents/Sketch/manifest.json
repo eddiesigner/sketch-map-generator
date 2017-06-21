@@ -22,7 +22,7 @@
   "homepage" : "https://github.com/eddiesigner/sketch-map-generator",
   "identifier" : "io.eduardogomez.sketch.map-generator",
   "appcast": "https://raw.githubusercontent.com/eddiesigner/sketch-map-generator/master/appcast.xml",
-  "version" : "1.0.4",
+  "version" : "1.0.5",
   "description" : "Plugin to fill a layer with a map generated from a location (Powered by Google Maps)",
   "authorEmail" : "this.eduardo@gmail.com",
   "name" : "Map Generator"
