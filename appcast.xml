@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle"  xmlns:dc="http://purl.org/dc/elements/1.1/">
+  <channel>
+    <title>Map Generator</title>
+    <link>http://sparkle-project.org/files/sparkletestcast.xml</link>
+    <description>Plugin to fill a layer with a map generated from a location (Powered by Google Maps)</description>
+    <language>en</language>
+      <item>
+        <title>Version 1.0.4</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>The plugin now supports the new mechanism for updating plugins within the app v1.0.4</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v1.0.4.zip" sparkle:version="1.0.4" />
+      </item>
+  </channel>
+</rss>
