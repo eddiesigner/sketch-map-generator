@@ -56,7 +56,7 @@ If this project help you in some way, you can invite us a :beer: :)
 
 Thank you from the [Craftbot](http://craftbot.io) team!
 
-[![paypal](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y72RSKMLQW3BQ)
+[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y72RSKMLQW3BQ)
 
 ## Questions or issues?
 
