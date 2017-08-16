@@ -52,7 +52,7 @@ The plugin is compatible with Sketch 4.
 
 ## Donations
 
-If this project help you in some way, you can give us a :beer: :)
+If this project help you in some way, you can invite us a :beer: :)
 
 Thank you from the [Craftbot](http://craftbot.io) team!
 
