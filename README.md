@@ -50,6 +50,12 @@ With this plugin you can design quickly a map view for a mobile application or a
 
 The plugin is compatible with Sketch 4.
 
-## Questions?
+## Donations
 
-You can write me questions about the plugin on Twitter: [@_edev](https://twitter.com/_edev)
+If this project help you in some way, you can give me a :beer: :)
+
+[![paypal](https://www.paypalobjects.com/en_US/MX/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y72RSKMLQW3BQ)
+
+## Questions or issues?
+
+If you have a question or some problem related to the plugin, you can open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
