@@ -18,19 +18,15 @@ In this update, Map Generator 2.0 has been build from scratch. We’ve introduce
 
 1. Create a shape and select it.
 2. Run the Map Generator Plugin:
-  <br><br>
-  **Google Maps**
-  <br>
-    Plugins > Map Generator > Generate a Map using Google Maps
-  <br>
-    Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
-  <br><br>
-  **Mapbox**
-  <br>
-    Plugins > Map Generator > Generate a Map using Mapbox
-  <br>
-    Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
-  <br><br>
+##### Google Maps
+Plugins > Map Generator > Generate a Map using Google Maps
+<br>
+Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
+##### Mapbox
+Plugins > Map Generator > Generate a Map using Mapbox
+<br>
+Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
+<br>
 3. Choose the location, styling and zoom.
 4. Voila! Your shape will be filled with a map.
 
