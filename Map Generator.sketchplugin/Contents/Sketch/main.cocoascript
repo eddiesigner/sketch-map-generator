@@ -1,0 +1,20 @@
+@import "google.js";
+@import "mapbox.js";
+
+/**
+ * Run the Google service provider.
+ * @param  {Sketch context} context 
+ */
+function runGoogle (context) {
+  var map = new GoogleMap();
+  map.create(context);
+}
+
+/**
+ * Run the Mapbox service provider.
+ * @param  {Sketch context} context 
+ */
+function runMapbox (context) {
+  var map = new MapboxMap();
+  map.create(context);
+}

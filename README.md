@@ -1,20 +1,52 @@
-# Map Generator Sketch Plugin
+# Map Generator 2.0 - Sketch App Plugin
 
-A plugin to fill a layer with a map generated from a location (Powered by Google Maps).
+Map Generator better than ever!
 
-With this plugin you can design quickly a map view for a mobile application or a web site. You only need to write some location and the plugin will do the rest!
+Design beautiful map interfaces, mobile applications and more in less time with Map Generator 2.0. Now powered by Google and Mapbox.
 
-## Demo
+In this update, Map Generator 2.0 has been build from scratch. We’ve introduced a new map provider (Mapbox) and a few other enhancements to boost your creation process.
 
-![Plugin Demo](/assets/demo.gif?raw=true "Map Generator Sketch Plugin Demo")
+### Mapbox
 
-## New Version Screenshot
+![Mapbox](/assets/mapbox.gif?raw=true "Map Generator using Mapbox")
 
-![New version](/assets/new-version.png?raw=true "Map Generator Sketch Plugin Screenshot")
+### Google Maps
+
+![Google Maps](/assets/google.gif?raw=true "Map Generator using Google Maps")
+
+## How it works?
+
+1. Create a shape and select it.
+2. Run the Map Generator Plugin:
+  <br><br>
+  **Google Maps**
+  <br>
+    Plugins > Map Generator > Generate a Map using Google Maps
+  <br>
+    Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
+  <br><br>
+  **Mapbox**
+  <br>
+    Plugins > Map Generator > Generate a Map using Mapbox
+  <br>
+    Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
+  <br><br>
+3. Choose the location, styling and zoom.
+4. Voila! Your shape will be filled with a map.
+
+## What’s new?
+
+* Google Maps and Mapbox support
+* Mapbox supports map types: https://www.mapbox.com/api-documentation/#styles
+* Build it to suppport more map services in the future
+* Bugfixes
+* New icon
+* New documentation
+* Map Generator is now a product of [craftbot.io](http://craftbot.io)
 
 ## Installation
 
-[![Install Sketch Map Generator with Sketchpacks](http://sketchpacks-com.s3.amazonaws.com/assets/badges/sketchpacks-badge-install.png "Install Sketch Map Generator with Sketchpacks")](https://sketchpacks.com/eddiesigner/sketch-map-generator/install)
+[![Install Sketch Map Generator with Sketchpacks](/assets/sketchpacks.png?raw=true "Install Sketch Map Generator with Sketchpacks")](https://sketchpacks.com/eddiesigner/sketch-map-generator/install)
 
 #### Installation via [Sketch Plugin Manager](https://mludowise.github.io/Sketch-Plugin-Manager/):
 
@@ -31,33 +63,20 @@ With this plugin you can design quickly a map view for a mobile application or a
 1. [Download the Zip](https://github.com/eddiesigner/sketch-map-generator/archive/master.zip) and unzip the package
 2. Double click on `Map Generator.sketchplugin` for auto installation
 
-## Usage
-
-1. Create one shape and select it
-2. Run the plugin from the plugins menu (Plugins > Map Generator > Generate a Map) or you can use the shortcut `shift` + `cmd` + `m`
-3. Write some place or location and choose a zoom level
-4. Press the OK button and that's it! Your shape will become filled with the location map
-
-## Improvements
-
-- [x] Now you can save the address, zoom, map type and the Snazzy styles to use them later
-- [x] Snazzy Maps integration
-- [x] You can choose a different map type (roadmap, satellite, hybrid, terrain)
-- [x] The quality of the maps has been improved (2x)
-- [x] Added switch focus between text fields to keep your hands on keyboard
-
 ## Compatibility
 
-The plugin is compatible with Sketch 4.
+The plugin is compatible with Sketch 4+.
 
 ## Donations
 
-If this project help you in some way, you can invite us a :beer: :)
+If this project help you in some way, you can invite us a :beer: ;) or share this project via social media.
 
-Thank you from the [Craftbot](http://craftbot.io) team!
+The [Craftbot](http://craftbot.io) team thank you! [Eddie](https://eduardogomez.io) & [Guillermo](https://dribbble.com/guillermoseis).
 
 [![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y72RSKMLQW3BQ)
 
-## Questions or issues?
+## Contact
 
-If you have a question or some problem related to the plugin, you can open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
+If you have any questions or troubles with our product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
+
+If you prefer, you can send an email to: [hello@craftbot.io](mailto:hello@craftbot.io)
