@@ -3,10 +3,10 @@
   <channel>
     <title>Map Generator</title>
     <link>http://sparkle-project.org/files/sparkletestcast.xml</link>
-    <description>Plugin to fill a layer with a map generated from a location (Powered by Google Maps)</description>
+    <description>Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)</description>
     <language>en</language>
       <item>
-        <title>Version 1.0.4</title>
+        <title>Version 2.0.0</title>
         <description>
           <![CDATA[
             <ul>
@@ -26,6 +26,17 @@
           ]]>
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v1.0.5.zip" sparkle:version="1.0.5" />
+      </item>
+      <item>
+        <title>Version 2.0.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Now you can generate a map using Google Maps or Mapbox! v2.0.0</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.0.zip" sparkle:version="2.0.0" />
       </item>
   </channel>
 </rss>

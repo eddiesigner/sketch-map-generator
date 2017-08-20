@@ -1,29 +1,35 @@
 {
-  "author" : "Eduardo Gómez",
+  "author" : "Craftbot",
   "bundleVersion" : 1,
   "commands" : [
     {
-      "script" : "script.cocoascript",
-      "name" : "Generate a Map",
-      "handlers" : {
-        "run" : "onRun"
-      },
-      "identifier" : "script",
+      "script" : "main.cocoascript",
+      "name" : "Generate a Map using Google Maps",
+      "handler" : "runGoogle",
+      "identifier" : "scriptGoogle",
       "shortcut" : "shift cmd m"
+    },
+    {
+      "script" : "main.cocoascript",
+      "name" : "Generate a Map using Mapbox",
+      "handler" : "runMapbox",
+      "identifier" : "scriptMapbox",
+      "shortcut" : "shift cmd b"
     }
   ],
   "menu" : {
     "items" : [
-      "script"
+      "scriptGoogle",
+      "scriptMapbox"
     ],
     "title" : "Map Generator"
   },
   "compatibleVersion" : 4,
   "homepage" : "https://github.com/eddiesigner/sketch-map-generator",
-  "identifier" : "io.eduardogomez.sketch.map-generator",
+  "identifier" : "io.craftbot.sketch.map-generator",
   "appcast": "https://raw.githubusercontent.com/eddiesigner/sketch-map-generator/master/appcast.xml",
-  "version" : "1.0.5",
-  "description" : "Plugin to fill a layer with a map generated from a location (Powered by Google Maps)",
-  "authorEmail" : "this.eduardo@gmail.com",
+  "version" : "2.0.0",
+  "description" : "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)",
+  "authorEmail" : "eduardo@craftbot.io",
   "name" : "Map Generator"
 }
