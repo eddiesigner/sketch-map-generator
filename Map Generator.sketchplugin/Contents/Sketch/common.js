@@ -8,7 +8,7 @@ var app              = NSApplication.sharedApplication();
  */
 function checkCount (context) {
   if (context.selection.count() != 1) {
-    app.displayDialog_withTitle('You have to select 1 shape layer.", "Wrong shape layer selection');
+    app.displayDialog_withTitle("You have to select 1 shape layer.", "Wrong shape layer selection");
     return false;
   }
 
