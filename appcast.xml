@@ -6,7 +6,7 @@
     <description>Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)</description>
     <language>en</language>
       <item>
-        <title>Version 2.0.0</title>
+        <title>Version 1.0.4</title>
         <description>
           <![CDATA[
             <ul>
@@ -37,6 +37,17 @@
           ]]>
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.0.zip" sparkle:version="2.0.0" />
+      </item>
+      <item>
+        <title>Version 2.0.1</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>Fix a low-level bug related to the dialog title v2.0.1</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.1.zip" sparkle:version="2.0.1" />
       </item>
   </channel>
 </rss>
