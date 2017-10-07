@@ -215,7 +215,7 @@ function saveData (dialog, viewElements, service) {
 }
 
 /**
- * Gets the an option value.
+ * Gets an option value.
  * @param  {String} key          
  * @param  {String | Integer} defaultValue 
  * @param  {String} service      
