@@ -49,5 +49,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.1.zip" sparkle:version="2.0.1" />
       </item>
+      <item>
+        <title>Version 2.0.2</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>The problem of maps that were not shown due to changes in Sketch version 47 has been solved v2.0.2</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.2.zip" sparkle:version="2.0.2" />
+      </item>
   </channel>
 </rss>

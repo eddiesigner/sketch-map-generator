@@ -156,7 +156,7 @@ function fillLayerWithImage (imageUrl, layer, context) {
   var fill = layer.style().fills().firstObject();
 
   fill.setFillType(4);
-  fill.setImage(MSImageData.alloc().initWithImage_convertColorSpace(imageFile, false));
+  fill.setImage(MSImageData.alloc().initWithImageConvertingColorSpace(imageFile));
   fill.setPatternFillType(1);
 
   context.document.showMessage("Map generated!");
