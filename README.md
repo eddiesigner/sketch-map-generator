@@ -46,15 +46,10 @@ Voila! Your shape will be filled with a map.
 
 [![Install Sketch Map Generator with Sketchpacks](/assets/sketchpacks.png?raw=true "Install Sketch Map Generator with Sketchpacks")](https://sketchpacks.com/eddiesigner/sketch-map-generator/install)
 
-#### Installation via [Sketch Plugin Manager](https://mludowise.github.io/Sketch-Plugin-Manager/):
+#### Install with Sketch Runner
+With Sketch Runner, just go to the `install` command and search for `Map Generator`. Runner allows you to manage plugins and do much more to speed up your workflow in Sketch. [Download Runner here](http://www.sketchrunner.com).
 
-1. In the 'Catalog' tab of the Sketch Plugin Manager window, click in the 'Search' field and type 'Map Generator', to filter the list.
-2. You will see the 'Sketch Map Generator' plugin listed at the top of the list. Click the 'Install' button inside it.
-
-#### With Sketch Toolbox
-
-1. Look for "Sketch Map Generator" in Sketch Toolbox
-2. Click on "Install"
+![Sketch Runner screenshot](https://res.cloudinary.com/edev/image/upload/v1511169425/Screen_Shot_2017-11-20_at_10.16.49_AM_oiwp2j.png)
 
 #### Manual
 
