@@ -71,5 +71,17 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.3.zip" sparkle:version="2.0.3" />
       </item>
+      <item>
+        <title>Version 2.0.4</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>The plugin now supports Sketch 52</li>
+              <li>Fixed the problem of not getting a map using Mapbox</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.4.zip" sparkle:version="2.0.4" />
+      </item>
   </channel>
 </rss>

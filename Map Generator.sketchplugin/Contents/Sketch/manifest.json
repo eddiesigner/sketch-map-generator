@@ -1,5 +1,5 @@
 {
-  "author" : "Craftbot",
+  "author" : "Eduardo Gómez",
   "bundleVersion" : 1,
   "commands" : [
     {
@@ -26,10 +26,10 @@
   },
   "compatibleVersion" : 4,
   "homepage" : "https://github.com/eddiesigner/sketch-map-generator",
-  "identifier" : "io.craftbot.sketch.map-generator",
+  "identifier" : "io.eduardogomez.sketch.map-generator",
   "appcast": "https://raw.githubusercontent.com/eddiesigner/sketch-map-generator/master/appcast.xml",
-  "version" : "2.0.3",
+  "version" : "2.0.4",
   "description" : "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)",
-  "authorEmail" : "eduardo@craftbot.io",
+  "authorEmail" : "this.eduardo@gmail.com",
   "name" : "Map Generator"
 }

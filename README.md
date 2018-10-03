@@ -40,10 +40,8 @@ Voila! Your shape will be filled with a map.
 * Google Maps and Mapbox support
 * Mapbox supports map types: https://www.mapbox.com/api-documentation/#styles
 * Build it to suppport more map services in the future
-* Bugfixes
-* New icon
-* New documentation
-* Map Generator is now a product of [craftbot.io](http://craftbot.io)
+* Sketch 52 is supported now
+* Thanks to [Guillermo](https://guillermoseis.com/) for the previews and the logo!
 
 ## Installation
 
@@ -58,24 +56,6 @@ With Sketch Runner, just go to the `install` command and search for `Map Generat
 
 1. [Download the Zip](https://github.com/eddiesigner/sketch-map-generator/archive/master.zip) and unzip the package
 2. Double click on `Map Generator.sketchplugin` for auto installation
-
-## Compatibility
-
-The plugin is compatible with Sketch 4+.
-
-## Donations
-
-If this project help you in some way, you can invite us a :beer: ;) or share this project via social media.
-
-The [Craftbot](http://craftbot.io) team thank you! [Eddie](https://eduardogomez.io) & [Guillermo](https://dribbble.com/guillermoseis).
-
-[![paypal](https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=Y72RSKMLQW3BQ)
-
-## Contact
-
-If you have any questions or troubles with our product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
-
-If you prefer, you can send an email to: [hello@craftbot.io](mailto:hello@craftbot.io)
 
 ## Contributors
 
@@ -105,4 +85,10 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/sketch-map-generator/sponsor/8/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/sketch-map-generator/sponsor/9/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/9/avatar.svg"></a>
 
+## Compatibility
 
+The plugin is compatible with Sketch 4+.
+
+## Issues
+
+If you have any questions or troubles with our product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).

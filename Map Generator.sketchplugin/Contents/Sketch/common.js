@@ -1,4 +1,4 @@
-var pluginIdentifier = "io.craftbot.sketch.map-generator";
+var pluginIdentifier = "io.eduardogomez.sketch.map-generator";
 var app              = NSApplication.sharedApplication();
 
 /**
@@ -23,9 +23,18 @@ function checkCount (context) {
 function checkLayerType (context) {
   var layer = context.selection[0];
 
-  if ([layer class] != MSShapeGroup) {
-    app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
-    return false;
+  if ((MSApplicationMetadata.metadata().appVersion >= 52)) {
+    var edited = layer.edited;
+
+    if (edited == undefined) {
+      app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
+      return false;
+    }
+  } else {
+    if ([layer class] != MSShapeGroup) {
+      app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
+      return false;
+    }
   }
 
   return true;
@@ -181,26 +190,21 @@ function getImage (url) {
 }
 
 /**
- * Gets the coordinates from a location.
+ * Gets the coordinates from a given location.
  * @param  {String} address 
  * @return {Object}         
  */
 function getGeoCode (address) {
-  var url = 'https://maps.google.com/maps/api/geocode/json?address=' + address;
-  var request = NSMutableURLRequest.new();
+  var data = JSON.stringify({
+    query: address,
+    hitsPerPage: 1
+  });
 
-  [request setHTTPMethod:@"GET"];
-  [request setURL:[NSURL URLWithString:url]];
-
-  var error = NSError.new();
-  var responseCode = null;
-  var oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:responseCode error:error];
-  var dataString = [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
-  var dataParsed = JSON.parse(dataString);
+  var dataParsed = networkRequest(["-X", "POST", "https://places-dsn.algolia.net/1/places/query", "-H", "Content-Type: application/json; charset=utf-8", "-d", data]);
 
   return {
-    lat: dataParsed.results[0].geometry.location.lat,
-    lon: dataParsed.results[0].geometry.location.lng
+    lat: dataParsed.hits[0]._geoloc.lat,
+    lon: dataParsed.hits[0]._geoloc.lng
   };
 }
 
@@ -271,4 +275,52 @@ function setPreferences(key, value) {
 
   userDefaults.setObject_forKey(preferences, pluginIdentifier);
   userDefaults.synchronize();
+}
+
+/**
+ * Creates a network request using Curl and returns the fetched data.
+ * @param {Array} args 
+ * @return {Json Object} 
+ */
+function networkRequest(args) {
+  var task = NSTask.alloc().init();
+  task.setLaunchPath("/usr/bin/curl");
+  task.setArguments(args);
+
+  var outputPipe = [NSPipe pipe];
+  [task setStandardOutput: outputPipe];
+  task.launch();
+
+  var responseData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
+  var responseString = [[[NSString alloc] initWithData: responseData encoding: NSUTF8StringEncoding]];
+  var parsed = tryParseJSON(responseString);
+
+  if (!parsed) {
+    log("Error invoking curl");
+    log("args:");
+    log(args);
+    log("responseString");
+    log(responseString);
+    throw "Error communicating with server";
+  }
+
+  return parsed;
+}
+
+/**
+ * Parses a string to Object.
+ * @param {String} jsonString 
+ * @return {Object} 
+ */
+function tryParseJSON(jsonString) {
+  try {
+    var o = JSON.parse(jsonString);
+
+    if (o && typeof o === "object" && o !== null) {
+      return o;
+    }
+  }
+  catch (e) { }
+
+  return false;
 }
