@@ -2,17 +2,20 @@
 
 function GoogleMap () {}
 
-GoogleMap.prototype.apiKey     = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
-GoogleMap.prototype.service    = 'google';
-GoogleMap.prototype.minZoom    = 1;
-GoogleMap.prototype.maxZoom    = 20;
+GoogleMap.prototype.apiKey = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
+GoogleMap.prototype.service = 'google';
+GoogleMap.prototype.minZoom = 1;
+GoogleMap.prototype.maxZoom = 20;
 GoogleMap.prototype.zoomLevels = [];
-GoogleMap.prototype.mapTypes   = [
+GoogleMap.prototype.mapTypes = [
   'roadmap',
   'satellite',
   'hybrid',
   'terrain'
 ];
+GoogleMap.prototype.windowSize = 800;
+GoogleMap.prototype.spacing = 40;
+GoogleMap.prototype.columnWidth = 340;
 
 /**
  * Creates the Google Maps service provider.
@@ -27,100 +30,114 @@ GoogleMap.prototype.create = function (context) {
     } else {
       makeZoomLevels(this.zoomLevels, this.minZoom, this.maxZoom);
 
-      var viewElements = [];
-      var dialog = this.buildDialog(context, viewElements);
-      var settings = handleAlertResponse(dialog, viewElements, this.service, dialog.runModal());
+      var window = buildWindow(this.windowSize, "Map Generator (Google Maps)");
+      this.buildInterface(window, context);
 
-      if (!checkSettings(settings, dialog)) {
-        return;
-      }
-
-      var layer = context.selection[0];
-      var layerSizes = layer.frame();
-      var imageUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + encodeURIComponent(settings.address) + '&zoom=' + settings.zoom + '&size=' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '&maptype=' + settings.type + '&scale=2' + this.parseStyle(settings.style, context) + '&key=' + this.apiKey;
-
-      fillLayerWithImage(imageUrl, layer, context);
+      [NSApp run];
     }
   }
 };
 
-/**
- * Builds the Google Maps window.
- * @param  {Sketch context} context      
- * @param  {Array} viewElements 
- * @return {COSAlertWindow}              
- */
-GoogleMap.prototype.buildDialog = function (context, viewElements) {
+GoogleMap.prototype.buildInterface = function (window, context) {
   var remember = getOption('remember', 0, this.service);
-  var dialogWindow = COSAlertWindow.new();
+  var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, this.windowSize, this.windowSize));
 
-  dialogWindow.setMessageText('Maps Generator (Google Maps)');
-  dialogWindow.setInformativeText('Write an address and choose a zoom option.');
-  dialogWindow.addTextLabelWithValue('Enter an address or a place');
-  dialogWindow.addTextFieldWithValue(remember == 0 ? '' : getOption('address', '', this.service));
-  dialogWindow.addTextLabelWithValue(' ');
-  dialogWindow.addTextLabelWithValue('Please choose a zoom level');
-  dialogWindow.addTextLabelWithValue('(A higher value increases the zoom level)');
-
-  var zoomSelect = createSelect(this.zoomLevels, remember == 0 ? 15 : getOption('zoom', 15, this.service));
-  dialogWindow.addAccessoryView(zoomSelect);
-  dialogWindow.addTextLabelWithValue(' ');
-  dialogWindow.addTextLabelWithValue('You can choose a map type as well');
-
-  var typeSelect = createSelect(this.mapTypes, remember == 0 ? 0 : getOption('type', 0, this.service));
-  dialogWindow.addAccessoryView(typeSelect);
-  dialogWindow.addTextLabelWithValue(' ');
-  dialogWindow.addTextLabelWithValue('(Optional) Paste a Snazzy Maps style code');
-
-  var styleField = NSTextField.alloc().initWithFrame(NSMakeRect(0,0,300,150));
-  styleField.setStringValue(remember == 0 ? '' : getOption('style', '', this.service));
-
-  dialogWindow.addAccessoryView(styleField);
-  dialogWindow.addTextLabelWithValue(' ');
-
-  var addressTextBox = dialogWindow.viewAtIndex(1);
-  var styleTextBox = dialogWindow.viewAtIndex(11);
-
-  dialogWindow.alert().window().setInitialFirstResponder(addressTextBox);
-  addressTextBox.setNextKeyView(zoomSelect);
-  zoomSelect.setNextKeyView(typeSelect);
-  typeSelect.setNextKeyView(styleTextBox);
-
-  var checkbox = createCheck('Remember my options', remember);
-  dialogWindow.addAccessoryView(checkbox);
-
-  dialogWindow.addButtonWithTitle('OK');
-  dialogWindow.addButtonWithTitle('Cancel');
-
-  dialogWindow.setIcon(NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed("logo@2x.png").path()));
-
-  viewElements.push({
-    key: 'address',
-    index: 1,
-    type: 'input'
+  var addressLabel = createLabel("Enter an address or a place:", {
+    left: this.spacing,
+    top: this.windowSize - 50,
+    width: this.columnWidth,
+    height: 20
   });
-  viewElements.push({
-    key: 'zoom',
-    index: 5,
-    type: 'select'
-  });
-  viewElements.push({
-    key: 'type',
-    index: 8,
-    type: 'select'
-  });
-  viewElements.push({
-    key: 'style',
-    index: 11,
-    type: 'input'
-  });
-  viewElements.push({
-    key: 'remember',
-    index: 13,
-    type: 'input'
-  });
+  view.addSubview(addressLabel);
 
-  return dialogWindow;
+  var addressField = createField({
+    left: this.spacing,
+    top: this.windowSize - 90,
+    width: this.columnWidth,
+    height: 25
+  })
+  view.addSubview(addressField);
+
+  var zoomLabel = createLabel("Please choose a zoom level (a higher value increases the zoom):", {
+    left: this.spacing,
+    top: this.windowSize - 155,
+    width: this.columnWidth,
+    height: 40
+  });
+  view.addSubview(zoomLabel);
+
+  var zoomSelect = createSelect(
+    this.zoomLevels,
+    remember == 0 ? 15 : getOption('zoom', 15, this.service),
+    {
+      left: this.spacing,
+      top: this.windowSize - 190,
+      width: 200,
+      height: 25
+    }
+  );
+  view.addSubview(zoomSelect);
+
+  var typeLabel = createLabel("You can choose a map type as well:", {
+    left: this.spacing,
+    top: this.windowSize - 235,
+    width: this.columnWidth,
+    height: 20
+  });
+  view.addSubview(typeLabel);
+
+  var typeSelect = createSelect(
+    this.mapTypes,
+    remember == 0 ? 0 : getOption('type', 0, this.service),
+    {
+      left: this.spacing,
+      top: this.windowSize - 270,
+      width: 200,
+      height: 25
+    }
+  );
+  view.addSubview(typeSelect);
+
+  var mapLabel = createLabel("Preview or pick a location directly from the map:", {
+    left: this.spacing,
+    top: this.windowSize - 315,
+    width: this.columnWidth,
+    height: 20
+  });
+  view.addSubview(mapLabel);
+
+  var stylesLabel = createLabel("(Optional) Paste a Snazzy Maps style code:", {
+    left: 420,
+    top: this.windowSize - 50,
+    width: this.columnWidth,
+    height: 20
+  });
+  view.addSubview(stylesLabel);
+
+  var styleField = createField({
+    left: 420,
+    top: this.windowSize - 265,
+    width: this.columnWidth,
+    height: 200
+  })
+  view.addSubview(styleField);
+
+  var checkbox = createCheck(
+    'Remember my options',
+    remember,
+    {
+      left: 420,
+      top: this.windowSize - 315,
+      width: this.columnWidth,
+      height: 25
+    }
+  );
+  view.addSubview(checkbox);
+
+  var webView = createWebView('google.html', context);
+  view.addSubview(webView);
+
+  [[window contentView] addSubview: view];
 }
 
 /**

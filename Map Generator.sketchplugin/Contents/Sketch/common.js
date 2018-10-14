@@ -1,5 +1,5 @@
 var pluginIdentifier = "io.eduardogomez.sketch.map-generator";
-var app              = NSApplication.sharedApplication();
+var app = NSApplication.sharedApplication();
 
 /**
  * Checks if there is something selected.
@@ -60,6 +60,42 @@ function checkSettings (settings, dialog) {
   return true;
 }
 
+function buildWindow (size, title) {
+  var window = [[[NSWindow alloc]
+        initWithContentRect: NSMakeRect(0, 0, size, size)
+        styleMask: NSWindowStyleMaskTitled | NSWindowStyleMaskClosable
+        backing: NSBackingStoreBuffered
+        defer: false
+  ] autorelease];
+
+  [window setTitle: title];
+  window.center();
+  window.makeKeyAndOrderFront_(window);
+
+  return window;
+}
+
+function createLabel (text, rect) {
+  var label = [[NSTextField alloc] init];
+
+  [label setEditable: false];
+  [label setBordered: false];
+  [label setDrawsBackground: false];
+  [label setStringValue: text];
+  [label sizeToFit];
+  [label setFrame: NSMakeRect(rect.left, rect.top, rect.width, rect.height)];
+
+  return label;
+}
+
+function createField (rect) {
+  var field = [[NSTextField alloc] initWithFrame: NSMakeRect(rect.left, rect.top, rect.width, rect.height)];
+
+  [field setStringValue: ""];
+
+  return field;
+}
+
 /**
  * Creates a select box with options.
  * @param  {Array} options       
@@ -67,9 +103,9 @@ function checkSettings (settings, dialog) {
  * @param  {Integer} width         
  * @return {NSPopUpButton}               
  */
-function createSelect (options, selectedIndex, width) {
+function createSelect (options, selectedIndex, rect) {
   var selectedItemIndex = selectedIndex || 0;
-  var select = NSPopUpButton.alloc().initWithFrame(NSMakeRect(0, 0, width || 100, 28));
+  var select = NSPopUpButton.alloc().initWithFrame(NSMakeRect(rect.left, rect.top, rect.width, rect.height));
 
   if (options) {
     select.addItemsWithTitles(options);
@@ -85,8 +121,8 @@ function createSelect (options, selectedIndex, width) {
  * @param  {Integer} checked 
  * @return {NSButton}         
  */
-function createCheck (title, checked) {
-  var checkbox = NSButton.alloc().initWithFrame(NSMakeRect(0,0,200,23));
+function createCheck (title, checked, rect) {
+  var checkbox = NSButton.alloc().initWithFrame(NSMakeRect(rect.left, rect.top, rect.width, rect.height));
 
   checkbox.setButtonType(NSSwitchButton);
   checkbox.setBezelStyle(NSRoundedBezelStyle);
@@ -110,6 +146,19 @@ function makeZoomLevels (zoomLevels, minZoom, maxZoom) {
   for (var x = minZoom; x <= maxZoom; x++) {
     zoomLevels.push(x.toString());
   }
+}
+
+function createWebView (url, context) {
+  var webviewFolder = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/';
+  var webviewHtmlFile = webviewFolder + url;
+  var requestUrl = [NSURL fileURLWithPath: webviewHtmlFile];
+  var urlRequest = [NSMutableURLRequest requestWithURL: requestUrl];
+  var webView = WebView.new();
+
+  webView.initWithFrame(NSMakeRect(0, 0, 800, 450));
+  webView.mainFrame().loadRequest(urlRequest);
+
+  return webView;
 }
 
 /**
