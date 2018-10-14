@@ -192,15 +192,21 @@ function getImage (url) {
 /**
  * Gets the coordinates from a given location.
  * @param  {String} address 
+ * @param  {Sketch context} context
  * @return {Object}         
  */
-function getGeoCode (address) {
+function getGeoCode (address, context) {
   var data = JSON.stringify({
-    query: address,
+    query: decodeURIComponent(address),
     hitsPerPage: 1
   });
 
   var dataParsed = networkRequest(["-X", "POST", "https://places-dsn.algolia.net/1/places/query", "-H", "Content-Type: application/json; charset=utf-8", "-d", data]);
+
+  if (dataParsed.hits.length === 0) {
+    context.document.showMessage("Address not found, please try another one.");
+    return;
+  }
 
   return {
     lat: dataParsed.hits[0]._geoloc.lat,

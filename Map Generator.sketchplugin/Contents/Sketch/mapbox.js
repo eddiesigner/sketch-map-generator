@@ -41,7 +41,7 @@ MapboxMap.prototype.create = function (context) {
 
       var layer = context.selection[0];
       var layerSizes = layer.frame();
-      var position = getGeoCode(encodeURIComponent(settings.address));
+      var position = getGeoCode(encodeURIComponent(settings.address), context);
       var imageUrl = 'https://api.mapbox.com/styles/v1/mapbox/' + settings.type + '/static/' + position.lon + ',' + position.lat + ',' + settings.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + this.apiKey;
 
       fillLayerWithImage(imageUrl, layer, context);

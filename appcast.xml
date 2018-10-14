@@ -83,5 +83,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.4.zip" sparkle:version="2.0.4" />
       </item>
+      <item>
+        <title>Version 2.0.5</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>I fixed an error with Mapbox, now it should works just fine :)</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.5.zip" sparkle:version="2.0.5" />
+      </item>
   </channel>
 </rss>
