@@ -1,4 +1,4 @@
-@import "common.js";
+@import 'common.js';
 
 function MapboxMap () {}
 
@@ -88,26 +88,22 @@ MapboxMap.prototype.buildDialog = function (context, viewElements) {
   dialogWindow.addButtonWithTitle('OK');
   dialogWindow.addButtonWithTitle('Cancel');
 
-  dialogWindow.setIcon(NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed("logo@2x.png").path()));
+  dialogWindow.setIcon(NSImage.alloc().initByReferencingFile(context.plugin.urlForResourceNamed('logo@2x.png').path()));
 
   viewElements.push({
     key: 'address',
-    index: 1,
     type: 'input'
   });
   viewElements.push({
     key: 'zoom',
-    index: 5,
     type: 'select'
   });
   viewElements.push({
     key: 'type',
-    index: 8,
     type: 'select'
   });
   viewElements.push({
     key: 'remember',
-    index: 10,
     type: 'input'
   });
 

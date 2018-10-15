@@ -1,4 +1,4 @@
-@import "common.js";
+@import 'common.js';
 
 function GoogleMap () {}
 
@@ -30,7 +30,7 @@ GoogleMap.prototype.create = function (context) {
     } else {
       makeZoomLevels(this.zoomLevels, this.minZoom, this.maxZoom);
 
-      var window = buildWindow(this.windowSize, "Map Generator (Google Maps)");
+      var window = buildWindow(this.windowSize, 'Map Generator (Google Maps)');
       this.buildInterface(window, context);
 
       [NSApp run];
@@ -41,13 +41,18 @@ GoogleMap.prototype.create = function (context) {
 GoogleMap.prototype.buildInterface = function (window, context) {
   var remember = getOption('remember', 0, this.service);
   var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, this.windowSize, this.windowSize));
+  var viewElements = [];
+  var self = this;
 
-  var addressLabel = createLabel("Enter an address or a place:", {
-    left: this.spacing,
-    top: this.windowSize - 50,
-    width: this.columnWidth,
-    height: 20
-  });
+  var addressLabel = createLabel(
+    'Enter an address or a place:',
+    {
+      left: this.spacing,
+      top: this.windowSize - 50,
+      width: this.columnWidth,
+      height: 20
+    }
+  );
   view.addSubview(addressLabel);
 
   var addressField = createField({
@@ -55,15 +60,25 @@ GoogleMap.prototype.buildInterface = function (window, context) {
     top: this.windowSize - 90,
     width: this.columnWidth,
     height: 25
-  })
+  },
+  remember == 0 ? '' : getOption('address', '', this.service)
+  );
   view.addSubview(addressField);
-
-  var zoomLabel = createLabel("Please choose a zoom level (a higher value increases the zoom):", {
-    left: this.spacing,
-    top: this.windowSize - 155,
-    width: this.columnWidth,
-    height: 40
+  viewElements.push({
+    key: 'address',
+    type: 'input',
+    component: addressField
   });
+
+  var zoomLabel = createLabel(
+    'Please choose a zoom level (a higher value increases the zoom):',
+    {
+      left: this.spacing,
+      top: this.windowSize - 155,
+      width: this.columnWidth,
+      height: 40
+    }
+  );
   view.addSubview(zoomLabel);
 
   var zoomSelect = createSelect(
@@ -77,13 +92,21 @@ GoogleMap.prototype.buildInterface = function (window, context) {
     }
   );
   view.addSubview(zoomSelect);
-
-  var typeLabel = createLabel("You can choose a map type as well:", {
-    left: this.spacing,
-    top: this.windowSize - 235,
-    width: this.columnWidth,
-    height: 20
+  viewElements.push({
+    key: 'zoom',
+    type: 'select',
+    component: zoomSelect
   });
+
+  var typeLabel = createLabel(
+    'You can choose a map type as well:',
+    {
+      left: this.spacing,
+      top: this.windowSize - 235,
+      width: this.columnWidth,
+      height: 20
+    }
+  );
   view.addSubview(typeLabel);
 
   var typeSelect = createSelect(
@@ -97,47 +120,126 @@ GoogleMap.prototype.buildInterface = function (window, context) {
     }
   );
   view.addSubview(typeSelect);
-
-  var mapLabel = createLabel("Preview or pick a location directly from the map:", {
-    left: this.spacing,
-    top: this.windowSize - 315,
-    width: this.columnWidth,
-    height: 20
+  viewElements.push({
+    key: 'type',
+    type: 'select',
+    component: typeSelect
   });
+
+  var mapLabel = createLabel(
+    'Preview or pick a location directly from the map:',
+    {
+      left: this.spacing,
+      top: this.windowSize - 315,
+      width: this.columnWidth,
+      height: 20
+    }
+  );
   view.addSubview(mapLabel);
 
-  var stylesLabel = createLabel("(Optional) Paste a Snazzy Maps style code:", {
-    left: 420,
-    top: this.windowSize - 50,
-    width: this.columnWidth,
-    height: 20
-  });
+  var stylesLabel = createLabel(
+    '(Optional) Paste a Snazzy Maps style code:',
+    {
+      left: 420,
+      top: this.windowSize - 50,
+      width: this.columnWidth,
+      height: 20
+    }
+  );
   view.addSubview(stylesLabel);
 
-  var styleField = createField({
-    left: 420,
-    top: this.windowSize - 265,
-    width: this.columnWidth,
-    height: 200
-  })
+  var styleField = createField(
+    {
+      left: 420,
+      top: this.windowSize - 215,
+      width: this.columnWidth,
+      height: 150
+    },
+    remember == 0 ? '' : getOption('style', '', this.service)
+  );
   view.addSubview(styleField);
+  viewElements.push({
+    key: 'style',
+    type: 'input',
+    component: styleField
+  });
 
   var checkbox = createCheck(
     'Remember my options',
     remember,
     {
       left: 420,
-      top: this.windowSize - 315,
+      top: this.windowSize - 265,
       width: this.columnWidth,
       height: 25
     }
   );
   view.addSubview(checkbox);
+  viewElements.push({
+    key: 'remember',
+    type: 'input',
+    component: checkbox
+  });
+
+  var previewButton = createButton(
+    'Preview',
+    {
+      left: 415,
+      top: this.windowSize - 315,
+      width: 100,
+      height: 25
+    }
+  );
+  [previewButton setCOSJSTargetFunction: function (sender) {
+    var values = handleButtonAction(viewElements, self.service);
+
+    if (values) {
+      self.previewMap(values, context);
+    }
+  }];
+  view.addSubview(previewButton);
+
+  var generateButton = createButton(
+    'Generate',
+    {
+      left: 525,
+      top: this.windowSize - 315,
+      width: 100,
+      height: 25
+    }
+  );
+  [generateButton setCOSJSTargetFunction: function (sender) {
+    var values = handleButtonAction(viewElements, self.service);
+
+    if (values) {
+      self.generateMap(values, context, window);
+    }
+  }];
+  view.addSubview(generateButton);
+  [window setDefaultButtonCell: [generateButton cell]];
 
   var webView = createWebView('google.html', context);
   view.addSubview(webView);
 
   [[window contentView] addSubview: view];
+
+  [addressField setNextKeyView: zoomSelect];
+  [zoomSelect setNextKeyView: typeSelect];
+  [typeSelect setNextKeyView: styleField];
+  [styleField setNextKeyView: checkbox];
+}
+
+GoogleMap.prototype.generateMap = function (values, context, window) {
+  var layer = context.selection[0];
+  var layerSizes = layer.frame();
+  var imageUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + encodeURIComponent(values.address) + '&zoom=' + values.zoom + '&size=' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '&maptype=' + values.type + '&scale=2' + this.parseStyle(values.style, context) + '&key=' + this.apiKey;
+
+  fillLayerWithImage(imageUrl, layer, context);
+  window.close();
+}
+
+GoogleMap.prototype.previewMap = function (values, context) {
+  console.log('PREVIEW MAP');
 }
 
 /**

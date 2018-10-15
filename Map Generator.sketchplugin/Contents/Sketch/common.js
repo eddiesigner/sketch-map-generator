@@ -1,4 +1,4 @@
-var pluginIdentifier = "io.eduardogomez.sketch.map-generator";
+var pluginIdentifier = 'io.eduardogomez.sketch.map-generator';
 var app = NSApplication.sharedApplication();
 
 /**
@@ -8,7 +8,7 @@ var app = NSApplication.sharedApplication();
  */
 function checkCount (context) {
   if (context.selection.count() != 1) {
-    app.displayDialog_withTitle("You have to select 1 shape layer.", "Wrong shape layer selection");
+    app.displayDialog_withTitle('You have to select 1 shape layer.', 'Wrong shape layer selection');
     return false;
   }
 
@@ -27,12 +27,12 @@ function checkLayerType (context) {
     var edited = layer.edited;
 
     if (edited == undefined) {
-      app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
+      app.displayDialog_withTitle('Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
       return false;
     }
   } else {
     if ([layer class] != MSShapeGroup) {
-      app.displayDialog_withTitle("Your selection was a “" + [layer name] + "”, that is not a shape layer. Please select a shape layer.", "Shape layer only");
+      app.displayDialog_withTitle('Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
       return false;
     }
   }
@@ -46,14 +46,9 @@ function checkLayerType (context) {
  * @param  {COSAlertWindow} dialog   
  * @return {Boolean}          
  */
-function checkSettings (settings, dialog) {
-  if (!settings) {
-    return false;
-  }
-
+function checkSettings (settings) {
   if (settings.address.length() === 0) {
     app.displayDialog_withTitle('Please enter a valid address.', 'Invalid address');
-    dialog.runModal();
     return false;
   }
 
@@ -88,10 +83,10 @@ function createLabel (text, rect) {
   return label;
 }
 
-function createField (rect) {
+function createField (rect, value) {
   var field = [[NSTextField alloc] initWithFrame: NSMakeRect(rect.left, rect.top, rect.width, rect.height)];
 
-  [field setStringValue: ""];
+  [field setStringValue: value];
 
   return field;
 }
@@ -132,20 +127,13 @@ function createCheck (title, checked, rect) {
   return checkbox;
 }
 
-/**
- * Fills the zoom level arrays with the data passed.
- * @param  {Array} zoomLevels 
- * @param  {Integer} minZoom    
- * @param  {Integer} maxZoom     
- */
-function makeZoomLevels (zoomLevels, minZoom, maxZoom) {
-  if (zoomLevels.length > 0) {
-    return;
-  }
+function createButton (title, rect) {
+  var button = NSButton.alloc().initWithFrame(NSMakeRect(rect.left, rect.top, rect.width, rect.height));
 
-  for (var x = minZoom; x <= maxZoom; x++) {
-    zoomLevels.push(x.toString());
-  }
+  button.setBezelStyle(1);
+  button.setTitle(title);
+
+  return button;
 }
 
 function createWebView (url, context) {
@@ -162,31 +150,39 @@ function createWebView (url, context) {
 }
 
 /**
- * Gets all the settings values.
- * @param  {COSAlertWindow} dialog       
- * @param  {Array} viewElements 
- * @param  {String} service      
- * @param  {String} responseCode 
- * @return {Object}              
+ * Fills the zoom level arrays with the data passed.
+ * @param  {Array} zoomLevels 
+ * @param  {Integer} minZoom    
+ * @param  {Integer} maxZoom     
  */
-function handleAlertResponse (dialog, viewElements, service, responseCode) {
-  saveData(dialog, viewElements, service);
-
-  if (responseCode == "1000") {
-    var result = {};
-
-    for (var x = 0; x < viewElements.length; x++) {
-      if (viewElements[x].type === 'select') {
-        result[viewElements[x].key] = dialog.viewAtIndex(viewElements[x].index).titleOfSelectedItem();
-      } else if (viewElements[x].type === 'input') {
-        result[viewElements[x].key] = dialog.viewAtIndex(viewElements[x].index).stringValue();
-      }
-    }
-
-    return result;
+function makeZoomLevels(zoomLevels, minZoom, maxZoom) {
+  if (zoomLevels.length > 0) {
+    return;
   }
 
-  return null;
+  for (var x = minZoom; x <= maxZoom; x++) {
+    zoomLevels.push(x.toString());
+  }
+}
+
+function handleButtonAction (viewElements, service) {
+  saveData(viewElements, service);
+
+  var result = {};
+
+  for (var x = 0; x < viewElements.length; x++) {
+    if (viewElements[x].type === 'select') {
+      result[viewElements[x].key] = viewElements[x].component.titleOfSelectedItem();
+    } else if (viewElements[x].type === 'input') {
+      result[viewElements[x].key] = viewElements[x].component.stringValue();
+    }
+  }
+
+  if (!checkSettings(result)) {
+    return null;
+  }
+
+  return result;
 }
 
 /**
@@ -223,7 +219,7 @@ function fillLayerWithImage (imageUrl, layer, context) {
   
   fill.setPatternFillType(1);
 
-  context.document.showMessage("Map generated!");
+  context.document.showMessage('Map generated!');
 }
 
 /**
@@ -250,10 +246,10 @@ function getGeoCode (address, context) {
     hitsPerPage: 1
   });
 
-  var dataParsed = networkRequest(["-X", "POST", "https://places-dsn.algolia.net/1/places/query", "-H", "Content-Type: application/json; charset=utf-8", "-d", data]);
+  var dataParsed = networkRequest(['-X', 'POST', 'https://places-dsn.algolia.net/1/places/query', '-H', 'Content-Type: application/json; charset=utf-8', '-d', data]);
 
   if (dataParsed.hits.length === 0) {
-    context.document.showMessage("Address not found, please try another one.");
+    context.document.showMessage('Address not found, please try another one.');
     return;
   }
 
@@ -264,17 +260,16 @@ function getGeoCode (address, context) {
 }
 
 /**
- * Saves the address settings.
- * @param  {COSAlertWindow} dialog       
+ * Saves the address settings.    
  * @param  {Array} viewElements 
  * @param  {String} service      
  */
-function saveData (dialog, viewElements, service) {
+function saveData (viewElements, service) {
   for (var x = 0; x < viewElements.length; x++) {
     if (viewElements[x].type === 'select') {
-      setPreferences(service + '.' + viewElements[x].key, dialog.viewAtIndex(viewElements[x].index).indexOfSelectedItem());
+      setPreferences(service + '.' + viewElements[x].key, viewElements[x].component.indexOfSelectedItem());
     } else if (viewElements[x].type === 'input') {
-      setPreferences(service + '.' + viewElements[x].key, dialog.viewAtIndex(viewElements[x].index).stringValue());
+      setPreferences(service + '.' + viewElements[x].key, viewElements[x].component.stringValue());
     }
   }
 }
@@ -339,7 +334,7 @@ function setPreferences(key, value) {
  */
 function networkRequest(args) {
   var task = NSTask.alloc().init();
-  task.setLaunchPath("/usr/bin/curl");
+  task.setLaunchPath('/usr/bin/curl');
   task.setArguments(args);
 
   var outputPipe = [NSPipe pipe];
@@ -351,12 +346,11 @@ function networkRequest(args) {
   var parsed = tryParseJSON(responseString);
 
   if (!parsed) {
-    log("Error invoking curl");
-    log("args:");
+    log('Error invoking curl');
+    log('args:');
     log(args);
-    log("responseString");
     log(responseString);
-    throw "Error communicating with server";
+    throw 'Error communicating with server';
   }
 
   return parsed;
@@ -371,7 +365,7 @@ function tryParseJSON(jsonString) {
   try {
     var o = JSON.parse(jsonString);
 
-    if (o && typeof o === "object" && o !== null) {
+    if (o && typeof o === 'object' && o !== null) {
       return o;
     }
   }
