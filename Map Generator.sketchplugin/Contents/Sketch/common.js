@@ -165,8 +165,10 @@ function makeZoomLevels(zoomLevels, minZoom, maxZoom) {
   }
 }
 
-function handleButtonAction (viewElements, service) {
-  saveData(viewElements, service);
+function handleButtonAction (viewElements, service, shouldSave) {
+  if (shouldSave) {
+    saveData(viewElements, service);
+  }
 
   var result = {};
 
@@ -372,4 +374,31 @@ function tryParseJSON(jsonString) {
   catch (e) { }
 
   return false;
+}
+
+function createStringArray(arr, prop) {
+  var result = [];
+  for (var i = 0; i < arr.length; i += 1) {
+    result.push(arr[i][prop]);
+  }
+  return result;
+}
+
+function createMapJavascriptFile(options, context) {
+  var addressInfo = {
+    address: '' + options.address,
+    zoom: '' + options.zoom,
+    type: '' + options.type,
+    style: '' + options.style.trim().replace(/\n|\r/g, '').replace(/\t/g, '').replace(/\s{2,}/g, '')
+  }
+  var jsContent = 'var mapData = ' + JSON.stringify(addressInfo) + ';';
+  var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
+  var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/mapData.js';
+
+  [jsContentNSSString 
+    writeToFile: jsContentFilePath 
+    atomically: true 
+    encoding: NSUTF8StringEncoding 
+    error: nil
+  ];
 }

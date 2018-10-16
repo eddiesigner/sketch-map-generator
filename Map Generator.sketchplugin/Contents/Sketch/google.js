@@ -191,7 +191,7 @@ GoogleMap.prototype.buildInterface = function (window, context) {
     }
   );
   [previewButton setCOSJSTargetFunction: function (sender) {
-    var values = handleButtonAction(viewElements, self.service);
+    var values = handleButtonAction(viewElements, self.service, false);
 
     if (values) {
       self.previewMap(values, context);
@@ -209,7 +209,7 @@ GoogleMap.prototype.buildInterface = function (window, context) {
     }
   );
   [generateButton setCOSJSTargetFunction: function (sender) {
-    var values = handleButtonAction(viewElements, self.service);
+    var values = handleButtonAction(viewElements, self.service, true);
 
     if (values) {
       self.generateMap(values, context, window);
@@ -239,7 +239,7 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
 }
 
 GoogleMap.prototype.previewMap = function (values, context) {
-  console.log('PREVIEW MAP');
+  createMapJavascriptFile(values, context);
 }
 
 /**

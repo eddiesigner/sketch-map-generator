@@ -20,6 +20,7 @@
       padding: 0;
     }
   </style>
+  <script src="mapData.js"></script>
 </head>
 
 <body>
@@ -27,9 +28,25 @@
   <script>
     var map;
     function initMap() {
-      map = new google.maps.Map(document.getElementById('map'), {
-        center: { lat: -34.397, lng: 150.644 },
-        zoom: 8
+      var geocoder = new google.maps.Geocoder();
+
+      geocoder.geocode({
+        'address': mapData.address
+      }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          var myOptions = {
+            center: results[0].geometry.location,
+            zoom: parseInt(mapData.zoom),
+            mapTypeId: mapData.type,
+            styles: mapData.style
+          }
+          map = new google.maps.Map(document.getElementById("map"), myOptions);
+
+          var marker = new google.maps.Marker({
+            map: map,
+            position: results[0].geometry.location
+          });
+        }
       });
     }
   </script>
