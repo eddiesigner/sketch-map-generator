@@ -376,22 +376,14 @@ function tryParseJSON(jsonString) {
   return false;
 }
 
-function createStringArray(arr, prop) {
-  var result = [];
-  for (var i = 0; i < arr.length; i += 1) {
-    result.push(arr[i][prop]);
-  }
-  return result;
-}
-
 function createMapJavascriptFile(options, context) {
   var addressInfo = {
     address: '' + options.address,
     zoom: '' + options.zoom,
     type: '' + options.type,
-    style: '' + options.style.trim().replace(/\n|\r/g, '').replace(/\t/g, '').replace(/\s{2,}/g, '')
+    style: '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '')
   }
-  var jsContent = 'var mapData = ' + JSON.stringify(addressInfo) + ';';
+  var jsContent = 'window.mapData = ' + JSON.stringify(addressInfo) + ';';
   var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
   var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/mapData.js';
 

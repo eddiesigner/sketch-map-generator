@@ -13,6 +13,7 @@ GoogleMap.prototype.mapTypes = [
   'hybrid',
   'terrain'
 ];
+GoogleMap.prototype.webView = null;
 GoogleMap.prototype.windowSize = 800;
 GoogleMap.prototype.spacing = 40;
 GoogleMap.prototype.columnWidth = 340;
@@ -218,8 +219,8 @@ GoogleMap.prototype.buildInterface = function (window, context) {
   view.addSubview(generateButton);
   [window setDefaultButtonCell: [generateButton cell]];
 
-  var webView = createWebView('google.html', context);
-  view.addSubview(webView);
+  this.webView = createWebView('google.html', context);
+  view.addSubview(this.webView);
 
   [[window contentView] addSubview: view];
 
@@ -240,6 +241,7 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
 
 GoogleMap.prototype.previewMap = function (values, context) {
   createMapJavascriptFile(values, context);
+  this.webView.reload(nil);
 }
 
 /**
@@ -271,7 +273,6 @@ GoogleMap.prototype.parseStyle = function (jsonString, context) {
   var json;
   var items = [];
   var separator = '%7C';
-  var parameters = '';
 
   try {
     json = JSON.parse(jsonString);
