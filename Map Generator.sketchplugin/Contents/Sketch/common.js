@@ -1,5 +1,6 @@
 var pluginIdentifier = 'io.eduardogomez.sketch.map-generator';
 var app = NSApplication.sharedApplication();
+var inputsElements = [];
 
 /**
  * Checks if there is something selected.
@@ -136,7 +137,9 @@ function createButton (title, rect) {
   return button;
 }
 
-function createWebView (url, context) {
+function createWebView (url, context, inputs, service) {
+  inputsElements = inputs;
+
   var webviewFolder = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/';
   var webviewHtmlFile = webviewFolder + url;
   var requestUrl = [NSURL fileURLWithPath: webviewHtmlFile];
@@ -146,7 +149,48 @@ function createWebView (url, context) {
   webView.initWithFrame(NSMakeRect(0, 0, 800, 450));
   webView.mainFrame().loadRequest(urlRequest);
 
+  createWebViewTitleDelegate(webView);
+
   return webView;
+}
+
+function createWebViewTitleDelegate(webView) {
+  var className = 'MochaJSDelegate_DynamicClass_MapUI_WebviewTitleDelegate' + NSUUID.UUID().UUIDString();
+
+  var delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(
+    className,
+    NSObject
+  );
+  delegateClassDesc.registerClass();
+
+  delegateClassDesc.addInstanceMethodWithSelector_function_(
+    NSSelectorFromString('webView:didReceiveTitle:forFrame:'),
+    function (sender, title) {
+      var mapInfo = title.split('$');
+      
+      if (mapInfo[0] == 'mapinfo') {
+        var values = {
+          address: mapInfo[1],
+          zoom: mapInfo[2]
+        }
+
+        updateInputsValues(values);
+      }
+    }.bind(this)
+  );
+
+  webView.setFrameLoadDelegate_(
+    NSClassFromString(className).new()
+  );
+}
+
+function updateInputsValues (values) {
+  inputsElements[0].component.setStringValue(values.address);
+
+  var zoomIndex = inputsElements[1].component.indexOfItemWithTitle(values.zoom);
+  if (zoomIndex >= 0) {
+    inputsElements[1].component.selectItemAtIndex(zoomIndex);
+  }
 }
 
 /**
@@ -185,6 +229,25 @@ function handleButtonAction (viewElements, service, shouldSave) {
   }
 
   return result;
+}
+
+function createMapJavascriptFile(options, context) {
+  var addressInfo = {
+    address: '' + options.address,
+    zoom: '' + options.zoom,
+    type: '' + options.type,
+    style: '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '')
+  }
+  var jsContent = 'window.mapData = ' + JSON.stringify(addressInfo) + ';';
+  var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
+  var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/mapData.js';
+
+  [jsContentNSSString 
+    writeToFile: jsContentFilePath 
+    atomically: true 
+    encoding: NSUTF8StringEncoding 
+    error: nil
+  ];
 }
 
 /**
@@ -283,7 +346,7 @@ function saveData (viewElements, service) {
  * @param  {String} service      
  * @return {String}              
  */
-function getOption(key, defaultValue, service) {
+function getOption (key, defaultValue, service) {
   return getPreferences(service + '.' + key, defaultValue);
 }
 
@@ -293,7 +356,7 @@ function getOption(key, defaultValue, service) {
  * @param  {String | Integer} defaultValue 
  * @return {String}              
  */
-function getPreferences(key, defaultValue) {
+function getPreferences (key, defaultValue) {
   var userDefaults = NSUserDefaults.standardUserDefaults();
 
   if (!userDefaults.dictionaryForKey(pluginIdentifier)) {
@@ -313,7 +376,7 @@ function getPreferences(key, defaultValue) {
  * @param {String} key   
  * @param {String} value 
  */
-function setPreferences(key, value) {
+function setPreferences (key, value) {
   var userDefaults = NSUserDefaults.standardUserDefaults();
   var preferences;
 
@@ -334,7 +397,7 @@ function setPreferences(key, value) {
  * @param {Array} args 
  * @return {Json Object} 
  */
-function networkRequest(args) {
+function networkRequest (args) {
   var task = NSTask.alloc().init();
   task.setLaunchPath('/usr/bin/curl');
   task.setArguments(args);
@@ -363,7 +426,7 @@ function networkRequest(args) {
  * @param {String} jsonString 
  * @return {Object} 
  */
-function tryParseJSON(jsonString) {
+function tryParseJSON (jsonString) {
   try {
     var o = JSON.parse(jsonString);
 
@@ -374,23 +437,4 @@ function tryParseJSON(jsonString) {
   catch (e) { }
 
   return false;
-}
-
-function createMapJavascriptFile(options, context) {
-  var addressInfo = {
-    address: '' + options.address,
-    zoom: '' + options.zoom,
-    type: '' + options.type,
-    style: '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '')
-  }
-  var jsContent = 'window.mapData = ' + JSON.stringify(addressInfo) + ';';
-  var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
-  var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/mapData.js';
-
-  [jsContentNSSString 
-    writeToFile: jsContentFilePath 
-    atomically: true 
-    encoding: NSUTF8StringEncoding 
-    error: nil
-  ];
 }

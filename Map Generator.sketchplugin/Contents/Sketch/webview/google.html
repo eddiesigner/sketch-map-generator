@@ -45,7 +45,7 @@
         mapElement.appendChild(titleElement);
       }
 
-      function initMap() {
+      function initMap () {
         if (mapData) {
           var geocoder = new google.maps.Geocoder();
           var infoWindow = new google.maps.InfoWindow();
@@ -58,6 +58,8 @@
                 center: results[0].geometry.location,
                 zoom: parseInt(mapData.zoom),
                 mapTypeId: mapData.type,
+                streetViewControl: false,
+                mapTypeControl: false,
                 styles: JSON.parse(mapData.style)
               };
 
@@ -78,7 +80,7 @@
         }
       }
 
-      function geocodeLatLng(geocoder, map, infowindow, marker) {
+      function geocodeLatLng (geocoder, map, infowindow, marker) {
         var latlng = {
           lat: marker.getPosition().lat(),
           lng: marker.getPosition().lng()

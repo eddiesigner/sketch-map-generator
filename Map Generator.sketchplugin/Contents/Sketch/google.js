@@ -219,7 +219,7 @@ GoogleMap.prototype.buildInterface = function (window, context) {
   view.addSubview(generateButton);
   [window setDefaultButtonCell: [generateButton cell]];
 
-  this.webView = createWebView('google.html', context);
+  this.webView = createWebView('google.html', context, viewElements, this.service);
   view.addSubview(this.webView);
 
   [[window contentView] addSubview: view];
