@@ -236,7 +236,7 @@ function createMapJavascriptFile(options, context) {
     address: '' + options.address,
     zoom: '' + options.zoom,
     type: '' + options.type,
-    style: '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '')
+    style: options.style ? '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '') : ''
   }
   var jsContent = 'window.mapData = ' + JSON.stringify(addressInfo) + ';';
   var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];

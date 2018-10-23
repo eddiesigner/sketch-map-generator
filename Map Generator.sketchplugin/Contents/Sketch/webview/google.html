@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <meta charset='utf-8'>
     <title>Google Maps</title>
     <meta name='viewport' content='initial-scale=1.0'>
-    <meta charset='utf-8'>
     <style>
       html, body {
         height: 100%;
@@ -37,6 +37,10 @@
       var map;
       var mapElement = document.getElementById('map');
       var mapData = window.mapData;
+      var mapInfoObject = {
+        address: '',
+        zoom: ''
+      };
 
       if (!mapData) {
         var titleElement = document.createElement('h1');
@@ -75,6 +79,15 @@
               google.maps.event.addListener(marker, 'dragend', function (e) {
                 geocodeLatLng(geocoder, map, infoWindow, marker);
               });
+
+              map.addListener('zoom_changed', function() {
+                if (mapInfoObject.address == '') {
+                  mapInfoObject.address = mapData.address;
+                }
+
+                mapInfoObject.zoom = map.getZoom();
+                document.title = getMapInfoAsString();
+              });
             }
           });
         }
@@ -89,10 +102,10 @@
         geocoder.geocode({ 'location': latlng }, function (results, status) {
           if (status === 'OK') {
             if (results[0]) {
-              var mapInfo = 'mapinfo$' + results[0].formatted_address + '$' + map.zoom;
-
-              document.title = mapInfo;
-              infowindow.setContent(mapInfo);
+              mapInfoObject.address = results[0].formatted_address;
+              mapInfoObject.zoom = map.zoom;
+              document.title = getMapInfoAsString();
+              infowindow.setContent('Address: ' + mapInfoObject.address + '. Zoom: ' + mapInfoObject.zoom);
             } else {
               infowindow.setContent('No results');
             }
@@ -102,6 +115,10 @@
 
           infowindow.open(map, marker);
         });
+      }
+
+      function getMapInfoAsString () {
+        return 'mapinfo$' + mapInfoObject.address + '$' + mapInfoObject.zoom;
       }
     </script>
     <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw&callback=initMap'
