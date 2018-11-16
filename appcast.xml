@@ -94,5 +94,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.5.zip" sparkle:version="2.0.5" />
       </item>
+      <item>
+        <title>Version 2.0.6</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>I repleaced the way to get the coordinates from an address, that means Mapbox maps should work now.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.6.zip" sparkle:version="2.0.6" />
+      </item>
   </channel>
 </rss>
