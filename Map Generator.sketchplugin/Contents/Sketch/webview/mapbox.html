@@ -4,8 +4,9 @@
     <meta charset='utf-8' />
     <title>Mapbox</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.50.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
     <style>
       body {
         margin: 0;
@@ -34,14 +35,15 @@
         margin: -10px auto 0;
       }
     </style>
-    <script src='mapData.js'></script>
+    <script src='mapbox.js'></script>
   </head>
   <body>
     <div id='map'></div>
     <script>
       var map;
       var mapElement = document.getElementById('map');
-      var mapData = window.mapData;
+      var mapData = window.mapbox;
+      var apiKey = 'pk.eyJ1IjoiZWRkaWVzaWduZXIiLCJhIjoiY2pvbzZodWIyMWVrdjNrbzhkZmJ6MTFlYSJ9.VIDcCZrVo7y6pXCKOSwnBQ';
       var mapInfoObject = {
         address: '',
         zoom: ''
@@ -57,16 +59,77 @@
       }
 
       function initMap () {
-        mapboxgl.accessToken = 'pk.eyJ1IjoiY3JhZnRib3QiLCJhIjoiY2o2ZmRucDVzMmg2MjMzbHZqMzJtZTY2bSJ9.Hc2FEbzqKBnyWRK7mHtCAQ';
-        var map = new mapboxgl.Map({
-          container: 'map', // container id
-          style: 'mapbox://styles/mapbox/streets-v9', // stylesheet location
-          center: [-74.50, 40], // starting position [lng, lat]
-          zoom: 9 // starting zoom
+        $.ajax({
+          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + mapData.address + '.json?access_token=' + apiKey + '&limit=1',
+          success: function (result) {
+            if (result.features.length > 0) {
+              var lat = result.features[0].center[1];
+              var lng = result.features[0].center[0];
+              var options = {
+                container: 'map',
+                style: 'mapbox://styles/mapbox/' + mapData.type,
+                center: [lng, lat],
+                zoom: parseInt(mapData.zoom)
+              };
+
+              mapboxgl.accessToken = apiKey;
+              map = new mapboxgl.Map(options);
+
+              map.addControl(new mapboxgl.NavigationControl({
+                showCompass: false
+              }), 'bottom-right');
+
+              map.on('zoomend', function () {
+                if (mapInfoObject.address == '') {
+                  mapInfoObject.address = mapData.address;
+                }
+
+                mapInfoObject.zoom = map.getZoom();
+                document.title = getMapInfoAsString();
+              });
+
+              var marker = new mapboxgl.Marker({
+                draggable: true
+              })
+                .setLngLat([lng, lat])
+                .addTo(map);
+
+              marker.on('dragend', function () {
+                geocodeLatLng(map, marker.getLngLat(), marker);
+              });
+            }
+          }
         });
       }
 
-      function getMapInfoAsString() {
+      function geocodeLatLng (map, coordinates, marker) {
+        var popup = new mapboxgl.Popup({ offset: 25 });
+
+        $.ajax({
+          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + coordinates.lng + ',' + coordinates.lat + '.json?access_token=' + apiKey + '&limit=1',
+          success: function (result) {
+            if (result.features.length > 0) {
+              mapInfoObject.address = result.features[0].place_name;
+              mapInfoObject.zoom = map.getZoom();
+
+              document.title = getMapInfoAsString();
+
+              popup.setText('Address: ' + mapInfoObject.address + '. Zoom: ' + mapInfoObject.zoom);
+            } else {
+              popup.setText('No results');
+            }
+          },
+          error: function (e) {
+            popup.setText('Error');
+          },
+          complete: function () {
+            marker.setPopup(popup)
+              .togglePopup();
+          }
+        });
+      }
+
+      function getMapInfoAsString () {
         return 'mapinfo$' + mapInfoObject.address + '$' + mapInfoObject.zoom;
       }
     </script>

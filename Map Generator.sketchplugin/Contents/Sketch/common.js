@@ -137,11 +137,11 @@ function createButton (title, rect) {
   return button;
 }
 
-function createWebView (url, context, inputs, service) {
+function createWebView(service, context, inputs) {
   inputsElements = inputs;
 
   var webviewFolder = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/';
-  var webviewHtmlFile = webviewFolder + url;
+  var webviewHtmlFile = webviewFolder + service + '.html';
   var requestUrl = [NSURL fileURLWithPath: webviewHtmlFile];
   var urlRequest = [NSMutableURLRequest requestWithURL: requestUrl];
   var webView = WebView.new();
@@ -231,16 +231,16 @@ function handleButtonAction (viewElements, service, shouldSave) {
   return result;
 }
 
-function createMapJavascriptFile(options, context) {
+function createMapJavascriptFile(service, options, context) {
   var addressInfo = {
     address: '' + options.address,
     zoom: '' + options.zoom,
     type: '' + options.type,
     style: options.style ? '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '') : ''
   }
-  var jsContent = 'window.mapData = ' + JSON.stringify(addressInfo) + ';';
+  var jsContent = 'window.' + service + ' = ' + JSON.stringify(addressInfo) + ';';
   var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
-  var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/mapData.js';
+  var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/' + service + '.js';
 
   [jsContentNSSString 
     writeToFile: jsContentFilePath 

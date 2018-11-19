@@ -219,7 +219,7 @@ GoogleMap.prototype.buildInterface = function (window, context) {
   view.addSubview(generateButton);
   [window setDefaultButtonCell: [generateButton cell]];
 
-  this.webView = createWebView('google.html', context, viewElements, this.service);
+  this.webView = createWebView(this.service, context, viewElements);
   view.addSubview(this.webView);
 
   [[window contentView] addSubview: view];
@@ -241,7 +241,7 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
 }
 
 GoogleMap.prototype.previewMap = function (values, context) {
-  createMapJavascriptFile(values, context);
+  createMapJavascriptFile(this.service, values, context);
   this.webView.reload(nil);
 }
 

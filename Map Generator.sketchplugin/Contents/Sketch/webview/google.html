@@ -29,14 +29,14 @@
         margin: 0 auto;
       }
     </style>
-    <script src='mapData.js'></script>
+    <script src='google.js'></script>
   </head>
   <body>
     <div id='map'></div>
     <script>
       var map;
       var mapElement = document.getElementById('map');
-      var mapData = window.mapData;
+      var mapData = window.google;
       var mapInfoObject = {
         address: '',
         zoom: ''
@@ -104,7 +104,9 @@
             if (results[0]) {
               mapInfoObject.address = results[0].formatted_address;
               mapInfoObject.zoom = map.zoom;
+
               document.title = getMapInfoAsString();
+
               infowindow.setContent('Address: ' + mapInfoObject.address + '. Zoom: ' + mapInfoObject.zoom);
             } else {
               infowindow.setContent('No results');

@@ -2,7 +2,7 @@
 
 function MapboxMap () {}
 
-MapboxMap.prototype.apiKey     = 'pk.eyJ1IjoiY3JhZnRib3QiLCJhIjoiY2o2ZmRucDVzMmg2MjMzbHZqMzJtZTY2bSJ9.Hc2FEbzqKBnyWRK7mHtCAQ';
+MapboxMap.prototype.apiKey = 'pk.eyJ1IjoiZWRkaWVzaWduZXIiLCJhIjoiY2pvbzZodWIyMWVrdjNrbzhkZmJ6MTFlYSJ9.VIDcCZrVo7y6pXCKOSwnBQ';
 MapboxMap.prototype.service    = 'mapbox';
 MapboxMap.prototype.minZoom    = 0;
 MapboxMap.prototype.maxZoom    = 20;
@@ -192,7 +192,7 @@ MapboxMap.prototype.buildInterface = function (window, context) {
   view.addSubview(generateButton);
   [window setDefaultButtonCell: [generateButton cell]];
 
-  this.webView = createWebView('mapbox.html', context, viewElements, this.service);
+  this.webView = createWebView(this.service, context, viewElements);
   view.addSubview(this.webView);
 
   [[window contentView] addSubview: view];
@@ -214,6 +214,6 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
 }
 
 MapboxMap.prototype.previewMap = function (values, context) {
-  createMapJavascriptFile(values, context);
+  createMapJavascriptFile(this.service, values, context);
   this.webView.reload(nil);
 }
