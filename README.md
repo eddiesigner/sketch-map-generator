@@ -1,13 +1,11 @@
-# Map Generator 2.0 - Sketch App Plugin
+# Map Generator 3.0 - Sketch App Plugin
 
 [![Backers on Open Collective](https://opencollective.com/sketch-map-generator/backers/badge.svg)](#backers)
  [![Sponsors on Open Collective](https://opencollective.com/sketch-map-generator/sponsors/badge.svg)](#sponsors) 
 
 Map Generator better than ever!
 
-Design beautiful map interfaces, mobile applications and more in less time with Map Generator 2.0. Now powered by Google and Mapbox.
-
-In this update, Map Generator 2.0 has been build from scratch. We’ve introduced a new map provider (Mapbox) and a few other enhancements to boost your creation process.
+Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.0. Now powered by Google and Mapbox.
 
 ### Mapbox
 
@@ -37,10 +35,11 @@ Voila! Your shape will be filled with a map.
 
 ## What’s new?
 
-* Google Maps and Mapbox support
-* Mapbox supports map types: https://www.mapbox.com/api-documentation/#styles
-* Build it to suppport more map services in the future
-* Sketch 52 is supported now
+* 🔥 Map preview! Now you can see a live preview before generating a map.
+* 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish.
+* 💅🏼 A whole new UI.
+* 🌓 Dark mode support.
+* 🛠 Improvements and bugfixes.
 * Thanks to [Guillermo](https://guillermoseis.com/) for the previews and the logo!
 
 ## Installation

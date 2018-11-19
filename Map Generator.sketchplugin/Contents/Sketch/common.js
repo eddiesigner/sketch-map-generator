@@ -43,8 +43,7 @@ function checkLayerType (context) {
 
 /**
  * Checks if there are valid settings and if the user wrote an address.
- * @param  {Object} settings 
- * @param  {COSAlertWindow} dialog   
+ * @param  {Object} settings   
  * @return {Boolean}          
  */
 function checkSettings (settings) {
@@ -56,6 +55,12 @@ function checkSettings (settings) {
   return true;
 }
 
+/**
+ * Builds the main window.
+ * @param {Number} size 
+ * @param {String} title 
+ * @return {NSWindow}
+ */
 function buildWindow (size, title) {
   var window = [[[NSWindow alloc]
         initWithContentRect: NSMakeRect(0, 0, size, size)
@@ -71,6 +76,12 @@ function buildWindow (size, title) {
   return window;
 }
 
+/**
+ * Creates a label text.
+ * @param {String} text 
+ * @param {Object} rect 
+ * @return {NSTextField}
+ */
 function createLabel (text, rect) {
   var label = [[NSTextField alloc] init];
 
@@ -84,6 +95,12 @@ function createLabel (text, rect) {
   return label;
 }
 
+/**
+ * Creates a text field.
+ * @param {Object} rect 
+ * @param {String} value 
+ * @return {NSTextField}
+ */
 function createField (rect, value) {
   var field = [[NSTextField alloc] initWithFrame: NSMakeRect(rect.left, rect.top, rect.width, rect.height)];
 
@@ -93,7 +110,7 @@ function createField (rect, value) {
 }
 
 /**
- * Creates a select box with options.
+ * Creates a select box with given options.
  * @param  {Array} options       
  * @param  {Integer} selectedIndex 
  * @param  {Integer} width         
@@ -115,6 +132,7 @@ function createSelect (options, selectedIndex, rect) {
  * Creates a checkbox.
  * @param  {String} title   
  * @param  {Integer} checked 
+ * @param {Object} rect
  * @return {NSButton}         
  */
 function createCheck (title, checked, rect) {
@@ -128,6 +146,12 @@ function createCheck (title, checked, rect) {
   return checkbox;
 }
 
+/**
+ * Creates a button.
+ * @param {String} title 
+ * @param {Object} rect 
+ * @return {NSButton}
+ */
 function createButton (title, rect) {
   var button = NSButton.alloc().initWithFrame(NSMakeRect(rect.left, rect.top, rect.width, rect.height));
 
@@ -137,6 +161,13 @@ function createButton (title, rect) {
   return button;
 }
 
+/**
+ * Creates a webview.
+ * @param {String} service 
+ * @param {Sketch context} context 
+ * @param {Array} inputs 
+ * @return {WebView}
+ */
 function createWebView(service, context, inputs) {
   inputsElements = inputs;
 
@@ -154,15 +185,18 @@ function createWebView(service, context, inputs) {
   return webView;
 }
 
+/**
+ * Creates a "listener" to handle the map data when the user interacts with the webview.
+ * @param {WebView} webView 
+ */
 function createWebViewTitleDelegate(webView) {
   var className = 'MochaJSDelegate_DynamicClass_MapUI_WebviewTitleDelegate' + NSUUID.UUID().UUIDString();
-
   var delegateClassDesc = MOClassDescription.allocateDescriptionForClassWithName_superclass_(
     className,
     NSObject
   );
-  delegateClassDesc.registerClass();
 
+  delegateClassDesc.registerClass();
   delegateClassDesc.addInstanceMethodWithSelector_function_(
     NSSelectorFromString('webView:didReceiveTitle:forFrame:'),
     function (sender, title) {
@@ -184,6 +218,10 @@ function createWebViewTitleDelegate(webView) {
   );
 }
 
+/**
+ * Upadtes the address and the zoom level.
+ * @param {Object} values 
+ */
 function updateInputsValues (values) {
   inputsElements[0].component.setStringValue(values.address);
 
@@ -209,6 +247,13 @@ function makeZoomLevels(zoomLevels, minZoom, maxZoom) {
   }
 }
 
+/**
+ * Handles the "Generate" button click.
+ * @param {Array} viewElements 
+ * @param {String} service 
+ * @param {Boolean} shouldSave 
+ * @return {Object}
+ */
 function handleButtonAction (viewElements, service, shouldSave) {
   if (shouldSave) {
     saveData(viewElements, service);
@@ -231,6 +276,12 @@ function handleButtonAction (viewElements, service, shouldSave) {
   return result;
 }
 
+/**
+ * Creates a javascript file with the address settings which is used by the webview.
+ * @param {String} service 
+ * @param {Object} options 
+ * @param {Sketch context} context 
+ */
 function createMapJavascriptFile(service, options, context) {
   var addressInfo = {
     address: '' + options.address,
@@ -300,32 +351,7 @@ function getImage (url) {
 }
 
 /**
- * Gets the coordinates from a given location.
- * @param  {String} address 
- * @param  {Sketch context} context
- * @return {Object}         
- */
-function getGeoCode (address, context) {
-  var data = JSON.stringify({
-    query: decodeURIComponent(address),
-    hitsPerPage: 1
-  });
-
-  var dataParsed = networkRequest(['-X', 'POST', 'https://places-dsn.algolia.net/1/places/query', '-H', 'Content-Type: application/json; charset=utf-8', '-d', data]);
-
-  if (dataParsed.hits.length === 0) {
-    context.document.showMessage('Address not found, please try another one.');
-    return;
-  }
-
-  return {
-    lat: dataParsed.hits[0]._geoloc.lat,
-    lon: dataParsed.hits[0]._geoloc.lng
-  };
-}
-
-/**
- * Saves the address settings.    
+ * Saves the address settings.      
  * @param  {Array} viewElements 
  * @param  {String} service      
  */
@@ -390,35 +416,6 @@ function setPreferences (key, value) {
 
   userDefaults.setObject_forKey(preferences, pluginIdentifier);
   userDefaults.synchronize();
-}
-
-/**
- * Creates a network request using Curl and returns the fetched data.
- * @param {Array} args 
- * @return {Json Object} 
- */
-function networkRequest (args) {
-  var task = NSTask.alloc().init();
-  task.setLaunchPath('/usr/bin/curl');
-  task.setArguments(args);
-
-  var outputPipe = [NSPipe pipe];
-  [task setStandardOutput: outputPipe];
-  task.launch();
-
-  var responseData = [[outputPipe fileHandleForReading] readDataToEndOfFile];
-  var responseString = [[[NSString alloc] initWithData: responseData encoding: NSUTF8StringEncoding]];
-  var parsed = tryParseJSON(responseString);
-
-  if (!parsed) {
-    log('Error invoking curl');
-    log('args:');
-    log(args);
-    log(responseString);
-    throw 'Error communicating with server';
-  }
-
-  return parsed;
 }
 
 /**

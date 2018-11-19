@@ -22,6 +22,10 @@ MapboxMap.prototype.windowSize = 800;
 MapboxMap.prototype.spacing = 40;
 MapboxMap.prototype.columnWidth = 340;
 
+/**
+ * Creates the Mapbox service provider.
+ * @param  {Sketch context} context 
+ */
 MapboxMap.prototype.create = function (context) {
   if (!checkCount(context)) {
     return;
@@ -39,6 +43,11 @@ MapboxMap.prototype.create = function (context) {
   }
 };
 
+/**
+ * Builds the whole user interface.
+ * @param {NSWindow} window
+ * @param {Sketch context} context
+ */
 MapboxMap.prototype.buildInterface = function (window, context) {
   var remember = getOption('remember', 0, this.service);
   var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, this.windowSize, this.windowSize));
@@ -202,10 +211,16 @@ MapboxMap.prototype.buildInterface = function (window, context) {
   [typeSelect setNextKeyView: checkbox];
 }
 
+/**
+ * Generates the map image.
+ * @param {Object} values
+ * @param {Sketch context} context
+ * @param {NSWindow} window
+ */
 MapboxMap.prototype.generateMap = function (values, context, window) {
   var layer = context.selection[0];
   var layerSizes = layer.frame();
-  var position = getGeoCode(encodeURIComponent(values.address), context);
+  var position = this.getGeoCode(encodeURIComponent(values.address), context);
   var imageUrl = 'https://api.mapbox.com/styles/v1/mapbox/' + values.type + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + this.apiKey;
 
   fillLayerWithImage(imageUrl, layer, context);
@@ -213,7 +228,42 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
   window.close();
 }
 
+/**
+ * Generates the map preview.
+ * @param {Object} values
+ * @param {Sketch context} context
+ */
 MapboxMap.prototype.previewMap = function (values, context) {
   createMapJavascriptFile(this.service, values, context);
   this.webView.reload(nil);
+}
+
+/**
+ * Gets the coordinates from a given location.
+ * @param  {String} address 
+ * @param  {Sketch context} context
+ * @return {Object}         
+ */
+MapboxMap.prototype.getGeoCode = function (address, context) {
+  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + this.apiKey + '&limit=1';
+  var request = NSMutableURLRequest.new();
+
+  [request setHTTPMethod:@"GET"];
+  [request setURL:[NSURL URLWithString:url]];
+
+  var error = NSError.new();
+  var responseCode = null;
+  var oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:responseCode error:error];
+  var dataString = [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
+  var dataParsed = JSON.parse(dataString);
+
+  if (dataParsed.features.length === 0) {
+    context.document.showMessage("Address not found, please try another one.");
+    return;
+  }
+
+  return {
+    lat: dataParsed.features[0].center[1],
+    lon: dataParsed.features[0].center[0]
+  };
 }

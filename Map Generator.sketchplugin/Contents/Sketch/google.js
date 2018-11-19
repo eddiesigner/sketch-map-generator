@@ -39,6 +39,11 @@ GoogleMap.prototype.create = function (context) {
   }
 };
 
+/**
+ * Builds the whole user interface.
+ * @param {NSWindow} window
+ * @param {Sketch context} context
+ */
 GoogleMap.prototype.buildInterface = function (window, context) {
   var remember = getOption('remember', 0, this.service);
   var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, this.windowSize, this.windowSize));
@@ -230,6 +235,12 @@ GoogleMap.prototype.buildInterface = function (window, context) {
   [styleField setNextKeyView: checkbox];
 }
 
+/**
+ * Generates the map image.
+ * @param {Object} values
+ * @param {Sketch context} context
+ * @param {NSWindow} window
+ */
 GoogleMap.prototype.generateMap = function (values, context, window) {
   var layer = context.selection[0];
   var layerSizes = layer.frame();
@@ -240,6 +251,11 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
   window.close();
 }
 
+/**
+ * Generates the map preview.
+ * @param {Object} values
+ * @param {Sketch context} context
+ */
 GoogleMap.prototype.previewMap = function (values, context) {
   createMapJavascriptFile(this.service, values, context);
   this.webView.reload(nil);

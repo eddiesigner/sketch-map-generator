@@ -58,6 +58,9 @@
         initMap();
       }
 
+      /**
+       * Initializes the map.
+       */
       function initMap () {
         $.ajax({
           url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + mapData.address + '.json?access_token=' + apiKey + '&limit=1',
@@ -102,6 +105,12 @@
         });
       }
 
+      /**
+       * Gets an address from given coordinates and saves the data.
+       * @param {Map} map
+       * @param {Object} coordinates
+       * @param {Marker} marker
+       */
       function geocodeLatLng (map, coordinates, marker) {
         var popup = new mapboxgl.Popup({ offset: 25 });
 
@@ -129,6 +138,9 @@
         });
       }
 
+      /**
+       * Get the address and the zoom as string.
+       */
       function getMapInfoAsString () {
         return 'mapinfo$' + mapInfoObject.address + '$' + mapInfoObject.zoom;
       }

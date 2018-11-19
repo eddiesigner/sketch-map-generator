@@ -94,5 +94,31 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.5.zip" sparkle:version="2.0.5" />
       </item>
+      <item>
+        <title>Version 2.0.6</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>I repleaced the way to get the coordinates from an address, that means Mapbox maps should work now.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v2.0.6.zip" sparkle:version="2.0.6" />
+      </item>
+      <item>
+        <title>Version 3.0.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>🔥 Map preview! Now you can see a live preview before generating a map.</li>
+              <li>📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish.</li>
+              <li>💅🏼 A whole new UI.</li>
+              <li>🌓 Dark mode support.</li>
+              <li>🛠 Improvements and bugfixes.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.0.0.zip" sparkle:version="3.0.0" />
+      </item>
   </channel>
 </rss>

@@ -49,6 +49,9 @@
         mapElement.appendChild(titleElement);
       }
 
+      /**
+       * Initializes the map.
+       */
       function initMap () {
         if (mapData) {
           var geocoder = new google.maps.Geocoder();
@@ -93,6 +96,13 @@
         }
       }
 
+      /**
+       * Gets an address from given coordinates and saves the data.
+       * @param {Geocoder} geocoder
+       * @param {Map} map
+       * @param {InfoWindow} infowindow
+       * @param {Marker} marker
+       */
       function geocodeLatLng (geocoder, map, infowindow, marker) {
         var latlng = {
           lat: marker.getPosition().lat(),
@@ -119,6 +129,9 @@
         });
       }
 
+      /**
+       * Get the address and the zoom as string.
+       */
       function getMapInfoAsString () {
         return 'mapinfo$' + mapInfoObject.address + '$' + mapInfoObject.zoom;
       }
