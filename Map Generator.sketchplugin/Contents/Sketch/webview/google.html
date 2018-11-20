@@ -61,14 +61,20 @@
             'address': mapData.address
           }, function (results, status) {
             if (status == google.maps.GeocoderStatus.OK) {
-              var options = {
-                center: results[0].geometry.location,
-                zoom: parseInt(mapData.zoom),
-                mapTypeId: mapData.type,
-                streetViewControl: false,
-                mapTypeControl: false,
-                styles: JSON.parse(mapData.style)
-              };
+              var options;
+              
+              try {
+                options = {
+                  center: results[0].geometry.location,
+                  zoom: parseInt(mapData.zoom),
+                  mapTypeId: mapData.type,
+                  streetViewControl: false,
+                  mapTypeControl: false,
+                  styles: mapData.style.length > 0 ? JSON.parse(mapData.style) : ''
+                };
+              } catch (error) {
+                return;
+              }
 
               map = new google.maps.Map(mapElement, options);
 

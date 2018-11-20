@@ -248,17 +248,23 @@ MapboxMap.prototype.getGeoCode = function (address, context) {
   var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + this.apiKey + '&limit=1';
   var request = NSMutableURLRequest.new();
 
-  [request setHTTPMethod:@"GET"];
+  [request setHTTPMethod:@'GET'];
   [request setURL:[NSURL URLWithString:url]];
 
   var error = NSError.new();
   var responseCode = null;
   var oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:responseCode error:error];
   var dataString = [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
-  var dataParsed = JSON.parse(dataString);
+  var dataParsed;
 
-  if (dataParsed.features.length === 0) {
-    context.document.showMessage("Address not found, please try another one.");
+  try {
+    dataParsed = JSON.parse(dataString);
+
+    if (dataParsed.features.length === 0) {
+      context.document.showMessage('Address not found, please try another one.');
+      return;
+    }
+  } catch (error) {
     return;
   }
 

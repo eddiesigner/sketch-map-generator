@@ -40,7 +40,7 @@ Voila! Your shape will be filled with a map.
 * 💅🏼 A whole new UI.
 * 🌓 Dark mode support.
 * 🛠 Improvements and bugfixes.
-* Thanks to [Guillermo](https://guillermoseis.com/) for the previews and the logo!
+* Thanks to [Guillermo](https://guillermoseis.com/) for the logo!
 
 ## Installation
 

@@ -431,7 +431,9 @@ function tryParseJSON (jsonString) {
       return o;
     }
   }
-  catch (e) { }
+  catch (e) {
+    console.log(e);
+  }
 
   return false;
 }
