@@ -117,7 +117,7 @@
 
               document.title = getMapInfoAsString();
 
-              infowindow.setContent('Address: ' + mapInfoObject.address + '. Zoom: ' + mapInfoObject.zoom);
+              infowindow.setContent(mapInfoObject.address);
             } else {
               infowindow.setContent('No results');
             }

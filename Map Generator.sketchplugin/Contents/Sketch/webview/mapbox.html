@@ -123,7 +123,7 @@
 
               document.title = getMapInfoAsString();
 
-              popup.setText('Address: ' + mapInfoObject.address + '. Zoom: ' + mapInfoObject.zoom);
+              popup.setText(mapInfoObject.address);
             } else {
               popup.setText('No results');
             }

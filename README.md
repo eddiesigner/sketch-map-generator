@@ -1,7 +1,7 @@
 # Map Generator 3.0 - Sketch App Plugin
 
 [![Backers on Open Collective](https://opencollective.com/sketch-map-generator/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/sketch-map-generator/sponsors/badge.svg)](#sponsors) 
+ [![Sponsors on Open Collective](https://opencollective.com/sketch-map-generator/sponsors/badge.svg)](#sponsors)
 
 Map Generator better than ever!
 
