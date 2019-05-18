@@ -1,11 +1,12 @@
 # Map Generator 3.0 - Sketch App Plugin
 
-[![Backers on Open Collective](https://opencollective.com/sketch-map-generator/backers/badge.svg)](#backers)
- [![Sponsors on Open Collective](https://opencollective.com/sketch-map-generator/sponsors/badge.svg)](#sponsors)
-
 Map Generator better than ever!
 
 Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.0. Now powered by Google and Mapbox.
+
+If you use it and you like it, please consider to make a donation to support its development! 🙏🏼
+
+<a href="https://www.buymeacoffee.com/eddiesigner" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/black_img.png" alt="Buy Me A Coffee" style="height: auto !important;width: auto !important;" ></a>
 
 ### Mapbox
 
@@ -55,34 +56,6 @@ With Sketch Runner, just go to the `install` command and search for `Map Generat
 
 1. [Download the Zip](https://github.com/eddiesigner/sketch-map-generator/archive/master.zip) and unzip the package
 2. Double click on `Map Generator.sketchplugin` for auto installation
-
-## Contributors
-
-This project exists thanks to all the people who contribute. [[Contribute](CONTRIBUTING.md)].
-<a href="graphs/contributors"><img src="https://opencollective.com/sketch-map-generator/contributors.svg?width=890&button=false" /></a>
-
-
-## Backers
-
-Thank you to all our backers! 🙏 [[Become a backer](https://opencollective.com/sketch-map-generator#backer)]
-
-<a href="https://opencollective.com/sketch-map-generator#backers" target="_blank"><img src="https://opencollective.com/sketch-map-generator/backers.svg?width=890"></a>
-
-
-## Sponsors
-
-Support this project by becoming a sponsor. Your logo will show up here with a link to your website. [[Become a sponsor](https://opencollective.com/sketch-map-generator#sponsor)]
-
-<a href="https://opencollective.com/sketch-map-generator/sponsor/0/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/0/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/1/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/1/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/2/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/2/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/3/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/3/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/4/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/4/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/5/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/5/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/6/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/6/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/7/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/7/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/8/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/8/avatar.svg"></a>
-<a href="https://opencollective.com/sketch-map-generator/sponsor/9/website" target="_blank"><img src="https://opencollective.com/sketch-map-generator/sponsor/9/avatar.svg"></a>
 
 ## Compatibility
 
