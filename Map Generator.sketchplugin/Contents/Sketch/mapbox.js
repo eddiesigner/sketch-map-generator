@@ -8,14 +8,16 @@ MapboxMap.prototype.minZoom    = 0;
 MapboxMap.prototype.maxZoom    = 20;
 MapboxMap.prototype.zoomLevels = [];
 MapboxMap.prototype.mapTypes   = [
-  'streets-v10',
-  'outdoors-v10',
-  'light-v9',
-  'dark-v9',
+  'streets-v11',
+  'outdoors-v11',
+  'light-v10',
+  'dark-v10',
   'satellite-v9',
-  'satellite-streets-v10',
-  'traffic-day-v2',
-  'traffic-night-v2'
+  'satellite-streets-v11',
+  'navigation-preview-day-v4',
+  'navigation-preview-night-v4',
+  'navigation-guidance-day-v4',
+  'navigation-guidance-night-v4'
 ];
 MapboxMap.prototype.webView = null;
 MapboxMap.prototype.windowSize = 800;
@@ -50,9 +52,22 @@ MapboxMap.prototype.create = function (context) {
  */
 MapboxMap.prototype.buildInterface = function (window, context) {
   var remember = getOption('remember', 0, this.service);
+  var token = getOption('token', '', this.service);
+  var username = getOption('username', '', this.service);
+  var ownStyles = [];
   var view = NSView.alloc().initWithFrame(NSMakeRect(0, 0, this.windowSize, this.windowSize));
   var viewElements = [];
   var self = this;
+
+  if (token && username) {
+    ownStyles = this.getOwnStyles(token, username);
+
+    if (ownStyles.length > 0) {
+      for (let i = 0; i < ownStyles.length; i++) {
+        this.mapTypes.unshift(ownStyles[i]);
+      }
+    }
+  }
 
   var addressLabel = createLabel(
     'Enter an address or a place:',
@@ -109,12 +124,12 @@ MapboxMap.prototype.buildInterface = function (window, context) {
   });
 
   var typeLabel = createLabel(
-    'You can choose a map type as well:',
+    'You can choose a style as well. Here you will see your own custom styles if you saved your Mapbox token and your Mapbox username previously.',
     {
-      left: this.spacing,
-      top: this.windowSize - 235,
+      left: 420,
+      top: this.windowSize - 90,
       width: this.columnWidth,
-      height: 20
+      height: 60
     }
   );
   view.addSubview(typeLabel);
@@ -123,9 +138,9 @@ MapboxMap.prototype.buildInterface = function (window, context) {
     this.mapTypes,
     remember == 0 ? 0 : getOption('type', 0, this.service),
     {
-      left: this.spacing,
-      top: this.windowSize - 270,
-      width: 200,
+      left: 420,
+      top: this.windowSize - 130,
+      width: 250,
       height: 25
     }
   );
@@ -221,7 +236,19 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
   var layer = context.selection[0];
   var layerSizes = layer.frame();
   var position = this.getGeoCode(encodeURIComponent(values.address), context);
-  var imageUrl = 'https://api.mapbox.com/styles/v1/mapbox/' + values.type + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + this.apiKey;
+  var token = getOption('token', '', this.service);
+  var ownUsername = getOption('username', '', this.service);
+  var key = this.apiKey;
+  var username = 'mapbox';
+  var style = values.type;
+
+  if (values.type.includes(' - ')) {
+    key = token;
+    username = ownUsername;
+    style = values.type.split(' - ')[1];
+  }
+
+  var imageUrl = 'https://api.mapbox.com/styles/v1/' + username + '/' + style + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + key;
 
   fillLayerWithImage(imageUrl, layer, context);
   this.previewMap(values, context);
@@ -246,16 +273,7 @@ MapboxMap.prototype.previewMap = function (values, context) {
  */
 MapboxMap.prototype.getGeoCode = function (address, context) {
   var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + this.apiKey + '&limit=1';
-  var request = NSMutableURLRequest.new();
-
-  [request setHTTPMethod:@'GET'];
-  [request setURL:[NSURL URLWithString:url]];
-
-  var error = NSError.new();
-  var responseCode = null;
-  var oResponseData = [NSURLConnection sendSynchronousRequest:request returningResponse:responseCode error:error];
-  var dataString = [[NSString alloc] initWithData:oResponseData encoding:NSUTF8StringEncoding];
-  var dataParsed;
+  var dataString = makeRequest(url);
 
   try {
     dataParsed = JSON.parse(dataString);
@@ -264,12 +282,108 @@ MapboxMap.prototype.getGeoCode = function (address, context) {
       context.document.showMessage('Address not found, please try another one.');
       return;
     }
+
+    return {
+      lat: dataParsed.features[0].center[1],
+      lon: dataParsed.features[0].center[0]
+    };
   } catch (error) {
     return;
   }
+}
 
-  return {
-    lat: dataParsed.features[0].center[1],
-    lon: dataParsed.features[0].center[0]
-  };
+/**
+ * Opens the window where users can save their own token and username.
+*/
+MapboxMap.prototype.openTokenWindow = function () {
+  var dialog = this.buildTokenWindow();
+  var response = this.handleTokenAlertResponse(dialog, dialog.runModal());
+}
+
+/**
+ * Builds the window where users can save their own token and username.
+ */
+MapboxMap.prototype.buildTokenWindow = function () {
+  var token = getOption('token', '', this.service);
+  var username = getOption('username', '', this.service);
+  var dialogWindow = COSAlertWindow.new();
+
+  dialogWindow.setMessageText('Map Generator (Mapbox)');
+  dialogWindow.setInformativeText('Enter your Mapbox token and your Mapbox username to load your own styles.');
+
+  var link = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 180, 20)));
+  link.setTitle('How to create a valid token');
+  link.setBezelStyle(NSInlineBezelStyle);
+
+  link.setCOSJSTargetFunction(function () {
+    var url = NSURL.URLWithString(@"https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-create-a-token-to-use-your-own-Mapbox-styles");
+
+    if (!NSWorkspace.sharedWorkspace().openURL(url)) {
+      log(@"Failed to open url:" + url.description());
+    }
+  });
+
+  dialogWindow.addAccessoryView(link);
+  
+  dialogWindow.addTextLabelWithValue('Enter your token:');
+  dialogWindow.addTextFieldWithValue(token);
+  dialogWindow.addTextLabelWithValue('Enter your username:');
+  dialogWindow.addTextFieldWithValue(username);
+
+  var tokenTextBox = dialogWindow.viewAtIndex(2);
+  var usernameTextBox = dialogWindow.viewAtIndex(4);
+
+  dialogWindow.alert().window().setInitialFirstResponder(tokenTextBox);
+  tokenTextBox.setNextKeyView(usernameTextBox);
+
+  dialogWindow.addButtonWithTitle('Save');
+  dialogWindow.addButtonWithTitle('Cancel');
+
+  return dialogWindow;
+}
+
+/**
+ * Get the user input from the dialog window
+ * @param {COSAlertWindow} dialog
+ * @param {Int} responseCode
+ * @return {Object}
+ */
+MapboxMap.prototype.handleTokenAlertResponse = function (dialog, responseCode) {
+  if (responseCode == "1000") {
+    var tokenValue = dialog.viewAtIndex(2).stringValue();
+    var usernameValue = dialog.viewAtIndex(4).stringValue();
+
+    setPreferences(this.service + '.token', tokenValue);
+    setPreferences(this.service + '.username', usernameValue);
+
+    return true;
+  } else {
+    return false;
+  }
+}
+
+/**
+ * Get user's own styles.
+ * @param {String} token
+ * @param {Strin} username
+ */
+MapboxMap.prototype.getOwnStyles = function (token, username) {
+  var url = 'https://api.mapbox.com/styles/v1/' + username + '?access_token=' + token;
+  var dataString = makeRequest(url);
+
+  try {
+    var dataParsed = JSON.parse(dataString);
+
+    if (!dataParsed.message) {
+      var styles = dataParsed.map(function (style) {
+        return style.name + ' - ' + style.id
+      });
+
+      return styles;
+    }
+
+    return [];
+  } catch (error) {
+    return [];
+  }
 }

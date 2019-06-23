@@ -289,6 +289,12 @@ function createMapJavascriptFile(service, options, context) {
     type: '' + options.type,
     style: options.style ? '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '') : ''
   }
+
+  if (service === 'mapbox') {
+    addressInfo['token'] = '' + getOption('token', '', service);
+    addressInfo['username'] = '' + getOption('username', '', service);
+  }
+
   var jsContent = 'window.' + service + ' = ' + JSON.stringify(addressInfo) + ';';
   var jsContentNSSString = [NSString stringWithFormat: '%@', jsContent];
   var jsContentFilePath = context.scriptPath.stringByDeletingLastPathComponent() + '/webview/' + service + '.js';
@@ -416,6 +422,25 @@ function setPreferences (key, value) {
 
   userDefaults.setObject_forKey(preferences, pluginIdentifier);
   userDefaults.synchronize();
+}
+
+/**
+ * Make a network request
+ * @param {String} url
+ * @return {NSString}
+ */
+function makeRequest (url) {
+  var request = NSMutableURLRequest.new();
+
+  [request setHTTPMethod:@'GET'];
+  [request setURL: [NSURL URLWithString: url]];
+
+  var error = null;
+  var responseCode = null;
+  var oResponseData = [NSURLConnection sendSynchronousRequest: request returningResponse: responseCode error: error];
+  var dataString = [[NSString alloc] initWithData: oResponseData encoding: NSUTF8StringEncoding];
+
+  return dataString;
 }
 
 /**

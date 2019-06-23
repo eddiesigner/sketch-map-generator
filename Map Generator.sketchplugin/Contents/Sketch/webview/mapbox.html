@@ -5,8 +5,8 @@
     <title>Mapbox</title>
     <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js'></script>
-    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.js'></script>
-    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.51.0/mapbox-gl.css' rel='stylesheet' />
+    <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.54.0/mapbox-gl.css' rel='stylesheet' />
     <style>
       body {
         margin: 0;
@@ -44,6 +44,8 @@
       var mapElement = document.getElementById('map');
       var mapData = window.mapbox;
       var apiKey = 'pk.eyJ1IjoiZWRkaWVzaWduZXIiLCJhIjoiY2pvbzZodWIyMWVrdjNrbzhkZmJ6MTFlYSJ9.VIDcCZrVo7y6pXCKOSwnBQ';
+      var username = 'mapbox';
+      var type = '';
       var mapInfoObject = {
         address: '',
         zoom: ''
@@ -55,6 +57,13 @@
         titleElement.innerText = 'Nothing to show, please enter an address and click the preview button.';
         mapElement.appendChild(titleElement);
       } else {
+        if (mapData.type.includes(' - ')) {
+          username = mapData.username;
+          type = mapData.type.split(' - ')[1];
+        } else {
+          type = mapData.type;
+        }
+
         initMap();
       }
 
@@ -70,7 +79,7 @@
               var lng = result.features[0].center[0];
               var options = {
                 container: 'map',
-                style: 'mapbox://styles/mapbox/' + mapData.type,
+                style: 'mapbox://styles/' + username + '/' + type,
                 center: [lng, lat],
                 zoom: parseInt(mapData.zoom)
               };

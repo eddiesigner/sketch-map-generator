@@ -4,23 +4,31 @@
   "commands" : [
     {
       "script" : "main.cocoascript",
-      "name" : "Generate a Map using Google Maps",
+      "name" : "Generate a Map using Google Maps...",
       "handler" : "runGoogle",
       "identifier" : "scriptGoogle",
       "shortcut" : "shift cmd m"
     },
     {
       "script" : "main.cocoascript",
-      "name" : "Generate a Map using Mapbox",
+      "name" : "Generate a Map using Mapbox...",
       "handler" : "runMapbox",
       "identifier" : "scriptMapbox",
       "shortcut" : "shift cmd b"
+    },
+    {
+      "script": "main.cocoascript",
+      "name": "Enter your Mapbox token and your Mapbox username...",
+      "handler": "runMapboxToken",
+      "identifier": "scriptMapboxToken",
+      "shortcut": "shift cmd u"
     }
   ],
   "menu" : {
     "items" : [
       "scriptGoogle",
-      "scriptMapbox"
+      "scriptMapbox",
+      "scriptMapboxToken"
     ],
     "title" : "Map Generator"
   },
@@ -29,7 +37,7 @@
   "icon": "icon.png",
   "identifier" : "io.eduardogomez.sketch.map-generator",
   "appcast": "https://raw.githubusercontent.com/eddiesigner/sketch-map-generator/master/appcast.xml",
-  "version" : "3.0.0",
+  "version" : "3.1.0",
   "description" : "Sketch plugin to fill a layer with a map generated from a given location using Google Maps and Mapbox",
   "authorEmail" : "this.eduardo@gmail.com",
   "name" : "Map Generator"

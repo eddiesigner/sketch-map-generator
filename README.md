@@ -36,6 +36,7 @@ Voila! Your shape will be filled with a map.
 
 ## What’s new?
 
+* 👉🏼 If you use Mapbox, now you can use your own custom styles!
 * 🔥 Map preview! Now you can see a live preview before generating a map.
 * 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish.
 * 💅🏼 A whole new UI.
@@ -63,4 +64,4 @@ The plugin is compatible with Sketch 4+.
 
 ## Issues
 
-If you have any questions or troubles with our product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
+If you have any questions or troubles with this product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).

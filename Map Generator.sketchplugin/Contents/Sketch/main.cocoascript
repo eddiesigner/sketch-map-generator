@@ -6,8 +6,8 @@
  * @param  {Sketch context} context 
  */
 function runGoogle (context) {
-  var map = new GoogleMap();
-  map.create(context);
+  var google = new GoogleMap();
+  google.create(context);
 }
 
 /**
@@ -15,6 +15,14 @@ function runGoogle (context) {
  * @param  {Sketch context} context 
  */
 function runMapbox (context) {
-  var map = new MapboxMap();
-  map.create(context);
+  var mapbox = new MapboxMap();
+  mapbox.create(context);
+}
+
+/**
+ * Open the window to enter the Mapbox token and the Mapbox username.
+ */
+function runMapboxToken () {
+  var mapbox = new MapboxMap();
+  mapbox.openTokenWindow();
 }

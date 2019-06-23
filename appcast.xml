@@ -120,5 +120,18 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.0.0.zip" sparkle:version="3.0.0" />
       </item>
+      <item>
+        <title>Version 3.1.0</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>👉🏼 If you use Mapbox, now you can use your own custom styles!</li>
+              <li>👀 The default styles from Mapbox were updated.</li>
+              <li>🛠 Improvements and bugfixes.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.1.0.zip" sparkle:version="3.1.0" />
+      </item>
   </channel>
 </rss>
