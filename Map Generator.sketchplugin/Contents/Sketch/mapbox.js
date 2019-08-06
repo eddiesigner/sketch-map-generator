@@ -250,7 +250,7 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
 
   var imageUrl = 'https://api.mapbox.com/styles/v1/' + username + '/' + style + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + key;
 
-  fillLayerWithImage(imageUrl, layer, context);
+  fillLayerWithImage(imageUrl, layer, context, this.service);
   this.previewMap(values, context);
   window.close();
 }

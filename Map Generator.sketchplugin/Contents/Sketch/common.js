@@ -313,7 +313,7 @@ function createMapJavascriptFile(service, options, context) {
  * @param  {MSShapeGroup} layer    
  * @param  {Sketch context} context  
  */
-function fillLayerWithImage (imageUrl, layer, context) {
+function fillLayerWithImage (imageUrl, layer, context, service) {
   var imageData = getImage(imageUrl);
 
   if (!imageData) {
@@ -324,7 +324,8 @@ function fillLayerWithImage (imageUrl, layer, context) {
   var result = NSString.alloc().initWithData_encoding(imageData, NSUTF8StringEncoding);
 
   if (result) {
-    context.document.showMessage('There was a problem, please check the address settings.');
+    var message = service === 'mapbox' ? tryParseJSON(result).message : result;
+    context.document.showMessage(message);
     return;
   }
 

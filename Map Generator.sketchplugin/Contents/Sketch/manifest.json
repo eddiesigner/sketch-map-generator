@@ -37,7 +37,7 @@
   "icon": "icon.png",
   "identifier" : "io.eduardogomez.sketch.map-generator",
   "appcast": "https://raw.githubusercontent.com/eddiesigner/sketch-map-generator/master/appcast.xml",
-  "version" : "3.1.0",
+  "version" : "3.1.1",
   "description" : "Sketch plugin to fill a layer with a map generated from a given location using Google Maps and Mapbox",
   "authorEmail" : "this.eduardo@gmail.com",
   "name" : "Map Generator"
