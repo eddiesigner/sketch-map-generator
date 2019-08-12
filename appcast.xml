@@ -144,5 +144,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.1.1.zip" sparkle:version="3.1.1" />
       </item>
+      <item>
+        <title>Version 3.1.2</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>✍🏼 The layer name now contains the address and zoom to better identify it and to reuse that information if necessary.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.1.2.zip" sparkle:version="3.1.2" />
+      </item>
   </channel>
 </rss>

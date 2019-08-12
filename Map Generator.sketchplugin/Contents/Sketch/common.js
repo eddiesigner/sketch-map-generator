@@ -308,6 +308,16 @@ function createMapJavascriptFile(service, options, context) {
 }
 
 /**
+ * 
+ * @param {MSShapeGroup} layer 
+ * @param {String} address 
+ * @param {String} zoom 
+ */
+function setLayerName (layer, address, zoom) {
+  layer.setName('Maps - ' + address + ' - Zoom ' + zoom);
+}
+
+/**
  * Fills a shape layer with a static map.
  * @param  {String} imageUrl 
  * @param  {MSShapeGroup} layer    
