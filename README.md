@@ -16,6 +16,20 @@ If you use it and you like it, please consider to make a donation to support its
 
 ![Google Maps](/assets/google.gif?raw=true "Map Generator using Google Maps")
 
+## Important, read carefully
+
+From now on you will have to create your own Google Maps key and your own Mapbox token so that the plugin can generate maps.
+
+During all this time the plugin has used my own Google Maps key and my own Mapbox token but due to the increasing number of people using it, has reached the point where I had to pay more and more in the case of Google Maps, while in the case of Mapbox, over time there have been more failed map requests because the limit of use is exceeded relatively quickly.
+
+Having said that and taking into account that the plugin is completely free, I have made the decision that from now on the plugin will only work if each user provides their own key or their own token. Although this change at first may seem negative, it also brings with it the following benefits:
+
+* In the case of Mapbox there should no longer be failed requests for reaching the limit allowed because it will no longer be distributed by all users of the plugin, you and only you will use your own token, this will make it virtually impossible to reach that limit.
+
+* In the case of Google Maps also virtually eliminates the risk of reaching the limit per day that currently exists. You can also generate maps up to 1280x1280 pixels.
+
+The only drawback to take into account is that in order to create a key for Google Maps, you will have to enter credit card details in the Google Cloud Console. But don't worry, it will be very difficult to pay even a single dollar because only you will be using your own key.
+
 ## How it works?
 
 Create a shape and select it.
