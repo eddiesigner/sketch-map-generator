@@ -10,6 +10,13 @@
       "shortcut" : "shift cmd m"
     },
     {
+      "script": "main.cocoascript",
+      "name": "Enter your Google Maps key...",
+      "handler": "runGoogleMapsKey",
+      "identifier": "scriptGoogleMapsKey",
+      "shortcut": "shift cmd y"
+    },
+    {
       "script" : "main.cocoascript",
       "name" : "Generate a Map using Mapbox...",
       "handler" : "runMapbox",
@@ -18,7 +25,7 @@
     },
     {
       "script": "main.cocoascript",
-      "name": "Enter your Mapbox token and your Mapbox username...",
+      "name": "Enter your Mapbox token and username...",
       "handler": "runMapboxToken",
       "identifier": "scriptMapboxToken",
       "shortcut": "shift cmd u"
@@ -27,6 +34,7 @@
   "menu" : {
     "items" : [
       "scriptGoogle",
+      "scriptGoogleMapsKey",
       "scriptMapbox",
       "scriptMapboxToken"
     ],

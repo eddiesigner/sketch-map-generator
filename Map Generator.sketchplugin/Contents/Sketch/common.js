@@ -284,14 +284,19 @@ function handleButtonAction (viewElements, service, shouldSave) {
  */
 function createMapJavascriptFile(service, options, context) {
   var addressInfo = {
+    token: '' + getOption('token', '', service),
     address: '' + options.address,
     zoom: '' + options.zoom,
     type: '' + options.type,
     style: options.style ? '' + options.style.trim().replace(/\n|\r|\t|\s{2,}/g, '') : ''
   }
 
+  if (!addressInfo.token || addressInfo.token.length === 0) {
+    context.document.showMessage('Please save your Mapbox token first.');
+    return;
+  }
+
   if (service === 'mapbox') {
-    addressInfo['token'] = '' + getOption('token', '', service);
     addressInfo['username'] = '' + getOption('username', '', service);
   }
 

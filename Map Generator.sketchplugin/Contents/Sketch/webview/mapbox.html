@@ -43,7 +43,6 @@
       var map;
       var mapElement = document.getElementById('map');
       var mapData = window.mapbox;
-      var apiKey = 'pk.eyJ1IjoiZWRkaWVzaWduZXIiLCJhIjoiY2pvbzZodWIyMWVrdjNrbzhkZmJ6MTFlYSJ9.VIDcCZrVo7y6pXCKOSwnBQ';
       var username = 'mapbox';
       var type = '';
       var mapInfoObject = {
@@ -72,7 +71,7 @@
        */
       function initMap () {
         $.ajax({
-          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + mapData.address + '.json?access_token=' + apiKey + '&limit=1',
+          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + mapData.address + '.json?access_token=' + mapData.token + '&limit=1',
           success: function (result) {
             if (result.features.length > 0) {
               var lat = result.features[0].center[1];
@@ -84,7 +83,7 @@
                 zoom: parseInt(mapData.zoom)
               };
 
-              mapboxgl.accessToken = apiKey;
+              mapboxgl.accessToken = mapData.token;
               map = new mapboxgl.Map(options);
 
               map.addControl(new mapboxgl.NavigationControl({
@@ -124,7 +123,7 @@
         var popup = new mapboxgl.Popup({ offset: 25 });
 
         $.ajax({
-          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + coordinates.lng + ',' + coordinates.lat + '.json?access_token=' + apiKey + '&limit=1',
+          url: 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + coordinates.lng + ',' + coordinates.lat + '.json?access_token=' + mapData.token + '&limit=1',
           success: function (result) {
             if (result.features.length > 0) {
               mapInfoObject.address = result.features[0].place_name;

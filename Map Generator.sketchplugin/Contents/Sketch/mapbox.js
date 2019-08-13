@@ -2,7 +2,6 @@
 
 function MapboxMap () {}
 
-MapboxMap.prototype.apiKey = 'pk.eyJ1IjoiZWRkaWVzaWduZXIiLCJhIjoiY2pvbzZodWIyMWVrdjNrbzhkZmJ6MTFlYSJ9.VIDcCZrVo7y6pXCKOSwnBQ';
 MapboxMap.prototype.service    = 'mapbox';
 MapboxMap.prototype.minZoom    = 0;
 MapboxMap.prototype.maxZoom    = 20;
@@ -233,17 +232,21 @@ MapboxMap.prototype.buildInterface = function (window, context) {
  * @param {NSWindow} window
  */
 MapboxMap.prototype.generateMap = function (values, context, window) {
+  var key = getOption('token', '', this.service);
+  
+  if (!key || key.length() === 0) {
+    context.document.showMessage('Please save your Mapbox token first.');
+    return;
+  }
+
   var layer = context.selection[0];
   var layerSizes = layer.frame();
-  var position = this.getGeoCode(encodeURIComponent(values.address), context);
-  var token = getOption('token', '', this.service);
   var ownUsername = getOption('username', '', this.service);
-  var key = this.apiKey;
   var username = 'mapbox';
   var style = values.type;
+  var position = this.getGeoCode(key, encodeURIComponent(values.address), context);
 
   if (values.type.includes(' - ')) {
-    key = token;
     username = ownUsername;
     style = values.type.split(' - ')[1];
   }
@@ -268,12 +271,13 @@ MapboxMap.prototype.previewMap = function (values, context) {
 
 /**
  * Gets the coordinates from a given location.
+ * @param  {String} apiKey
  * @param  {String} address 
  * @param  {Sketch context} context
  * @return {Object}         
  */
-MapboxMap.prototype.getGeoCode = function (address, context) {
-  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + this.apiKey + '&limit=1';
+MapboxMap.prototype.getGeoCode = function (apiKey, address, context) {
+  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + apiKey + '&limit=1';
   var dataString = makeRequest(url);
 
   try {
@@ -310,7 +314,7 @@ MapboxMap.prototype.buildTokenWindow = function () {
   var dialogWindow = COSAlertWindow.new();
 
   dialogWindow.setMessageText('Map Generator (Mapbox)');
-  dialogWindow.setInformativeText('Enter your Mapbox token and your Mapbox username to load your own styles.');
+  dialogWindow.setInformativeText('Enter your Mapbox token and username to generate maps and to load your own styles.');
 
   var link = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 180, 20)));
   link.setTitle('How to create a valid token');

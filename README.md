@@ -18,7 +18,7 @@ If you use it and you like it, please consider to make a donation to support its
 
 ## Important, read carefully
 
-From now on you will have to create your own Google Maps key and your own Mapbox token so that the plugin can generate maps.
+From now on you will have to generate your own Google Maps key and your own Mapbox token so that the plugin can generate maps.
 
 During all this time the plugin has used my own Google Maps key and my own Mapbox token but due to the increasing number of people using it, has reached the point where I had to pay more and more in the case of Google Maps, while in the case of Mapbox, over time there have been more failed map requests because the limit of use is exceeded relatively quickly.
 
@@ -28,7 +28,13 @@ Having said that and taking into account that the plugin is completely free, I h
 
 * In the case of Google Maps also virtually eliminates the risk of reaching the limit per day that currently exists. You can also generate maps up to 1280x1280 pixels.
 
-The only drawback to take into account is that in order to create a key for Google Maps, you will have to enter credit card details in the Google Cloud Console. But don't worry, it will be very difficult to pay even a single dollar because only you will be using your own key.
+The only drawback to take into account is that in order to generate a key for Google Maps, you will have to enter credit card details in the Google Cloud Console. But don't worry, it will be very difficult to pay even a single cent because only you will be using your own key.
+
+In order to help you here you have some guides on how to generate a Google Maps key and a Mapbox token:
+
+[How to generate a Google Maps key](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-generate-a-Google-Maps-key)
+
+[How to generate a Mapbox token](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-create-a-token-to-use-your-own-Mapbox-styles)
 
 ## How it works?
 
