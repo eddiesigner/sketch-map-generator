@@ -2,7 +2,6 @@
 
 function GoogleMap () {}
 
-GoogleMap.prototype.apiKey = 'AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw';
 GoogleMap.prototype.service = 'google';
 GoogleMap.prototype.minZoom = 1;
 GoogleMap.prototype.maxZoom = 20;
@@ -242,9 +241,16 @@ GoogleMap.prototype.buildInterface = function (window, context) {
  * @param {NSWindow} window
  */
 GoogleMap.prototype.generateMap = function (values, context, window) {
+  var key = getOption('token', '', this.service);
+
+  if (!key || key.length() === 0) {
+    context.document.showMessage('⚠️ Please save your Google Maps key first.');
+    return;
+  }
+
   var layer = context.selection[0];
   var layerSizes = layer.frame();
-  var imageUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + encodeURIComponent(values.address) + '&zoom=' + values.zoom + '&size=' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '&maptype=' + values.type + '&scale=2' + this.parseStyle(values.style, context) + '&key=' + this.apiKey;
+  var imageUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + encodeURIComponent(values.address) + '&zoom=' + values.zoom + '&size=' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '&maptype=' + values.type + '&scale=2' + this.parseStyle(values.style, context) + '&key=' + key;
 
   fillLayerWithImage(imageUrl, layer, context, this.service);
   setLayerName(layer, values.address, values.zoom);
@@ -260,6 +266,69 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
 GoogleMap.prototype.previewMap = function (values, context) {
   createMapJavascriptFile(this.service, values, context);
   this.webView.reload(nil);
+}
+
+/**
+ * Opens the window where users can save their own key.
+*/
+GoogleMap.prototype.openKeyWindow = function () {
+  var dialog = this.buildKeyWindow();
+  var response = this.handleKeyAlertResponse(dialog, dialog.runModal());
+}
+
+/**
+ * Builds the window where users can save their own key.
+ */
+GoogleMap.prototype.buildKeyWindow = function () {
+  var key = getOption('token', '', this.service);
+  var dialogWindow = COSAlertWindow.new();
+
+  dialogWindow.setMessageText('Map Generator (Google Maps)');
+  dialogWindow.setInformativeText('Enter your Google Maps key to generate maps.');
+
+  var link = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 180, 20)));
+  link.setTitle('How to create an API key');
+  link.setBezelStyle(NSInlineBezelStyle);
+
+  link.setCOSJSTargetFunction(function () {
+    var url = NSURL.URLWithString(@"https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-generate-a-Google-Maps-key");
+
+    if (!NSWorkspace.sharedWorkspace().openURL(url)) {
+      log(@"Failed to open url:" + url.description());
+    }
+  });
+
+  dialogWindow.addAccessoryView(link);
+
+  dialogWindow.addTextLabelWithValue('Enter your key:');
+  dialogWindow.addTextFieldWithValue(key);
+
+  var keyTextBox = dialogWindow.viewAtIndex(2);
+
+  dialogWindow.alert().window().setInitialFirstResponder(keyTextBox);
+
+  dialogWindow.addButtonWithTitle('Save');
+  dialogWindow.addButtonWithTitle('Cancel');
+
+  return dialogWindow;
+}
+
+/**
+ * Get the user input from the dialog window
+ * @param {COSAlertWindow} dialog
+ * @param {Int} responseCode
+ * @return {Object}
+ */
+GoogleMap.prototype.handleKeyAlertResponse = function (dialog, responseCode) {
+  if (responseCode == "1000") {
+    var tokenValue = dialog.viewAtIndex(2).stringValue();
+
+    setPreferences(this.service + '.token', tokenValue);
+
+    return true;
+  } else {
+    return false;
+  }
 }
 
 /**
@@ -295,7 +364,7 @@ GoogleMap.prototype.parseStyle = function (jsonString, context) {
   try {
     json = JSON.parse(jsonString);
   } catch (e) {
-    context.document.showMessage('The style cannot be applied');
+    context.document.showMessage('ℹ️ The style cannot be applied');
 
     return '';
   }

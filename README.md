@@ -1,8 +1,8 @@
-# Map Generator 3.0 - Sketch App Plugin
+# Map Generator 3.5 - Sketch App Plugin
 
 Map Generator better than ever!
 
-Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.0. Now powered by Google and Mapbox.
+Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.5. Now powered by Google and Mapbox.
 
 If you use it and you like it, please consider to make a donation to support its development! 🙏🏼
 

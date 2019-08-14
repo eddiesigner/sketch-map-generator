@@ -9,7 +9,7 @@ var inputsElements = [];
  */
 function checkCount (context) {
   if (context.selection.count() != 1) {
-    app.displayDialog_withTitle('You have to select 1 shape layer.', 'Wrong shape layer selection');
+    app.displayDialog_withTitle('⚠️ You have to select 1 shape layer.', 'Wrong shape layer selection');
     return false;
   }
 
@@ -28,12 +28,12 @@ function checkLayerType (context) {
     var edited = layer.edited;
 
     if (edited == undefined) {
-      app.displayDialog_withTitle('Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
+      app.displayDialog_withTitle('⚠️ Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
       return false;
     }
   } else {
     if ([layer class] != MSShapeGroup) {
-      app.displayDialog_withTitle('Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
+      app.displayDialog_withTitle('⚠️ Your selection was a “' + [layer name] + '”, that is not a shape layer. Please select a shape layer.', 'Shape layer only');
       return false;
     }
   }
@@ -48,7 +48,7 @@ function checkLayerType (context) {
  */
 function checkSettings (settings) {
   if (settings.address.length() === 0) {
-    app.displayDialog_withTitle('Please enter a valid address.', 'Invalid address');
+    app.displayDialog_withTitle('⚠️ Please enter a valid address.', 'Invalid address');
     return false;
   }
 
@@ -292,7 +292,8 @@ function createMapJavascriptFile(service, options, context) {
   }
 
   if (!addressInfo.token || addressInfo.token.length === 0) {
-    context.document.showMessage('Please save your Mapbox token first.');
+    var message = (service === 'mapbox') ? '⚠️ Please save your Mapbox token first.' : '⚠️ Please save your Google Maps key first';
+    context.document.showMessage(message);
     return;
   }
 
@@ -332,7 +333,7 @@ function fillLayerWithImage (imageUrl, layer, context, service) {
   var imageData = getImage(imageUrl);
 
   if (!imageData) {
-    context.document.showMessage('There was a problem, please check your Internet connection or the address settings.');
+    context.document.showMessage('ℹ️ There was a problem, please check your Internet connection or the address settings.');
     return;
   }
 
@@ -340,7 +341,7 @@ function fillLayerWithImage (imageUrl, layer, context, service) {
 
   if (result) {
     var message = service === 'mapbox' ? tryParseJSON(result).message : result;
-    context.document.showMessage(message);
+    context.document.showMessage('ℹ️ ' + message);
     return;
   }
 
@@ -357,7 +358,7 @@ function fillLayerWithImage (imageUrl, layer, context, service) {
   
   fill.setPatternFillType(1);
 
-  context.document.showMessage('Map generated!');
+  context.document.showMessage('🎉 Map generated!');
 }
 
 /**

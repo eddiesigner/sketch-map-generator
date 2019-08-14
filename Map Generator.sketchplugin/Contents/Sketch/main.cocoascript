@@ -11,6 +11,14 @@ function runGoogle (context) {
 }
 
 /**
+ * Open the window to enter the Google Maps key.
+ */
+function runGoogleMapsKey () {
+  var google = new GoogleMap();
+  google.openKeyWindow();
+}
+
+/**
  * Run the Mapbox service provider.
  * @param  {Sketch context} context 
  */
@@ -20,7 +28,7 @@ function runMapbox (context) {
 }
 
 /**
- * Open the window to enter the Mapbox token and the Mapbox username.
+ * Open the window to enter the Mapbox token and username.
  */
 function runMapboxToken () {
   var mapbox = new MapboxMap();

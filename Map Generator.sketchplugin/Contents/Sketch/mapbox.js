@@ -235,7 +235,7 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
   var key = getOption('token', '', this.service);
   
   if (!key || key.length() === 0) {
-    context.document.showMessage('Please save your Mapbox token first.');
+    context.document.showMessage('⚠️ Please save your Mapbox token first.');
     return;
   }
 
@@ -284,7 +284,7 @@ MapboxMap.prototype.getGeoCode = function (apiKey, address, context) {
     dataParsed = JSON.parse(dataString);
 
     if (dataParsed.features.length === 0) {
-      context.document.showMessage('Address not found, please try another one.');
+      context.document.showMessage('ℹ️ Address not found, please try another one.');
       return;
     }
 

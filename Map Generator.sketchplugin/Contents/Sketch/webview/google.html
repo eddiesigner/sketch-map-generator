@@ -142,7 +142,10 @@
         return 'mapinfo$' + mapInfoObject.address + '$' + mapInfoObject.zoom;
       }
     </script>
-    <script src='https://maps.googleapis.com/maps/api/js?key=AIzaSyBPSS1dILXvLs3Bp189PrCP7OMoD94RXmw&callback=initMap'
-      async defer></script>
+    <script id="googleMapsLibScript" async defer></script>
+    <script>
+        var url = 'https://maps.googleapis.com/maps/api/js?key=' + window.google.token + '&callback=initMap';
+        document.getElementById('googleMapsLibScript').src = url;
+    </script>
   </body>
 </html>
