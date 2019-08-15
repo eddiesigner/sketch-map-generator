@@ -34,7 +34,7 @@ GoogleMap.prototype.create = function (context) {
       var key = getOption('token', '', this.service);
 
       if (!key || key.length() === 0) {
-        keyMessage = ' (Unregistered API key)';
+        keyMessage = ' (Unsaved API key)';
       }
 
       var window = buildWindow(this.windowSize, 'Map Generator - Google Maps' + keyMessage);

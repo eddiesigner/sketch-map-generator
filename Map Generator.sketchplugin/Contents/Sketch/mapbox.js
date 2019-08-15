@@ -38,9 +38,10 @@ MapboxMap.prototype.create = function (context) {
 
       var tokenMessage = '';
       var token = getOption('token', '', this.service);
+      var publictoken = getOption('publictoken', '', this.service);
 
-      if (!token || token.length() === 0) {
-        tokenMessage = ' (Unregistered token)';
+      if ((!token || token.length() === 0) || (!publictoken || publictoken.length() === 0)) {
+        tokenMessage = ' (You have not yet saved some of your tokens)';
       }
 
       var window = buildWindow(this.windowSize, 'Map Generator - Mapbox' + tokenMessage);
@@ -240,9 +241,10 @@ MapboxMap.prototype.buildInterface = function (window, context) {
  */
 MapboxMap.prototype.generateMap = function (values, context, window) {
   var token = getOption('token', '', this.service);
+  var publictoken = getOption('publictoken', '', this.service);
   
-  if (!token || token.length() === 0) {
-    context.document.showMessage('⚠️ Please save your Mapbox token first.');
+  if ((!token || token.length() === 0) || (!publictoken || publictoken.length() === 0)) {
+    context.document.showMessage('⚠️ Please save your Mapbox tokens first.');
     return;
   }
 
@@ -316,19 +318,20 @@ MapboxMap.prototype.openTokenWindow = function () {
  * Builds the window where users can save their own token and username.
  */
 MapboxMap.prototype.buildTokenWindow = function () {
-  var token = getOption('token', '', this.service);
   var username = getOption('username', '', this.service);
+  var publicToken = getOption('publictoken', '', this.service);
+  var token = getOption('token', '', this.service);
   var dialogWindow = COSAlertWindow.new();
 
   dialogWindow.setMessageText('Map Generator (Mapbox)');
-  dialogWindow.setInformativeText('Enter your Mapbox token and username to generate maps and to load your own styles.');
+  dialogWindow.setInformativeText('Enter your Mapbox username and tokens to generate maps and to load your own styles.');
 
-  var link = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 180, 20)));
-  link.setTitle('How to create a valid token');
+  var link = NSButton.alloc().initWithFrame(NSMakeRect(0, 0, 270, 20)));
+  link.setTitle('How to get your public and secret tokens');
   link.setBezelStyle(NSInlineBezelStyle);
 
   link.setCOSJSTargetFunction(function () {
-    var url = NSURL.URLWithString(@"https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-create-a-token-to-use-your-own-Mapbox-styles");
+    var url = NSURL.URLWithString(@"https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-get-your-Mapbox-tokens");
 
     if (!NSWorkspace.sharedWorkspace().openURL(url)) {
       log(@"Failed to open url:" + url.description());
@@ -337,16 +340,20 @@ MapboxMap.prototype.buildTokenWindow = function () {
 
   dialogWindow.addAccessoryView(link);
   
-  dialogWindow.addTextLabelWithValue('Enter your token:');
-  dialogWindow.addTextFieldWithValue(token);
   dialogWindow.addTextLabelWithValue('Enter your username:');
   dialogWindow.addTextFieldWithValue(username);
+  dialogWindow.addTextLabelWithValue('Enter your public token:');
+  dialogWindow.addTextFieldWithValue(publicToken);
+  dialogWindow.addTextLabelWithValue('Enter your secret token:');
+  dialogWindow.addTextFieldWithValue(token);
 
-  var tokenTextBox = dialogWindow.viewAtIndex(2);
-  var usernameTextBox = dialogWindow.viewAtIndex(4);
+  var usernameTextBox = dialogWindow.viewAtIndex(2);
+  var publicTokenTextBox = dialogWindow.viewAtIndex(4);
+  var tokenTextBox = dialogWindow.viewAtIndex(6);
 
-  dialogWindow.alert().window().setInitialFirstResponder(tokenTextBox);
-  tokenTextBox.setNextKeyView(usernameTextBox);
+  dialogWindow.alert().window().setInitialFirstResponder(usernameTextBox);
+  usernameTextBox.setNextKeyView(publicTokenTextBox);
+  publicTokenTextBox.setNextKeyView(tokenTextBox);
 
   dialogWindow.addButtonWithTitle('Save');
   dialogWindow.addButtonWithTitle('Cancel');
@@ -362,11 +369,13 @@ MapboxMap.prototype.buildTokenWindow = function () {
  */
 MapboxMap.prototype.handleTokenAlertResponse = function (dialog, responseCode) {
   if (responseCode == "1000") {
-    var tokenValue = dialog.viewAtIndex(2).stringValue();
-    var usernameValue = dialog.viewAtIndex(4).stringValue();
+    var usernameValue = dialog.viewAtIndex(2).stringValue();
+    var publicTokenValue = dialog.viewAtIndex(4).stringValue();
+    var tokenValue = dialog.viewAtIndex(6).stringValue();
 
-    setPreferences(this.service + '.token', tokenValue);
     setPreferences(this.service + '.username', usernameValue);
+    setPreferences(this.service + '.publictoken', publicTokenValue);
+    setPreferences(this.service + '.token', tokenValue);
 
     return true;
   } else {

@@ -83,7 +83,7 @@
                 zoom: parseInt(mapData.zoom)
               };
 
-              mapboxgl.accessToken = mapData.token;
+              mapboxgl.accessToken = mapData.publictoken;
               map = new mapboxgl.Map(options);
 
               map.addControl(new mapboxgl.NavigationControl({
