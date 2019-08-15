@@ -166,5 +166,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.0.zip" sparkle:version="3.5.0" />
       </item>
+      <item>
+        <title>Version 3.5.1</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>🤓 Zoom levels now accept decimals (14.5 e.g.).</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.1.zip" sparkle:version="3.5.1" />
+      </item>
   </channel>
 </rss>

@@ -242,8 +242,8 @@ function makeZoomLevels(zoomLevels, minZoom, maxZoom) {
     return;
   }
 
-  for (var x = minZoom; x <= maxZoom; x++) {
-    zoomLevels.push(x.toString());
+  for (var x = minZoom; x <= maxZoom * 2; x++) {
+    zoomLevels.push((x / 2).toString());
   }
 }
 
