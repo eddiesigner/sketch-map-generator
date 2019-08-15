@@ -36,6 +36,8 @@ In order to help you here you have some guides on how to generate a Google Maps 
 
 [How to generate a Mapbox token](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-create-a-token-to-use-your-own-Mapbox-styles)
 
+**The Google Maps key API and the Mapbox token that the plugin has used so far will stop working on September 30th.**
+
 ## How it works?
 
 Create a shape and select it.
