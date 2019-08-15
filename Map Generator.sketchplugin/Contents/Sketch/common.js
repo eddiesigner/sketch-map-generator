@@ -292,7 +292,7 @@ function createMapJavascriptFile(service, options, context) {
   }
 
   if (!addressInfo.token || addressInfo.token.length === 0) {
-    var message = (service === 'mapbox') ? '⚠️ Please save your Mapbox token first.' : '⚠️ Please save your Google Maps key first';
+    var message = (service === 'mapbox') ? '⚠️ Please save your Mapbox token first.' : '⚠️ Please save your Google Maps key first.';
     context.document.showMessage(message);
     return;
   }

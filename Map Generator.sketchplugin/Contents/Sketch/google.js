@@ -30,7 +30,14 @@ GoogleMap.prototype.create = function (context) {
     } else {
       makeZoomLevels(this.zoomLevels, this.minZoom, this.maxZoom);
 
-      var window = buildWindow(this.windowSize, 'Map Generator (Google Maps)');
+      var keyMessage = '';
+      var key = getOption('token', '', this.service);
+
+      if (!key || key.length() === 0) {
+        keyMessage = ' (Unregistered API key)';
+      }
+
+      var window = buildWindow(this.windowSize, 'Map Generator - Google Maps' + keyMessage);
       this.buildInterface(window, context);
 
       [NSApp run];

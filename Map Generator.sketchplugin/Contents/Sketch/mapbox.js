@@ -36,7 +36,14 @@ MapboxMap.prototype.create = function (context) {
     } else {
       makeZoomLevels(this.zoomLevels, this.minZoom, this.maxZoom);
 
-      var window = buildWindow(this.windowSize, 'Map Generator (Mapbox)');
+      var tokenMessage = '';
+      var token = getOption('token', '', this.service);
+
+      if (!token || token.length() === 0) {
+        tokenMessage = ' (Unregistered token)';
+      }
+
+      var window = buildWindow(this.windowSize, 'Map Generator - Mapbox' + tokenMessage);
       this.buildInterface(window, context);
 
       [NSApp run];
@@ -232,9 +239,9 @@ MapboxMap.prototype.buildInterface = function (window, context) {
  * @param {NSWindow} window
  */
 MapboxMap.prototype.generateMap = function (values, context, window) {
-  var key = getOption('token', '', this.service);
+  var token = getOption('token', '', this.service);
   
-  if (!key || key.length() === 0) {
+  if (!token || token.length() === 0) {
     context.document.showMessage('⚠️ Please save your Mapbox token first.');
     return;
   }
@@ -244,14 +251,14 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
   var ownUsername = getOption('username', '', this.service);
   var username = 'mapbox';
   var style = values.type;
-  var position = this.getGeoCode(key, encodeURIComponent(values.address), context);
+  var position = this.getGeoCode(token, encodeURIComponent(values.address), context);
 
   if (values.type.includes(' - ')) {
     username = ownUsername;
     style = values.type.split(' - ')[1];
   }
 
-  var imageUrl = 'https://api.mapbox.com/styles/v1/' + username + '/' + style + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + key;
+  var imageUrl = 'https://api.mapbox.com/styles/v1/' + username + '/' + style + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + token;
 
   fillLayerWithImage(imageUrl, layer, context, this.service);
   setLayerName(layer, values.address, values.zoom);
@@ -271,13 +278,13 @@ MapboxMap.prototype.previewMap = function (values, context) {
 
 /**
  * Gets the coordinates from a given location.
- * @param  {String} apiKey
+ * @param  {String} token
  * @param  {String} address 
  * @param  {Sketch context} context
  * @return {Object}         
  */
-MapboxMap.prototype.getGeoCode = function (apiKey, address, context) {
-  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + apiKey + '&limit=1';
+MapboxMap.prototype.getGeoCode = function (token, address, context) {
+  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + address + '.json?access_token=' + token + '&limit=1';
   var dataString = makeRequest(url);
 
   try {
