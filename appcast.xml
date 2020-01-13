@@ -188,5 +188,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.2.zip" sparkle:version="3.5.2" />
       </item>
+      <item>
+        <title>Version 3.5.3</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>⚡️ Now you can generate with a single command the last map you created. Just hit [cmd] + [shift] + [p]</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.3.zip" sparkle:version="3.5.3" />
+      </item>
   </channel>
 </rss>

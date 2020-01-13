@@ -262,6 +262,11 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
 
   var imageUrl = 'https://api.mapbox.com/styles/v1/' + username + '/' + style + '/static/' + position.lon + ',' + position.lat + ',' + values.zoom + ',0,0/' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '@2x?access_token=' + token;
 
+  setPreferences('lastservice', this.service);
+  setPreferences('lasturl', imageUrl);
+  setPreferences('lastaddress', values.address);
+  setPreferences('lastzoom', values.zoom);
+
   fillLayerWithImage(imageUrl, layer, context, this.service);
   setLayerName(layer, values.address, values.zoom);
   this.previewMap(values, context);

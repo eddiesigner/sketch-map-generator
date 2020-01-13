@@ -58,6 +58,7 @@ Voila! Your shape will be filled with a map.
 
 ## What’s new?
 
+* ⚡️ You can generate with a single command the last map you created. Just hit <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and you're done.
 * 👉🏼 If you use Mapbox, now you can use your own custom styles!
 * 🔥 Map preview! Now you can see a live preview before generating a map.
 * 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish.

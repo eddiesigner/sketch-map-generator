@@ -259,6 +259,11 @@ GoogleMap.prototype.generateMap = function (values, context, window) {
   var layerSizes = layer.frame();
   var imageUrl = 'https://maps.googleapis.com/maps/api/staticmap?center=' + encodeURIComponent(values.address) + '&zoom=' + values.zoom + '&size=' + parseInt([layerSizes width]) + 'x' + parseInt([layerSizes height]) + '&maptype=' + values.type + '&scale=2' + this.parseStyle(values.style, context) + '&key=' + key;
 
+  setPreferences('lastservice', this.service);
+  setPreferences('lasturl', imageUrl);
+  setPreferences('lastaddress', values.address);
+  setPreferences('lastzoom', values.zoom);
+
   fillLayerWithImage(imageUrl, layer, context, this.service);
   setLayerName(layer, values.address, values.zoom);
   this.previewMap(values, context);

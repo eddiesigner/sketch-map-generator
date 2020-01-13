@@ -1,5 +1,6 @@
 @import "google.js";
 @import "mapbox.js";
+@import "generic.js";
 
 /**
  * Run the Google service provider.
@@ -33,4 +34,13 @@ function runMapbox (context) {
 function runMapboxToken () {
   var mapbox = new MapboxMap();
   mapbox.openTokenWindow();
+}
+
+/**
+ * Recreate the last generated map.
+ * @param  {Sketch context} context 
+ */
+function runGenericPreviousMap (context) {
+  var generic = new GenericMap();
+  generic.generateLastMap(context);
 }
