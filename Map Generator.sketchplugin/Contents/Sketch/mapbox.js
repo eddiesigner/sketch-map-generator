@@ -266,6 +266,8 @@ MapboxMap.prototype.generateMap = function (values, context, window) {
   setPreferences('lasturl', imageUrl);
   setPreferences('lastaddress', values.address);
   setPreferences('lastzoom', values.zoom);
+  setPreferences('lastwidth', parseInt([layerSizes width]));
+  setPreferences('lastheight', parseInt([layerSizes height]));
 
   fillLayerWithImage(imageUrl, layer, context, this.service);
   setLayerName(layer, values.address, values.zoom);

@@ -199,5 +199,16 @@
         </description>
         <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.3.zip" sparkle:version="3.5.3" />
       </item>
+      <item>
+        <title>Version 3.5.4</title>
+        <description>
+          <![CDATA[
+            <ul>
+              <li>🛠 The map that is generated based on the last one created now respects the proportions of the new figure instead of keeping the previous ones.</li>
+            </ul>
+          ]]>
+        </description>
+        <enclosure url="https://github.com/eddiesigner/sketch-map-generator/archive/v3.5.4.zip" sparkle:version="3.5.4" />
+      </item>
   </channel>
 </rss>
