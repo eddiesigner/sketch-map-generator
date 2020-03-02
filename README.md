@@ -4,7 +4,7 @@ Map Generator better than ever!
 
 Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.5. Now powered by Google and Mapbox.
 
-If you use it and you like it, please consider to make a donation to support its development! 🙏🏼
+If you find this plugin useful, please consider to make a donation to support its development! 🙏🏼
 
 <a href="https://www.buymeacoffee.com/eddiesigner" target="_blank"><img src="https://res.cloudinary.com/edev/image/upload/v1583011476/button_y8hgt8.png" alt="Donate" style="width: 250px !important; height: 60px !important;" width="250" height="60"></a>
 
