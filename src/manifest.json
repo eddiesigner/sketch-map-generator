@@ -37,7 +37,7 @@
     }
   ],
   "menu": {
-    "title": "Sketch Map Generator",
+    "title": "🗺 Sketch Map Generator",
     "items": [
       "sketch-map-generator.create-map-google",
       "sketch-map-generator.create-map-mapbox",

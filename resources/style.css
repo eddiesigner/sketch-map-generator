@@ -1,14 +1,22 @@
 /* some default styles to make the view more native like */
 
+.titlebar {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 html {
   box-sizing: border-box;
   background: transparent;
-
   /* Prevent the page to be scrollable */
   overflow: hidden;
-
   /* Force the default cursor, even on text */
   cursor: default;
+}
+
+body {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 *, *:before, *:after {
@@ -16,7 +24,6 @@ html {
   margin: 0;
   padding: 0;
   position: relative;
-
   /* Prevent the content from being selectionable */
   -webkit-user-select: none;
   user-select: none;
@@ -26,3 +33,9 @@ input, textarea {
   -webkit-user-select: auto;
   user-select: auto;
 }
+
+[v-cloak] {
+  display: none
+}
+
+/* Webview styles */
