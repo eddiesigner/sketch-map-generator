@@ -9,7 +9,7 @@ import {
   isLayerShape
 } from './common'
 
-const webviewIdentifier = 'sketch-dark-mode.webview'
+const webviewIdentifier = 'sketch-map-generator.webview'
 const doc = sketch.getSelectedDocument()
 
 const closeWwebView = () => {

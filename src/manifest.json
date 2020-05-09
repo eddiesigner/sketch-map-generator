@@ -31,7 +31,7 @@
     },
     {
       "name": "Generate previous Map",
-      "identifier": "sketch-dark-mode.create-previous-map",
+      "identifier": "sketch-map-generator.create-previous-map",
       "script": "./previous-map.js",
       "shortcut": "shift cmd p"
     }
@@ -41,7 +41,7 @@
     "items": [
       "sketch-map-generator.create-map-google",
       "sketch-map-generator.create-map-mapbox",
-      "sketch-dark-mode.create-previous-map"
+      "sketch-map-generator.create-previous-map"
     ]
   },
   "compatibleVersion": "53",
