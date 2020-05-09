@@ -1,0 +1,52 @@
+{
+  "$schema": "https://raw.githubusercontent.com/sketch-hq/SketchAPI/develop/docs/sketch-plugin-manifest-schema.json",
+  "author": "Eduardo Gómez",
+  "authorEmail": "this.eduardo@gmail.com",
+  "bundleVersion": 1,
+  "icon": "icon.png",
+  "commands": [
+    {
+      "name": "Generate a Map using Google Maps...",
+      "identifier": "sketch-map-generator.create-map-google",
+      "script": "./create-map.js",
+      "shortcut": "shift cmd m",
+      "handlers": {
+        "run": "onGoogleRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
+    },
+    {
+      "name": "Generate a Map using Mapbox...",
+      "identifier": "sketch-map-generator.create-map-mapbox",
+      "script": "./create-map.js",
+      "shortcut": "shift cmd b",
+      "handlers": {
+        "run": "onMapboxRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
+    },
+    {
+      "name": "Generate previous Map",
+      "identifier": "sketch-dark-mode.create-previous-map",
+      "script": "./previous-map.js",
+      "shortcut": "shift cmd p"
+    }
+  ],
+  "menu": {
+    "title": "Sketch Map Generator",
+    "items": [
+      "sketch-map-generator.create-map-google",
+      "sketch-map-generator.create-map-mapbox",
+      "sketch-dark-mode.create-previous-map"
+    ]
+  },
+  "compatibleVersion": "53",
+  "homepage": "https://github.com/eddiesigner/sketch-map-generator",
+  "identifier": "io.eduardogomez.sketch.map-generator",
+  "name": "Sketch Map Generator",
+  "description": "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)."
+}

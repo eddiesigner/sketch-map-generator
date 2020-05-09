@@ -1,0 +1,41 @@
+{
+  "name": "sketch-map-generator",
+  "description": "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)",
+  "version": "2.3.0",
+  "engines": {
+    "sketch": ">=53.0"
+  },
+  "skpm": {
+    "name": "sketch-map-generator",
+    "manifest": "src/manifest.json",
+    "main": "sketch-map-generator.sketchplugin",
+    "assets": [
+      "assets/**/*"
+    ],
+    "sketch-assets-file": "sketch-assets/icons.sketch"
+  },
+  "scripts": {
+    "build": "skpm-build",
+    "watch": "skpm-build --watch",
+    "start": "skpm-build --watch",
+    "postinstall": "npm run build && skpm-link"
+  },
+  "devDependencies": {
+    "@skpm/builder": "^0.7.4",
+    "@skpm/extract-loader": "^2.0.2",
+    "css-loader": "^3.2.0",
+    "html-loader": "^0.5.5"
+  },
+  "resources": [
+    "resources/**/*.js"
+  ],
+  "dependencies": {
+    "sketch-module-web-view": "^3.4.1"
+  },
+  "author": "Eduardo Gomez",
+  "homepage": "https://github.com/eddiesigner/sketch-map-generator",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/eddiesigner/sketch-map-generator.git"
+  }
+}
