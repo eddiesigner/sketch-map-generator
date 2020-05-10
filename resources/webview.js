@@ -18,7 +18,12 @@ window.createMapUI = (provider) => {
     el: '#app',
     data() {
       return {
-        provider
+        currentTab: provider
+      }
+    },
+    methods: {
+      selectTab(tab) {
+        this.currentTab = tab
       }
     }
   })
@@ -29,5 +34,5 @@ document.addEventListener('click', interceptClickEvent)
 
 // disable the context menu (eg. the right click menu) to have a more native feel
 document.addEventListener('contextmenu', (e) => {
-  e.preventDefault()
+  // e.preventDefault()
 })

@@ -60,9 +60,9 @@ const createMapUI = (provider) => {
   const windowOptions = {
     identifier: webviewIdentifier,
     parent: doc,
-    width: 800,
-    minWidth: 800,
-    maxWidth: 800,
+    width: 900,
+    minWidth: 900,
+    maxWidth: 900,
     height: 800,
     minHeight: 800,
     maxHeight: 800,

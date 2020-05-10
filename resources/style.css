@@ -1,3 +1,31 @@
+/* CSS variables */
+
+:root {
+  --background-color: #f6f9fc;
+  --tab-active-background-color: #e0edfa;
+  --tab-content-background-color: #ffffff;
+  --text-color: #121d2e;
+  --border-color: #edf0f5;
+  --input-color: #333;
+  --input-background-color: #d8dce7;
+  --button-background-color: #2253e6;
+  --link-color: #121d2e;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background-color: #171e36;
+    --tab-active-background-color: #0c101f;
+    --tab-content-background-color: #1c243b;
+    --text-color: #ffffff;
+    --border-color: #16172a;
+    --input-color: #ececec;
+    --input-background-color: #0d1c2f;
+    --button-background-color: #2253e6;
+    --link-color: #ffffff;
+  }
+}
+
 /* some default styles to make the view more native like */
 
 .titlebar {
@@ -7,7 +35,7 @@
 
 html {
   box-sizing: border-box;
-  background: transparent;
+  background: var(--background-color);
   /* Prevent the page to be scrollable */
   overflow: hidden;
   /* Force the default cursor, even on text */
@@ -39,3 +67,212 @@ input, textarea {
 }
 
 /* Webview styles */
+
+.app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+.header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-end;
+  justify-content: center;
+  height: 70px;
+  padding: 20px;
+  position: relative;
+  background: var(--bar-background-color);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 3;
+}
+
+.header-title {
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  font-weight: normal;
+  font-size: 16px;
+  margin: 0;
+  opacity: 0.8;
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  position: relative;
+  z-index: 1;
+  height: calc(100vh - 70px);
+}
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 25%;
+  height: 100%;
+  border-right: 1px solid var(--border-color);
+}
+
+.content {
+  width: 75%;
+  height: 100%;
+  position: relative;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  font-size: 15px;
+  padding: 20px;
+  width: 100%;
+  background: transparent;
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  border: 0;
+  outline: 0;
+}
+
+.tab.top {
+  border-bottom: 1px solid var(--border-color);
+}
+
+.tab.bottom {
+  border-top: 1px solid var(--border-color);
+}
+
+.tab.active {
+  background-color: var(--tab-active-background-color);
+}
+
+.tab .icon {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
+}
+
+.tab-content {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+}
+
+.wrapper {
+  position: relative;
+  padding: 20px;
+}
+
+.small-heading {
+  color: var(--text-color);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 500;
+  margin: 0 0 25px;
+  opacity: 0.7;
+}
+
+.buttons-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.button {
+  display: block;
+  color: white;
+  font-weight: 500;
+  font-size: 13px;
+  letter-spacing: 0.2px;
+  padding: 12px 15px;
+  border-radius: 5px;
+  background: var(--button-background-color);
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  border: 0;
+  outline: 0;
+  transition: background linear 0.1s;
+}
+
+.button:active:not(:disabled),
+.button:focus:not(:disabled) {
+  background: #1840b8;
+}
+
+.button:disabled {
+  opacity: 0.5;
+}
+
+.fieldset {
+  position: relative;
+  width: 100%;
+  border: 0;
+  margin-bottom: 20px;
+}
+
+.fieldset.last {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  color: var(--text-color);
+  font-size: 14px;
+  margin-bottom: 12px;
+  opacity: 0.8;
+}
+
+.input {
+  position: relative;
+  width: 100%;
+  color: var(--input-color);
+  font-family: monospace;
+  font-size: 16px;
+  padding: 12px 15px;
+  border-radius: 5px;
+  background: var(--background-color);
+  -webkit-appearance: none !important;
+  appearance: none !important;
+  border: 1px solid var(--border-color);
+  outline: 0;
+}
+
+.settings-container {
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 25px;
+  background-color: var(--tab-content-background-color);
+}
+
+.donate {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  color: var(--link-color);
+  text-decoration: none;
+  font-size: 14px;
+  padding: 10px 20px;
+  position: relative;
+  cursor: pointer;
+  border-top: 1px solid var(--border-color);
+}
+
+.donate:before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.15;
+  background-color: var(--tab-active-background-color);
+  z-index: -1;
+}
+
+.donate span {
+  display: inline-block;
+  font-size: 13px;
+  margin-right: 10px;
+}
