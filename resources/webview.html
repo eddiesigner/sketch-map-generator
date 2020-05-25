@@ -137,46 +137,57 @@
       <div class="main-content">
         <div :class="['sidebar', { 'collapsed': showSettings }]">
           <div class="sidebar-form">
-            <div v-if="errorMessage" class="alert warning">
+            <div
+              v-cloak
+              v-if="errorMessage"
+              class="alert warning"
+            >
               {{ errorMessage }}
             </div>
             <fieldset class="fieldset">
               <label class="label">
                 Location
               </label>
-              <input type="text" class="input" value="" spellcheck="false" placeholder="Address, city or a place" />
-            </fieldset>
-            <fieldset class="fieldset">
-              <label class="label">
-                Location
-              </label>
               <input
+                v-model="address"
                 type="text"
                 class="input"
-                value=""
                 spellcheck="false"
-                placeholder="Address, city or a place"
+                placeholder="Enter an address, a city or a place"
               />
             </fieldset>
             <fieldset class="fieldset">
               <label class="label">
                 Zoom level
               </label>
-              <select class="select">
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
+              <select v-model="zoom" class="select">
+                <option value="">Select a zoom level</option>
+                <option
+                  v-for="zoomLevel in zoomLevels"
+                  :key="zoomLevel"
+                  :value="zoomLevel"
+                >
+                  {{ zoomLevel }}
+                </option>
               </select>
             </fieldset>
             <fieldset class="fieldset">
               <label class="label">
                 Map style
               </label>
-              <select class="select">
-                <option value="1">Option 1</option>
-                <option value="2">Option 2</option>
+              <select v-model="style" class="select">
+                <option value="">Select a map style</option>
+                <option
+                  v-for="mapStyle in mapStyles"
+                  :key="mapStyle"
+                  :value="mapStyle"
+                >
+                  {{ mapStyle }}
+                </option>
               </select>
             </fieldset>
             <fieldset
+              v-cloak
               v-show="currentProvider === 'google'"
               class="fieldset"
             >
@@ -184,6 +195,7 @@
                 Snazzy styles
               </label>
               <textarea
+                v-model="snazzyStyle"
                 class="textarea"
                 placeholder="Paste some Snazzy styles here"
               ></textarea>
@@ -191,7 +203,7 @@
           </div>
           <div class="row centered sidebar-bottom">
             <label class="checkbox">
-              <input type="checkbox" value="">
+              <input v-model="remember" type="checkbox">
               <span>Remember my options</span>
             </label>
             <div class="buttons-container">
@@ -200,8 +212,13 @@
           </div>
         </div>
         <div :class="['content', { 'expanded': showSettings }]">
-          <div v-show="!showSettings" class="preview"></div>
           <div
+            v-cloak
+            v-show="!showSettings"
+            class="preview"
+          ></div>
+          <div
+            v-cloak
             v-show="showSettings"
             :class="['settings', { opened: showSettings }]"
           >
@@ -211,9 +228,9 @@
                 <fieldset class="fieldset">
                   <label class="label">API Key</label>
                   <input
+                    v-model="googleApiKey"
                     type="text"
                     class="input"
-                    value=""
                     spellcheck="false"
                     placeholder="Enter your API Key"
                   />
@@ -231,9 +248,9 @@
                 <fieldset class="fieldset">
                   <label class="label">Username</label>
                   <input
+                    v-model="mapboxUsername"
                     type="text"
                     class="input"
-                    value=""
                     spellcheck="false"
                     placeholder="Enter your username"
                   />
@@ -241,9 +258,9 @@
                 <fieldset class="fieldset">
                   <label class="label">Public token</label>
                   <input
+                    v-model="mapboxPublicToken"
                     type="text"
                     class="input"
-                    value=""
                     spellcheck="false"
                     placeholder="Enter your public token"
                   />
@@ -251,9 +268,9 @@
                 <fieldset class="fieldset">
                   <label class="label">Secret token</label>
                   <input
+                    v-model="mapboxSecretToken"
                     type="text"
                     class="input"
-                    value=""
                     spellcheck="false"
                     placeholder="Enter your secret token"
                   />
@@ -267,7 +284,7 @@
                 </a>
               </div>
               <div class="buttons-container end">
-                <button class="button">Save settings</button>
+                <button class="button" v-on:click="saveSettings()">Save settings</button>
               </div>
             </div>
           </div>

@@ -149,6 +149,8 @@ input, textarea {
 
 .sidebar-form {
   flex: 1;
+  padding: 0 2px;
+  margin: 0 -2px;
   overflow-y: auto;
 }
 
@@ -271,10 +273,10 @@ input, textarea {
 }
 
 .select {
-  padding-right: 44px;
+  padding-right: 40px;
   background-repeat: no-repeat;
   background-size: 22px 18px;
-  background-position: 95% center;
+  background-position: 96% center;
   background-image: var(--select-icon);
 }
 

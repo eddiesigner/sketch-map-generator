@@ -3,11 +3,7 @@ import UI from 'sketch/ui'
 import Settings from 'sketch/settings'
 import BrowserWindow from 'sketch-module-web-view'
 import { getWebview } from 'sketch-module-web-view/remote'
-import {
-  isSketchSupportedVersion,
-  isOneLayerSelected,
-  isLayerShape
-} from './common'
+import { isSketchSupportedVersion } from './common'
 
 const webviewIdentifier = 'sketch-map-generator.webview'
 const doc = sketch.getSelectedDocument()
@@ -43,18 +39,17 @@ const createMapUI = (provider) => {
     return
   }
 
-  const selection = doc.selectedLayers
+  const googleApiKey = Settings.settingForKey('google.token')
+  const mapboxUsername = Settings.settingForKey('mapbox.username')
+  const mapboxPublicToken = Settings.settingForKey('mapbox.publictoken')
+  const mapboxSecretToken = Settings.settingForKey('mapbox.token')
 
-  if (!isOneLayerSelected(selection)) {
-    UI.message('⚠️ You have to select one layer.')
-    return
-  }
-
-  const layer = selection.layers[0]
-
-  if (!isLayerShape(layer)) {
-    UI.message('⚠️ You have to select a shape layer.')
-    return
+  const data = {
+    provider,
+    googleApiKey,
+    mapboxUsername,
+    mapboxPublicToken,
+    mapboxSecretToken
   }
 
   const windowOptions = {
@@ -97,9 +92,28 @@ const createMapUI = (provider) => {
     closeWwebView()
   })
 
+  webContents.on('saveSettings', (data) => {
+    Settings.setSettingForKey(
+      'google.token',
+      data.googleApiKey
+    )
+    Settings.setSettingForKey(
+      'mapbox.username',
+      data.mapboxUsername
+    )
+    Settings.setSettingForKey(
+      'mapbox.publictoken',
+      data.mapboxPublicToken
+    )
+    Settings.setSettingForKey(
+      'mapbox.token',
+      data.mapboxSecretToken
+    )
+  })
+
   webContents.executeJavaScript(
     `createMapUI(
-      ${JSON.stringify(provider)}
+      ${JSON.stringify(data)}
     )`
   )
     .then((res) => {
