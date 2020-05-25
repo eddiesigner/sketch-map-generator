@@ -18,12 +18,18 @@ window.createMapUI = (provider) => {
     el: '#app',
     data() {
       return {
-        currentTab: provider
+        currentProvider: provider,
+        showSettings: false,
+        errorMessage: ''
       }
     },
     methods: {
-      selectTab(tab) {
-        this.currentTab = tab
+      selectProvider(provider) {
+        this.currentProvider = provider
+        this.showSettings = false
+      },
+      displaySettings() {
+        this.showSettings = true
       }
     }
   })
