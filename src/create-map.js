@@ -8,7 +8,7 @@ import { isSketchSupportedVersion } from './common'
 const webviewIdentifier = 'sketch-map-generator.webview'
 const doc = sketch.getSelectedDocument()
 
-const closeWwebView = () => {
+const closeWebView = () => {
   const existingWebview = getWebview(webviewIdentifier)
   if (existingWebview) {
     existingWebview.close()
@@ -18,7 +18,7 @@ const closeWwebView = () => {
 // When the plugin is shutdown by Sketch (for example when the user disable the plugin)
 // we need to close the webview if it's open
 export function onShutdown() {
-  closeWwebView()
+  closeWebView()
 }
 
 export function onGoogleRun() {
@@ -43,13 +43,23 @@ const createMapUI = (provider) => {
   const mapboxUsername = Settings.settingForKey('mapbox.username')
   const mapboxPublicToken = Settings.settingForKey('mapbox.publictoken')
   const mapboxSecretToken = Settings.settingForKey('mapbox.token')
+  const remember = Settings.settingForKey('map.remember')
+  const address = Settings.settingForKey('map.address')
+  const zoom = Settings.settingForKey('map.zoom')
+  const style = Settings.settingForKey('map.style')
+  const snazzy = Settings.settingForKey('google.snazzy')
 
   const data = {
     provider,
     googleApiKey,
     mapboxUsername,
     mapboxPublicToken,
-    mapboxSecretToken
+    mapboxSecretToken,
+    remember,
+    address,
+    zoom,
+    style,
+    snazzy
   }
 
   const windowOptions = {
@@ -85,11 +95,35 @@ const createMapUI = (provider) => {
   })
 
   webContents.on('closeWindow', () => {
-    closeWwebView()
+    closeWebView()
   })
 
-  webContents.on('generateMap', () => {
-    closeWwebView()
+  webContents.on('generateMap', (data) => {
+    Settings.setSettingForKey(
+      'map.address',
+      data.address
+    )
+    Settings.setSettingForKey(
+      'map.zoom',
+      data.zoom
+    )
+    Settings.setSettingForKey(
+      'map.style',
+      data.style
+    )
+    Settings.setSettingForKey(
+      'map.snazzy',
+      data.snazzy
+    )
+
+    closeWebView()
+  })
+
+  webContents.on('toggleRemember', (status) => {
+    Settings.setSettingForKey(
+      'map.remember',
+      status
+    )
   })
 
   webContents.on('saveSettings', (data) => {

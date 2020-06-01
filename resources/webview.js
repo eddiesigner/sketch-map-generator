@@ -14,22 +14,23 @@ const interceptClickEvent = (event) => {
 }
 
 window.createMapUI = (data) => {
+  console.log(data)
   app = new Vue({
     el: '#app',
     data() {
       return {
-        currentProvider: data.provider,
-        googleApiKey: data.googleApiKey,
-        mapboxUsername: data.mapboxUsername,
-        mapboxPublicToken: data.mapboxPublicToken,
-        mapboxSecretToken: data.mapboxSecretToken,
+        currentProvider: data.provider ? data.provider : '',
+        googleApiKey: data.googleApiKey ? data.googleApiKey : '',
+        mapboxUsername: data.mapboxUsername ? data.mapboxUsername : '',
+        mapboxPublicToken: data.mapboxPublicToken ? data.mapboxPublicToken : '',
+        mapboxSecretToken: data.mapboxSecretToken ? data.mapboxSecretToken : '',
+        remember: data.remember ? data.remember : false,
         address: '',
         zoom: '',
         style: '',
-        snazzyStyle: '',
-        remember: false,
+        snazzy: '',
         showSettings: false,
-        errorMessage: ''
+        areSettingsSaved: false
       }
     },
     computed: {
@@ -77,7 +78,32 @@ window.createMapUI = (data) => {
         }
 
         return styles
+      },
+      errorMessage() {
+        if (this.isGoogleProviderSelected && !this.googleApiKey) {
+          return '💡 Please save your Google API Key in the settings.'
+        } else if (!this.isGoogleProviderSelected && (
+            !this.mapboxUsername ||
+            !this.mapboxPublicToken ||
+            !this.mapboxSecretToken
+          )
+        ) {
+          return '💡 Please save your Mapbox username, your public token and your secret token in the settings.'
+        }
+
+        return ''
+      },
+      disableGenerateMapButton() {
+        return this.address.length === 0 || this.errorMessage.length > 0
       }
+    },
+    watch: {
+      remember() {
+        window.postMessage('toggleRemember', this.remember)
+      }
+    },
+    created() {
+      this.setMapData(data)
     },
     methods: {
       selectProvider(provider) {
@@ -87,6 +113,22 @@ window.createMapUI = (data) => {
       displaySettings() {
         this.showSettings = true
       },
+      setMapData(data) {
+        if (this.remember) {
+          this.address = data.address ? data.address : '',
+          this.zoom = data.zoom ? data.zoom : '',
+          this.style = data.style ? data.style : '',
+          this.snazzy = data.snazzy ? data.snazzy : ''
+        }
+      },
+      generateMap() {
+        window.postMessage('generateMap', {
+          address: this.address,
+          zoom: this.zoom,
+          style: this.style,
+          snazzy: this.snazzy
+        })
+      },
       saveSettings() {
         window.postMessage('saveSettings', {
           googleApiKey: this.googleApiKey,
@@ -94,6 +136,12 @@ window.createMapUI = (data) => {
           mapboxPublicToken: this.mapboxPublicToken,
           mapboxSecretToken: this.mapboxSecretToken
         })
+
+        this.areSettingsSaved = true
+
+        setTimeout(() => {
+          this.areSettingsSaved = false
+        }, 3000)
       }
     }
   })

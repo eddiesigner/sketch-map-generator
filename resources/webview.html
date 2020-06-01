@@ -195,7 +195,7 @@
                 Snazzy styles
               </label>
               <textarea
-                v-model="snazzyStyle"
+                v-model="snazzy"
                 class="textarea"
                 placeholder="Paste some Snazzy styles here"
               ></textarea>
@@ -207,7 +207,13 @@
               <span>Remember my options</span>
             </label>
             <div class="buttons-container">
-              <button class="button">Generate map</button>
+              <button
+                class="button"
+                :disabled="disableGenerateMapButton"
+                v-on:click="generateMap()"
+              >
+                Generate map
+              </button>
             </div>
           </div>
         </div>
@@ -216,7 +222,12 @@
             v-cloak
             v-show="!showSettings"
             class="preview"
-          ></div>
+          >
+            <div class="no-preview-container">
+              <h2 class="no-preview">Nothing to preview</h2>
+              <p class="small-message">Error code: 400</p>
+            </div>
+          </div>
           <div
             v-cloak
             v-show="showSettings"
@@ -284,7 +295,15 @@
                 </a>
               </div>
               <div class="buttons-container end">
-                <button class="button" v-on:click="saveSettings()">Save settings</button>
+                <p
+                  v-cloak
+                  v-if="areSettingsSaved"
+                  class="small-message in-settings">
+                    Settings have been saved.
+                </p>
+                <button class="button" v-on:click="saveSettings()">
+                  Save settings
+                </button>
               </div>
             </div>
           </div>
