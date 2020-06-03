@@ -2,12 +2,15 @@
 <html>
 <head>
   <meta charset="utf-8">
+  <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
   <title>Sketch Map Generator</title>
   <link rel="stylesheet" href="./style.css">
+  <script src="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.js"></script>
+  <link href="https://api.mapbox.com/mapbox-gl-js/v1.10.1/mapbox-gl.css" rel="stylesheet" />
 </head>
-<body data-app-region="drag">
+<body>
   <div id="app" class="app">
-    <div class="header">
+    <div class="header" data-app-region="drag">
       <h1 class="header-title">Sketch Map Generator</h1>
     </div>
     <div class="body">
@@ -224,8 +227,14 @@
             class="preview"
           >
             <div class="no-preview-container">
-              <h2 class="no-preview">Nothing to preview</h2>
-              <p class="small-message">Error code: 400</p>
+              <h2 class="no-preview">{{ previewTitle }}</h2>
+              <p class="small-message">{{ previewErrorMesasge }}</p>
+            </div>
+            <div
+              v-show="!loadingPreview && !errorLoadingPreview"
+              class="map-container"
+            >
+              <div id="map" class="map"></div>
             </div>
           </div>
           <div

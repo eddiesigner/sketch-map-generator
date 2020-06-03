@@ -112,7 +112,7 @@ const createMapUI = (provider) => {
       data.style
     )
     Settings.setSettingForKey(
-      'map.snazzy',
+      'google.snazzy',
       data.snazzy
     )
 
