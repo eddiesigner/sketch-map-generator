@@ -2,7 +2,10 @@ import Vue from './vue'
 import {
   initGoogleMapsScript,
   getGoogleCoordinates,
-  getGoogleAddress
+  getMapboxCoordinates,
+  getGoogleAddress,
+  getMapboxAddress,
+  getMapboxUserStyles
 } from './utils'
 
 /**
@@ -31,15 +34,19 @@ window.createMapUI = (data) => {
         remember: data.remember ? data.remember : false,
         address: '',
         zoom: '',
+        defaultZoom: 15,
         style: '',
+        userMapboxStyles: [],
         snazzy: '',
         showSettings: false,
         areSettingsSaved: false,
         loadingPreview: false,
         errorLoadingPreview: false,
         previewErrorMesasge: '',
-        map: null,
-        marker: null,
+        googleMap: null,
+        mapboxMap: null,
+        googleMarker: null,
+        mapboxMarker: null,
         timer: null,
         googleGeocoder: null
       }
@@ -74,7 +81,7 @@ window.createMapUI = (data) => {
             'terrain'
           ]
         } else {
-          styles = [
+          const mapboxStyles = [
             'streets-v11',
             'outdoors-v11',
             'light-v10',
@@ -86,9 +93,24 @@ window.createMapUI = (data) => {
             'navigation-guidance-day-v4',
             'navigation-guidance-night-v4'
           ]
+
+          styles = this.userMapboxStyles.concat(mapboxStyles)
         }
 
         return styles
+      },
+      defaultStyle() {
+        return this.isGoogleProviderSelected ? 'roadmap' : 'streets-v11'
+      },
+      mapboxUsernameForStyle() {
+        return this.style.includes(' - ') ? this.mapboxUsername : 'mapbox'
+      },
+      mapboxUserStyle() {
+        if (this.mapboxUsernameForStyle !== 'mapbox') {
+          return this.style.split(' - ')[1]
+        }
+
+        return this.style
       },
       isGoogleConfigurated() {
         return this.googleApiKey
@@ -123,11 +145,20 @@ window.createMapUI = (data) => {
       }
     },
     watch: {
+      currentProvider() {
+        if (!this.zoom || !this.zoomLevels.includes(this.zoom)) {
+          this.zoom = this.defaultZoom
+        }
+
+        if (!this.style || !this.mapStyles.includes(this.style)) {
+          this.style = this.defaultStyle
+        }
+      },
       remember() {
         window.postMessage('toggleRemember', this.remember)
       },
       address(newValue) {
-        if (!this.map) {
+        if (!this[`${this.currentProvider}Map`]) {
           return
         }
 
@@ -140,8 +171,8 @@ window.createMapUI = (data) => {
             if (this.isGoogleProviderSelected) {
               getGoogleCoordinates(this.googleGeocoder, this.address)
                 .then((location) => {
-                  this.map.setCenter(location)
-                  this.marker.setPosition(location)
+                  this.googleMap.setCenter(location)
+                  this.googleMarker.setPosition(location)
                 })
                 .catch((error) => {
                   this.errorLoadingPreview = true
@@ -152,25 +183,25 @@ window.createMapUI = (data) => {
         }
       },
       zoom(newValue) {
-        if (!this.map) {
+        if (!this[`${this.currentProvider}Map`]) {
           return
         }
 
         if (this.isGoogleProviderSelected) {
-          this.map.setZoom(parseInt(newValue))
+          this.googleMap.setZoom(parseInt(newValue))
         }
       },
       style(newValue) {
-        if (!this.map) {
+        if (!this[`${this.currentProvider}Map`]) {
           return
         }
 
         if (this.isGoogleProviderSelected) {
-          this.map.setMapTypeId(newValue)
+          this.googleMap.setMapTypeId(newValue)
         }
       },
       snazzy(newValue) {
-        if (!this.map) {
+        if (!this.googleMap) {
           return
         }
 
@@ -182,7 +213,7 @@ window.createMapUI = (data) => {
               return
             }
 
-            this.map.setOptions({ styles })
+            this.googleMap.setOptions({ styles })
           } catch (error) {
             console.log(error)
           }
@@ -191,6 +222,18 @@ window.createMapUI = (data) => {
     },
     created() {
       this.setMapData(data)
+
+      if (!this.isGoogleProviderSelected) {
+        getMapboxUserStyles(this.mapboxSecretToken, this.mapboxUsername)
+          .then((styles) => {
+            if (styles.length > 0) {
+              this.userMapboxStyles = styles
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     },
     mounted() {
       this.initMap()
@@ -205,17 +248,23 @@ window.createMapUI = (data) => {
       },
       setMapData(data) {
         if (this.remember) {
-          this.address = data.address ? data.address : '',
-            this.zoom = data.zoom ? data.zoom : '',
-            this.style = data.style ? data.style : '',
-            this.snazzy = data.snazzy ? data.snazzy : ''
+          this.address = data.address ? data.address : ''
+          this.zoom = data.zoom ? data.zoom : this.defaultZoom
+          this.style =
+          data.style && this.mapStyles.includes(data.style) ?
+            data.style :
+            this.defaultStyle
+          this.snazzy = data.snazzy ? data.snazzy : ''
+        } else {
+          this.zoom = this.defaultZoom
+          this.style = this.defaultStyle
         }
       },
       initMap() {
-        if (this.isGoogleConfigurated) {
+        if (this.isGoogleProviderSelected && this.isGoogleConfigurated) {
           this.loadGoogleMaps()
         } else if (this.isMapboxConfigurated) {
-          this.loadMapbox()
+          this.initMapboxMap()
         }
       },
       loadGoogleMaps() {
@@ -238,7 +287,7 @@ window.createMapUI = (data) => {
           .then((location) => {
             this.loadingPreview = false
 
-            const mapElement = document.getElementById('map')
+            const mapElement = document.getElementById('google-map')
             let options
 
             try {
@@ -255,17 +304,17 @@ window.createMapUI = (data) => {
               return
             }
 
-            this.map = new google.maps.Map(mapElement, options)
+            this.googleMap = new google.maps.Map(mapElement, options)
 
-            this.marker = new google.maps.Marker({
-              map: this.map,
+            this.googleMarker = new google.maps.Marker({
+              map: this.googleMap,
               position: location,
               draggable: true,
               title: 'Drag me!'
             })
 
-            google.maps.event.addListener(this.marker, 'dragend', () => {
-              getGoogleAddress(this.googleGeocoder, this.marker)
+            google.maps.event.addListener(this.googleMarker, 'dragend', () => {
+              getGoogleAddress(this.googleGeocoder, this.googleMarker)
                 .then((address) => {
                   this.address = address
                 })
@@ -274,8 +323,8 @@ window.createMapUI = (data) => {
                 })
             })
 
-            this.map.addListener('zoom_changed', () => {
-              this.zoom = this.map.getZoom()
+            this.googleMap.addListener('zoom_changed', () => {
+              this.zoom = this.googleMap.getZoom()
             })
           })
           .catch((error) => {
@@ -283,8 +332,54 @@ window.createMapUI = (data) => {
             this.previewErrorMesasge = error
           })
       },
-      loadMapbox() {
+      initMapboxMap() {
         this.loadingPreview = true
+
+        getMapboxCoordinates(this.mapboxSecretToken, this.address)
+          .then((location) => {
+            this.loadingPreview = false
+
+            mapboxgl.accessToken = this.mapboxPublicToken
+
+            const options = {
+              container: 'mapbox-map',
+              style: `mapbox://styles/${this.mapboxUsernameForStyle}/${this.mapboxUserStyle}`,
+              center: [location.lng, location.lat],
+              zoom: parseInt(this.zoom)
+            }
+
+            this.mapboxMap = new mapboxgl.Map(options)
+
+            setTimeout(() => {
+              window.dispatchEvent(new Event('resize'))
+            }, 10)
+
+            this.mapboxMap.addControl(new mapboxgl.NavigationControl())
+
+            this.mapboxMap.on('zoomend', () => {
+              this.zoom = parseInt(this.mapboxMap.getZoom())
+            })
+
+            this.mapboxMarker = new mapboxgl.Marker({
+              draggable: true
+            })
+              .setLngLat([location.lng, location.lat])
+              .addTo(this.mapboxMap)
+
+            this.mapboxMarker.on('dragend', () => {
+              getMapboxAddress(this.mapboxSecretToken, this.mapboxMarker)
+                .then((address) => {
+                  this.address = address
+                })
+                .catch((error) => {
+                  console.log(error)
+                })
+            })
+          })
+          .catch((error) => {
+            this.errorLoadingPreview = true
+            this.previewErrorMesasge = error
+          })
       },
       generateMap() {
         window.postMessage('generateMap', {

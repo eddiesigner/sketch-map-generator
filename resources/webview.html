@@ -164,7 +164,6 @@
                 Zoom level
               </label>
               <select v-model="zoom" class="select">
-                <option value="">Select a zoom level</option>
                 <option
                   v-for="zoomLevel in zoomLevels"
                   :key="zoomLevel"
@@ -179,7 +178,6 @@
                 Map style
               </label>
               <select v-model="style" class="select">
-                <option value="">Select a map style</option>
                 <option
                   v-for="mapStyle in mapStyles"
                   :key="mapStyle"
@@ -240,10 +238,22 @@
               <p class="small-message">{{ previewErrorMesasge }}</p>
             </div>
             <div
+              v-cloak
               v-show="!loadingPreview && !errorLoadingPreview"
               class="map-container"
             >
-              <div id="map" class="map"></div>
+              <div
+                v-cloak
+                v-show="isGoogleProviderSelected"
+                id="google-map"
+                class="map"
+              ></div>
+              <div
+                v-cloak
+                v-show="!isGoogleProviderSelected"
+                id="mapbox-map"
+                class="map"
+              ></div>
             </div>
           </div>
           <div

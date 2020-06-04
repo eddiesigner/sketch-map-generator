@@ -36,6 +36,26 @@ export const getGoogleCoordinates = (geocoder, address) => {
   })
 }
 
+export const getMapboxCoordinates = (secretToken, address) => {
+  return new Promise((resolve, reject) => {
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${secretToken}&limit=1`
+    )
+      .then(response => response.json())
+      .then((result) => {
+        if (result.features[0]) {
+          resolve({
+            lat: result.features[0].center[1],
+            lng: result.features[0].center[0]
+          })
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 export const getGoogleAddress = (geocoder, marker) => {
   return new Promise((resolve, reject) => {
     const coordinates = {
@@ -50,5 +70,47 @@ export const getGoogleAddress = (geocoder, marker) => {
 
       resolve(results[0].formatted_address)
     })
+  })
+}
+
+export const getMapboxAddress = (secretToken, marker) => {
+  return new Promise((resolve, reject) => {
+    const coordinates = marker.getLngLat()
+
+    fetch(
+      `https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates.lng},${coordinates.lat}.json?access_token=${secretToken}&limit=1`
+    )
+      .then(response => response.json())
+      .then((result) => {
+        if (result.features[0]) {
+          resolve(result.features[0].place_name)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export const getMapboxUserStyles = (secretToken, username) => {
+  return new Promise((resolve, reject) => {
+    fetch(
+      `https://api.mapbox.com/styles/v1/${username}?access_token=${secretToken}`
+    )
+      .then(response => response.json())
+      .then((result) => {
+        if (result.length > 0) {
+          const styles = result.map((style) => {
+            return `${style.name} - ${style.id}`
+          })
+
+          resolve(styles)
+        } else {
+          resolve([])
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
   })
 }
