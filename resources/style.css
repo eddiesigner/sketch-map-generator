@@ -414,6 +414,7 @@ input, textarea {
   left: 0;
   width: 100%;
   height: 100%;
+  padding: 20px;
   overflow: hidden;
   background-color: var(--background-color);
   z-index: 2;
@@ -422,6 +423,8 @@ input, textarea {
 .map {
   width: 100%;
   height: 100%;
+  border-radius: 5px;
+  overflow: hidden;
 }
 
 .alert {

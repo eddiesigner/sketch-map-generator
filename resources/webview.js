@@ -168,6 +168,25 @@ window.createMapUI = (data) => {
         if (this.isGoogleProviderSelected) {
           this.map.setMapTypeId(newValue)
         }
+      },
+      snazzy(newValue) {
+        if (!this.map) {
+          return
+        }
+
+        if (this.isGoogleProviderSelected) {
+          try {
+            const styles = JSON.parse(newValue)
+
+            if (!Array.isArray(styles)) {
+              return
+            }
+
+            this.map.setOptions({ styles })
+          } catch (error) {
+            console.log(error)
+          }
+        }
       }
     },
     created() {
