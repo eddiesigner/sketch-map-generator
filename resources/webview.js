@@ -35,7 +35,16 @@ window.createMapUI = (data) => {
         address: '',
         zoom: '',
         defaultZoom: 15,
-        style: '',
+        googleDefaultStyle: 'roadmap',
+        mapboxDefaultStyle: 'streets-v11',
+        googleStyle: '',
+        mapboxStyle: '',
+        googleStyles: [
+          'roadmap',
+          'satellite',
+          'hybrid',
+          'terrain'
+        ],
         userMapboxStyles: [],
         snazzy: '',
         showSettings: false,
@@ -56,61 +65,44 @@ window.createMapUI = (data) => {
         return this.currentProvider === 'google'
       },
       zoomLevels() {
-        const minZoomLevel = this.isGoogleProviderSelected ? 1 : 0
-        const maxZoomLevel = this.isGoogleProviderSelected ? 18 : 40
+        const minZoomLevel = 1
+        const maxZoomLevel = 20
         const levels = []
 
         for (let i = minZoomLevel; i <= maxZoomLevel; i++) {
-          const zoomLevel = this.isGoogleProviderSelected ? i : i / 2
-
-          if (zoomLevel > 0) {
-            levels.push(zoomLevel)
-          }
+          levels.push(i)
         }
 
         return levels
       },
-      mapStyles() {
-        let styles = []
+      mapboxStyles() {
+        const defaultMapboxStyles = [
+          'streets-v11',
+          'outdoors-v11',
+          'light-v10',
+          'dark-v10',
+          'satellite-v9',
+          'satellite-streets-v11',
+          'navigation-preview-day-v4',
+          'navigation-preview-night-v4',
+          'navigation-guidance-day-v4',
+          'navigation-guidance-night-v4'
+        ]
 
-        if (this.isGoogleProviderSelected) {
-          styles = [
-            'roadmap',
-            'satellite',
-            'hybrid',
-            'terrain'
-          ]
-        } else {
-          const mapboxStyles = [
-            'streets-v11',
-            'outdoors-v11',
-            'light-v10',
-            'dark-v10',
-            'satellite-v9',
-            'satellite-streets-v11',
-            'navigation-preview-day-v4',
-            'navigation-preview-night-v4',
-            'navigation-guidance-day-v4',
-            'navigation-guidance-night-v4'
-          ]
-
-          styles = this.userMapboxStyles.concat(mapboxStyles)
-        }
-
-        return styles
-      },
-      defaultStyle() {
-        return this.isGoogleProviderSelected ? 'roadmap' : 'streets-v11'
+        return this.userMapboxStyles.concat(defaultMapboxStyles)
       },
       mapboxUsernameForStyle() {
-        return this.style.includes(' - ') ? this.mapboxUsername : 'mapbox'
+        return this.mapboxStyle.includes(' - ') ? this.mapboxUsername : 'mapbox'
       },
       mapboxUserStyle() {
         if (this.mapboxUsernameForStyle !== 'mapbox') {
-          return this.style.split(' - ')[1]
+          return this.mapboxStyle.split(' - ')[1]
         }
 
-        return this.style
+        return this.mapboxStyle
+      },
+      mapboxCurrentStyle() {
+        return `mapbox://styles/${this.mapboxUsernameForStyle}/${this.mapboxUserStyle}`
       },
       isGoogleConfigurated() {
         return this.googleApiKey
@@ -145,15 +137,6 @@ window.createMapUI = (data) => {
       }
     },
     watch: {
-      currentProvider() {
-        if (!this.zoom || !this.zoomLevels.includes(this.zoom)) {
-          this.zoom = this.defaultZoom
-        }
-
-        if (!this.style || !this.mapStyles.includes(this.style)) {
-          this.style = this.defaultStyle
-        }
-      },
       remember() {
         window.postMessage('toggleRemember', this.remember)
       },
@@ -169,10 +152,20 @@ window.createMapUI = (data) => {
         if (newValue) {
           this.timer = setTimeout(() => {
             if (this.isGoogleProviderSelected) {
-              getGoogleCoordinates(this.googleGeocoder, this.address)
+              getGoogleCoordinates(this.googleGeocoder, newValue)
                 .then((location) => {
                   this.googleMap.setCenter(location)
                   this.googleMarker.setPosition(location)
+                })
+                .catch((error) => {
+                  this.errorLoadingPreview = true
+                  this.previewErrorMesasge = error
+                })
+            } else {
+              getMapboxCoordinates(this.mapboxSecretToken, newValue)
+                .then((location) => {
+                  this.mapboxMap.setCenter(location)
+                  this.mapboxMarker.setLngLat([location.lng, location.lat])
                 })
                 .catch((error) => {
                   this.errorLoadingPreview = true
@@ -187,17 +180,24 @@ window.createMapUI = (data) => {
           return
         }
 
-        if (this.isGoogleProviderSelected) {
-          this.googleMap.setZoom(parseInt(newValue))
-        }
+        this[`${this.currentProvider}Map`].setZoom(parseInt(newValue))
       },
-      style(newValue) {
-        if (!this[`${this.currentProvider}Map`]) {
+      googleStyle(newValue) {
+        if (!this.googleMap) {
           return
         }
 
         if (this.isGoogleProviderSelected) {
           this.googleMap.setMapTypeId(newValue)
+        }
+      },
+      mapboxStyle() {
+        if (!this.mapboxMap) {
+          return
+        }
+
+        if (!this.isGoogleProviderSelected) {
+          this.mapboxMap.setStyle(this.mapboxCurrentStyle)
         }
       },
       snazzy(newValue) {
@@ -250,14 +250,15 @@ window.createMapUI = (data) => {
         if (this.remember) {
           this.address = data.address ? data.address : ''
           this.zoom = data.zoom ? data.zoom : this.defaultZoom
-          this.style =
-          data.style && this.mapStyles.includes(data.style) ?
-            data.style :
-            this.defaultStyle
+          this.googleStyle =
+            data.googleStyle ? data.googleStyle : this.googleDefaultStyle
+          this.mapboxStyle =
+            data.mapboxStyle ? data.mapboxStyle : this.mapboxDefaultStyle
           this.snazzy = data.snazzy ? data.snazzy : ''
         } else {
           this.zoom = this.defaultZoom
-          this.style = this.defaultStyle
+          this.googleStyle = this.googleDefaultStyle
+          this.mapboxStyle = this.mapboxDefaultStyle
         }
       },
       initMap() {
@@ -294,7 +295,7 @@ window.createMapUI = (data) => {
               options = {
                 center: location,
                 zoom: parseFloat(this.zoom),
-                mapTypeId: this.style,
+                mapTypeId: this.googleStyle,
                 streetViewControl: false,
                 mapTypeControl: false,
                 styles: this.snazzy.length > 0 ? JSON.parse(this.snazzy) : ''
@@ -343,7 +344,7 @@ window.createMapUI = (data) => {
 
             const options = {
               container: 'mapbox-map',
-              style: `mapbox://styles/${this.mapboxUsernameForStyle}/${this.mapboxUserStyle}`,
+              style: this.mapboxCurrentStyle,
               center: [location.lng, location.lat],
               zoom: parseInt(this.zoom)
             }
@@ -385,7 +386,8 @@ window.createMapUI = (data) => {
         window.postMessage('generateMap', {
           address: this.address,
           zoom: this.zoom,
-          style: this.style,
+          googleStyle: this.googleStyle,
+          mapboxStyle: this.mapboxStyle,
           snazzy: this.snazzy
         })
       },

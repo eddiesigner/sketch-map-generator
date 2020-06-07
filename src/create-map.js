@@ -46,7 +46,8 @@ const createMapUI = (provider) => {
   const remember = Settings.settingForKey('map.remember')
   const address = Settings.settingForKey('map.address')
   const zoom = Settings.settingForKey('map.zoom')
-  const style = Settings.settingForKey('map.style')
+  const googleStyle = Settings.settingForKey('google.style')
+  const mapboxStyle = Settings.settingForKey('mapbox.style')
   const snazzy = Settings.settingForKey('google.snazzy')
 
   const data = {
@@ -58,7 +59,8 @@ const createMapUI = (provider) => {
     remember,
     address,
     zoom,
-    style,
+    googleStyle,
+    mapboxStyle,
     snazzy
   }
 
@@ -108,8 +110,12 @@ const createMapUI = (provider) => {
       data.zoom
     )
     Settings.setSettingForKey(
-      'map.style',
-      data.style
+      'google.style',
+      data.googleStyle
+    )
+    Settings.setSettingForKey(
+      'mapbox.style',
+      data.mapboxStyle
     )
     Settings.setSettingForKey(
       'google.snazzy',

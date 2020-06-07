@@ -21,7 +21,7 @@
               :class="
                 [
                   'text-button',
-                  { active: currentProvider === 'google' && !showSettings }
+                  { active: isGoogleProviderSelected && !showSettings }
                 ]
               "
               v-on:click="selectProvider('google')"
@@ -177,19 +177,38 @@
               <label class="label">
                 Map style
               </label>
-              <select v-model="style" class="select">
+              <select
+                v-cloak
+                v-show="isGoogleProviderSelected"
+                v-model="googleStyle"
+                class="select"
+              >
                 <option
-                  v-for="mapStyle in mapStyles"
-                  :key="mapStyle"
-                  :value="mapStyle"
+                  v-for="style in googleStyles"
+                  :key="style"
+                  :value="style"
                 >
-                  {{ mapStyle }}
+                  {{ style }}
+                </option>
+              </select>
+              <select
+                v-cloak
+                v-show="!isGoogleProviderSelected"
+                v-model="mapboxStyle"
+                class="select"
+              >
+                <option
+                  v-for="style in mapboxStyles"
+                  :key="style"
+                  :value="style"
+                >
+                  {{ style }}
                 </option>
               </select>
             </fieldset>
             <fieldset
               v-cloak
-              v-show="currentProvider === 'google'"
+              v-show="isGoogleProviderSelected"
               class="fieldset"
             >
               <label class="label">
@@ -203,7 +222,7 @@
             </fieldset>
             <a
               v-cloak
-              v-show="currentProvider === 'google'"
+              v-show="isGoogleProviderSelected"
               href="https://snazzymaps.com/"
               target="_blank"
               class="simple-link"
