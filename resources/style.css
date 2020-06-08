@@ -466,3 +466,9 @@ input, textarea {
   font-size: 13px;
   margin-right: 5px;
 }
+
+.mapboxgl-control-container {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}

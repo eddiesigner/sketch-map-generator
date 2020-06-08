@@ -3,7 +3,13 @@ import UI from 'sketch/ui'
 import Settings from 'sketch/settings'
 import BrowserWindow from 'sketch-module-web-view'
 import { getWebview } from 'sketch-module-web-view/remote'
-import { isSketchSupportedVersion } from './common'
+import {
+  isSketchSupportedVersion,
+  isOneLayerSelected,
+  isLayerShape,
+  getImageFromURL,
+  parseStyle
+} from './common'
 
 const webviewIdentifier = 'sketch-map-generator.webview'
 const doc = sketch.getSelectedDocument()
@@ -29,10 +35,6 @@ export function onMapboxRun() {
   createMapUI('mapbox')
 }
 
-/**
- * 
- * @param {String} provider 
- */
 const createMapUI = (provider) => {
   if (!isSketchSupportedVersion()) {
     UI.message('⚠️ This plugin only works on Sketch 53 or above.')
@@ -123,6 +125,36 @@ const createMapUI = (provider) => {
     )
 
     closeWebView()
+
+    const selection = doc.selectedLayers
+
+    if (!isOneLayerSelected(selection)) {
+      UI.message('⚠️ Please select one layer.')
+      return
+    }
+
+    const layer = selection.layers[0]
+
+    if (!isLayerShape(layer)) {
+      UI.message('⚠️ Please select a shape layer.')
+      return
+    }
+
+    let requestURL = ''
+
+    if (data.provider === 'google') {
+      const googleApiKey = Settings.settingForKey('google.token')
+
+      requestURL = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(data.address)}&zoom=${data.zoom}&size=${parseInt(layer.frame.width)}x${parseInt(layer.frame.height)}&maptype=${data.googleStyle}&scale=2${parseStyle(data.snazzy)}&key=${googleApiKey}`
+    }
+
+    getImageFromURL(requestURL)
+      .then((imageData) => {
+        console.log(imageData)
+      })
+      .catch((error) => {
+        console.log(error)
+      })
   })
 
   webContents.on('toggleRemember', (status) => {

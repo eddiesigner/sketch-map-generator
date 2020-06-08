@@ -41,7 +41,7 @@ export const getMapboxCoordinates = (secretToken, address) => {
     fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${secretToken}&limit=1`
     )
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((result) => {
         if (result.features[0]) {
           resolve({
@@ -80,7 +80,7 @@ export const getMapboxAddress = (secretToken, marker) => {
     fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${coordinates.lng},${coordinates.lat}.json?access_token=${secretToken}&limit=1`
     )
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((result) => {
         if (result.features[0]) {
           resolve(result.features[0].place_name)
@@ -97,7 +97,7 @@ export const getMapboxUserStyles = (secretToken, username) => {
     fetch(
       `https://api.mapbox.com/styles/v1/${username}?access_token=${secretToken}`
     )
-      .then(response => response.json())
+      .then((response) => response.json())
       .then((result) => {
         if (result.length > 0) {
           const styles = result.map((style) => {

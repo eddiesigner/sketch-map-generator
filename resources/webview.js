@@ -8,10 +8,6 @@ import {
   getMapboxUserStyles
 } from './utils'
 
-/**
- * 
- * @param {Event} event 
- */
 const interceptClickEvent = (event) => {
   const target = event.target.closest('a')
 
@@ -137,6 +133,15 @@ window.createMapUI = (data) => {
       }
     },
     watch: {
+      currentProvider(newValue) {
+        if (!this[`${newValue}Map`]) {
+          if (!this.isGoogleProviderSelected) {
+            this.getUserOwnStyles()
+          }
+
+          this.initMap()
+        }
+      },
       remember() {
         window.postMessage('toggleRemember', this.remember)
       },
@@ -224,15 +229,7 @@ window.createMapUI = (data) => {
       this.setMapData(data)
 
       if (!this.isGoogleProviderSelected) {
-        getMapboxUserStyles(this.mapboxSecretToken, this.mapboxUsername)
-          .then((styles) => {
-            if (styles.length > 0) {
-              this.userMapboxStyles = styles
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+        this.getUserOwnStyles()
       }
     },
     mounted() {
@@ -355,7 +352,10 @@ window.createMapUI = (data) => {
               window.dispatchEvent(new Event('resize'))
             }, 10)
 
-            this.mapboxMap.addControl(new mapboxgl.NavigationControl())
+            this.mapboxMap.addControl(
+              new mapboxgl.NavigationControl(),
+              'bottom-right'
+            )
 
             this.mapboxMap.on('zoomend', () => {
               this.zoom = parseInt(this.mapboxMap.getZoom())
@@ -382,8 +382,20 @@ window.createMapUI = (data) => {
             this.previewErrorMesasge = error
           })
       },
+      getUserOwnStyles() {
+        getMapboxUserStyles(this.mapboxSecretToken, this.mapboxUsername)
+          .then((styles) => {
+            if (styles.length > 0) {
+              this.userMapboxStyles = styles
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      },
       generateMap() {
         window.postMessage('generateMap', {
+          provider: this.currentProvider,
           address: this.address,
           zoom: this.zoom,
           googleStyle: this.googleStyle,
