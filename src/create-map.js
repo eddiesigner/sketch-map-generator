@@ -14,7 +14,6 @@ import {
 } from './common'
 
 const webviewIdentifier = 'sketch-map-generator.webview'
-const doc = sketch.getSelectedDocument()
 
 const closeWebView = () => {
   const existingWebview = getWebview(webviewIdentifier)
@@ -43,6 +42,7 @@ const createMapUI = (provider) => {
     return
   }
 
+  const doc = sketch.getSelectedDocument()
   const googleApiKey = Settings.settingForKey('google.token')
   const mapboxUsername = Settings.settingForKey('mapbox.username')
   const mapboxPublicToken = Settings.settingForKey('mapbox.publictoken')
@@ -106,6 +106,10 @@ const createMapUI = (provider) => {
 
   webContents.on('generateMap', (data) => {
     Settings.setSettingForKey(
+      'map.lastprovider',
+      data.provider
+    )
+    Settings.setSettingForKey(
       'map.address',
       data.address
     )
@@ -124,6 +128,10 @@ const createMapUI = (provider) => {
     Settings.setSettingForKey(
       'google.snazzy',
       data.snazzy
+    )
+    Settings.setSettingForKey(
+      'mapbox.location',
+      data.location
     )
 
     closeWebView()
