@@ -1,9 +1,20 @@
 import sketch from 'sketch/dom'
+import Settings from 'sketch/settings'
 
 export const isSketchSupportedVersion = () => {
   const sketchVersion = sketch.version.sketch
 
   if (sketchVersion >= '53') {
+    return true
+  }
+
+  return false
+}
+
+export const hasSketchFillTypeSupport = () => {
+  const sketchVersion = sketch.version.sketch
+
+  if (sketchVersion >= '55') {
     return true
   }
 
@@ -27,7 +38,29 @@ export const isLayerShape = (layer) => {
 }
 
 export const setLayerName = (layer, address, zoom) => {
-  layer.name = `Address: - ${address} Zoom: ${zoom}`
+  layer.name = `Address: ${address} - Zoom: ${zoom}`
+}
+
+export const makeProviderImageUrl = (provider, data, layer) => {
+  const token =
+    provider === 'google' ?
+    Settings.settingForKey('google.token') :
+    Settings.settingForKey('mapbox.token')
+
+  let requestURL = ''
+
+  if (provider === 'google') {
+    requestURL = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(data.address)}&zoom=${data.zoom}&size=${parseInt(layer.frame.width)}x${parseInt(layer.frame.height)}&maptype=${data.googleStyle}&scale=2${parseStyle(data.snazzy)}&key=${token}`
+  } else {
+    const mapboxStyle =
+      data.mapboxStyle.includes(' - ') ?
+      data.mapboxStyle.split(' - ')[1] :
+      data.mapboxStyle
+
+    requestURL = `https://api.mapbox.com/styles/v1/${data.mapboxUsername}/${mapboxStyle}/static/${data.location.lng},${data.location.lat},${data.zoom},0,0/${parseInt(layer.frame.width)}x${parseInt(layer.frame.height)}@2x?access_token=${token}`
+  }
+
+  return requestURL
 }
 
 export const getImageFromURL = (url) => {
@@ -41,6 +74,23 @@ export const getImageFromURL = (url) => {
         reject(error)
       })
   })
+}
+
+export const fillLayer = (layer, imageData) => {
+  const Style = sketch.Style
+  const imageFile = NSImage.alloc().initWithData(imageData)
+  const image = MSImageData.alloc().initWithImage(imageFile)
+  const fillTypeName = hasSketchFillTypeSupport() ? 'fillType' : 'fill'
+
+  layer.style.fills = [
+    {
+      [`${fillTypeName}`]: 'Pattern',
+      pattern: {
+        patternType: Style.PatternFillType.Fill,
+        image
+      }
+    }
+  ]
 }
 
 export const isColor = (value) => {
@@ -93,17 +143,17 @@ export const parseStyle = (jsonString) => {
         target = (target) ? `${target}${separator}` : ''
         target += `element:${item.elementType}`
       }
-
-      for (let x = 0, sl = stylers.length; x < sl; x++) {
-        const styleItem = stylers[x]
-        const key = Object.keys(styleItem)[0]
-
-        style = (style) ? `${style}${separator}` : ''
-        style += `${key}:${(isColor(styleItem[key]) ? toColor(styleItem[key]) : styleItem[key])}`
-      }
-
-      items.push(`${target}${separator}${style}`)
     }
+
+    for (let x = 0, sl = stylers.length; x < sl; x++) {
+      const styleItem = stylers[x]
+      const key = Object.keys(styleItem)[0]
+
+      style = (style) ? `${style}${separator}` : ''
+      style += `${key}:${(isColor(styleItem[key]) ? toColor(styleItem[key]) : styleItem[key])}`
+    }
+
+    items.push(`${target}${separator}${style}`)
   }
 
   return `&style=${items.join('&style=')}`

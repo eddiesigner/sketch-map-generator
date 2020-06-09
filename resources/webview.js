@@ -400,7 +400,10 @@ window.createMapUI = (data) => {
           zoom: this.zoom,
           googleStyle: this.googleStyle,
           mapboxStyle: this.mapboxStyle,
-          snazzy: this.snazzy
+          mapboxUsername: this.mapboxUsernameForStyle,
+          snazzy: this.snazzy,
+          location:
+            this.isGoogleProviderSelected ? null : this.mapboxMap.getCenter()
         })
       },
       saveSettings() {

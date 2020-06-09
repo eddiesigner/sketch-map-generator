@@ -7,8 +7,10 @@ import {
   isSketchSupportedVersion,
   isOneLayerSelected,
   isLayerShape,
+  setLayerName,
+  makeProviderImageUrl,
   getImageFromURL,
-  parseStyle
+  fillLayer
 } from './common'
 
 const webviewIdentifier = 'sketch-map-generator.webview'
@@ -140,20 +142,17 @@ const createMapUI = (provider) => {
       return
     }
 
-    let requestURL = ''
-
-    if (data.provider === 'google') {
-      const googleApiKey = Settings.settingForKey('google.token')
-
-      requestURL = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(data.address)}&zoom=${data.zoom}&size=${parseInt(layer.frame.width)}x${parseInt(layer.frame.height)}&maptype=${data.googleStyle}&scale=2${parseStyle(data.snazzy)}&key=${googleApiKey}`
-    }
+    const requestURL = makeProviderImageUrl(data.provider, data, layer)
 
     getImageFromURL(requestURL)
       .then((imageData) => {
-        console.log(imageData)
+        fillLayer(layer, imageData)
+        setLayerName(layer, data.address, data.zoom)
+        UI.message('🎉 Map generated!')
       })
       .catch((error) => {
         console.log(error)
+        UI.message(`⚠️ ${error}`)
       })
   })
 
