@@ -15,8 +15,7 @@ export const initGoogleMapsScript = (apiKey) => {
   window.initGoogleMapsCallback = () => resolveInitPromise(window.google)
 
   const script = document.createElement('script')
-  script.defer = true
-  script.async = true
+  script.id = 'google-maps-script'
   script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}&callback=initGoogleMapsCallback`
   script.onerror = rejectInitPromise
   document.head.appendChild(script)
@@ -26,6 +25,10 @@ export const initGoogleMapsScript = (apiKey) => {
 
 export const getGoogleCoordinates = (geocoder, address) => {
   return new Promise((resolve, reject) => {
+    if (!address) {
+      reject('Please enter an address first.')
+    }
+
     geocoder.geocode({ address }, (results, status) => {
       if (status !== 'OK' || !results[0]) {
         reject(status)
@@ -38,16 +41,26 @@ export const getGoogleCoordinates = (geocoder, address) => {
 
 export const getMapboxCoordinates = (secretToken, address) => {
   return new Promise((resolve, reject) => {
+    if (!secretToken) {
+      reject('Please save your secret token in the settings.')
+    }
+
+    if (!address) {
+      reject('Please enter an address first.')
+    }
+
     fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${address}.json?access_token=${secretToken}&limit=1`
     )
       .then((response) => response.json())
       .then((result) => {
-        if (result.features[0]) {
+        if (!result.message && result.features[0]) {
           resolve({
             lat: result.features[0].center[1],
             lng: result.features[0].center[0]
           })
+        } else {
+          reject(result.message)
         }
       })
       .catch((error) => {
@@ -82,7 +95,7 @@ export const getMapboxAddress = (secretToken, marker) => {
     )
       .then((response) => response.json())
       .then((result) => {
-        if (result.features[0]) {
+        if (result && result.features[0]) {
           resolve(result.features[0].place_name)
         }
       })

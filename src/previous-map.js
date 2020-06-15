@@ -77,6 +77,13 @@ export default () => {
 
   const requestURL = makeProviderImageUrl(lastProvider, data, layer)
 
+  if (!requestURL && lastProvider === 'mapbox') {
+    UI.message('⚠️ Please make sure to enter a correct Mapbox secret token in the settings.')
+    return
+  }
+
+  UI.message('⏰ Generating map...')
+
   getImageFromURL(requestURL)
     .then((imageData) => {
       fillLayer(layer, imageData)

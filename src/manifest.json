@@ -6,7 +6,7 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "Generate a Map using Google Maps...",
+      "name": "Generate a map using Google Maps...",
       "identifier": "sketch-map-generator.create-map-google",
       "script": "./create-map.js",
       "shortcut": "shift cmd m",
@@ -18,7 +18,7 @@
       }
     },
     {
-      "name": "Generate a Map using Mapbox...",
+      "name": "Generate a map using Mapbox...",
       "identifier": "sketch-map-generator.create-map-mapbox",
       "script": "./create-map.js",
       "shortcut": "shift cmd b",
@@ -30,10 +30,21 @@
       }
     },
     {
-      "name": "Generate previous Map",
+      "name": "Generate previous map",
       "identifier": "sketch-map-generator.create-previous-map",
       "script": "./previous-map.js",
       "shortcut": "shift cmd p"
+    },
+    {
+      "name": "Open Map Generator settings...",
+      "identifier": "sketch-map-generator.open-settings",
+      "script": "./create-map.js",
+      "handlers": {
+        "run": "onSettingsRun",
+        "actions": {
+          "Shutdown": "onShutdown"
+        }
+      }
     }
   ],
   "menu": {
@@ -41,7 +52,8 @@
     "items": [
       "sketch-map-generator.create-map-google",
       "sketch-map-generator.create-map-mapbox",
-      "sketch-map-generator.create-previous-map"
+      "sketch-map-generator.create-previous-map",
+      "sketch-map-generator.open-settings"
     ]
   },
   "compatibleVersion": "53",

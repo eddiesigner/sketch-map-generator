@@ -143,7 +143,8 @@
             <div
               v-cloak
               v-if="errorMessage"
-              class="alert warning"
+              class="alert clickable warning"
+              v-on:click="displaySettings()"
             >
               {{ errorMessage }}
             </div>
@@ -254,22 +255,35 @@
           >
             <div class="no-preview-container">
               <h2 class="no-preview">{{ previewTitle }}</h2>
-              <p class="small-message">{{ previewErrorMesasge }}</p>
+              <p
+                v-cloak
+                v-show="isGoogleProviderSelected && googlePreviewErrorMessage"
+                class="small-message"
+              >
+                {{ googlePreviewErrorMessage }}
+              </p>
+              <p
+                v-cloak
+                v-show="!isGoogleProviderSelected && mapboxPreviewErrorMessage"
+                class="small-message"
+              >
+                {{ mapboxPreviewErrorMessage }}
+              </p>
             </div>
             <div
               v-cloak
-              v-show="!loadingPreview && !errorLoadingPreview"
+              v-show="!loadingPreview && address"
               class="map-container"
             >
               <div
                 v-cloak
-                v-show="isGoogleProviderSelected"
+                v-show="isGoogleProviderSelected && !googleErrorLoadingPreview"
                 id="google-map"
                 class="map"
               ></div>
               <div
                 v-cloak
-                v-show="!isGoogleProviderSelected"
+                v-show="!isGoogleProviderSelected && !mapboxErrorLoadingPreview"
                 id="mapbox-map"
                 class="map"
               ></div>
@@ -346,7 +360,7 @@
                   v-cloak
                   v-if="areSettingsSaved"
                   class="small-message in-settings">
-                    Settings have been saved.
+                    ✅ Settings have been saved. Please reopen this window for the changes to take effect.
                 </p>
                 <button class="button" v-on:click="saveSettings()">
                   Save settings

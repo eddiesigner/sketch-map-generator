@@ -51,7 +51,11 @@ export const makeProviderImageUrl = (provider, data, layer) => {
 
   if (provider === 'google') {
     requestURL = `https://maps.googleapis.com/maps/api/staticmap?center=${encodeURIComponent(data.address)}&zoom=${data.zoom}&size=${parseInt(layer.frame.width)}x${parseInt(layer.frame.height)}&maptype=${data.googleStyle}&scale=2${parseStyle(data.snazzy)}&key=${token}`
-  } else {
+  } else if (provider === 'mapbox') {
+    if (!data.location) {
+      return
+    }
+
     const mapboxStyle =
       data.mapboxStyle.includes(' - ') ?
       data.mapboxStyle.split(' - ')[1] :
@@ -66,11 +70,23 @@ export const makeProviderImageUrl = (provider, data, layer) => {
 export const getImageFromURL = (url) => {
   return new Promise((resolve, reject) => {
     fetch(url)
-      .then((response) => response.blob())
-      .then((image) => {
-        resolve(image)
+      .then((response) => {
+        console.log(response)
+        if (response.ok) {
+          return response.blob()
+        } else {
+          return { error: response.text() }
+        }
+      })
+      .then((result) => {
+        if (!result.error) {
+          resolve(result)
+        }
+
+        reject(result.error._value)
       })
       .catch((error) => {
+        console.log(error)
         reject(error)
       })
   })
@@ -111,11 +127,15 @@ export const parseJSON = (jsonString) => {
   }
   catch (error) {
     console.log(error)
-    return null
+    return ''
   }
 }
 
 export const parseStyle = (jsonString) => {
+  if (!jsonString) {
+    return ''
+  }
+
   const items = []
   const separator = '%7C'
   let json

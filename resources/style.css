@@ -203,6 +203,7 @@ input, textarea {
 
 .button {
   display: block;
+  flex-shrink: 0;
   color: white;
   font-weight: 500;
   font-size: 13px;
@@ -416,7 +417,6 @@ input, textarea {
   height: 100%;
   padding: 20px;
   overflow: hidden;
-  background-color: var(--background-color);
   z-index: 2;
 }
 
@@ -442,10 +442,15 @@ input, textarea {
   background-color: bisque;
 }
 
+.alert.clickable {
+  cursor: pointer;
+}
+
 .small-message {
   color: var(--text-color);
-  font-size: 13px;
   letter-spacing: 0.2px;
+  line-height: 1.5;
+  font-size: 13px;
 }
 
 .small-message.in-settings {

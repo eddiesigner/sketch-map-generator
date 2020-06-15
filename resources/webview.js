@@ -22,7 +22,7 @@ window.createMapUI = (data) => {
     el: '#app',
     data() {
       return {
-        currentProvider: data.provider ? data.provider : '',
+        currentProvider: data.provider ? data.provider : 'google',
         googleApiKey: data.googleApiKey ? data.googleApiKey : '',
         mapboxUsername: data.mapboxUsername ? data.mapboxUsername : '',
         mapboxPublicToken: data.mapboxPublicToken ? data.mapboxPublicToken : '',
@@ -43,11 +43,13 @@ window.createMapUI = (data) => {
         ],
         userMapboxStyles: [],
         snazzy: '',
-        showSettings: false,
+        showSettings: data.provider ? false : true,
         areSettingsSaved: false,
         loadingPreview: false,
-        errorLoadingPreview: false,
-        previewErrorMesasge: '',
+        googleErrorLoadingPreview: false,
+        mapboxErrorLoadingPreview: false,
+        googlePreviewErrorMessage: '',
+        mapboxPreviewErrorMessage: '',
         googleMap: null,
         mapboxMap: null,
         googleMarker: null,
@@ -114,9 +116,9 @@ window.createMapUI = (data) => {
         ) {
           return '💡 Please save your Google API Key in the settings.'
         } else if (
-          this.isGoogleProviderSelected && !this.isMapboxConfigurated
+          !this.isGoogleProviderSelected && !this.isMapboxConfigurated
         ) {
-          return '💡 Please save your Mapbox username, your public token and your secret token in the settings.'
+          return '💡 Please save your Mapbox username, public token and secret token in the settings.'
         }
 
         return ''
@@ -146,15 +148,19 @@ window.createMapUI = (data) => {
         window.postMessage('toggleRemember', this.remember)
       },
       address(newValue) {
-        if (!this[`${this.currentProvider}Map`]) {
-          return
-        }
-
-        if (this.timer) {
-          clearTimeout(this.timer)
-        }
-
         if (newValue) {
+          if (!this[`${this.currentProvider}Map`]) {
+            if (!this.remember) {
+              this.initMap()
+            }
+
+            return
+          }
+
+          if (this.timer) {
+            clearTimeout(this.timer)
+          }
+
           this.timer = setTimeout(() => {
             if (this.isGoogleProviderSelected) {
               getGoogleCoordinates(this.googleGeocoder, newValue)
@@ -163,8 +169,8 @@ window.createMapUI = (data) => {
                   this.googleMarker.setPosition(location)
                 })
                 .catch((error) => {
-                  this.errorLoadingPreview = true
-                  this.previewErrorMesasge = error
+                  this.googleErrorLoadingPreview = true
+                  this.googlePreviewErrorMessage = error
                 })
             } else {
               getMapboxCoordinates(this.mapboxSecretToken, newValue)
@@ -173,8 +179,8 @@ window.createMapUI = (data) => {
                   this.mapboxMarker.setLngLat([location.lng, location.lat])
                 })
                 .catch((error) => {
-                  this.errorLoadingPreview = true
-                  this.previewErrorMesasge = error
+                  this.mapboxErrorLoadingPreview = true
+                  this.mapboxPreviewErrorMessage = error
                 })
             }
           }, 1000)
@@ -234,6 +240,12 @@ window.createMapUI = (data) => {
     },
     mounted() {
       this.initMap()
+
+      window.gm_authFailure = () => {
+        this.loadingPreview = false
+        this.googleErrorLoadingPreview = true
+        this.googlePreviewErrorMessage = 'Google Maps JavaScript API error: Invalid Key'
+      }
     },
     methods: {
       selectProvider(provider) {
@@ -259,6 +271,10 @@ window.createMapUI = (data) => {
         }
       },
       initMap() {
+        if (!this.address) {
+          return
+        }
+
         if (this.isGoogleProviderSelected && this.isGoogleConfigurated) {
           this.loadGoogleMaps()
         } else if (this.isMapboxConfigurated) {
@@ -266,19 +282,19 @@ window.createMapUI = (data) => {
         }
       },
       loadGoogleMaps() {
-        this.loadingPreview = true
-
         initGoogleMapsScript(this.googleApiKey)
           .then((response) => {
+            this.loadingPreview = false
             this.initGoogleMap(response)
           })
           .catch((error) => {
             this.loadingPreview = false
-            this.errorLoadingPreview = true
-            console.log(error)
+            this.googleErrorLoadingPreview = true
+            this.googlePreviewErrorMessage = error
           })
       },
       initGoogleMap(google) {
+        this.loadingPreview = true
         this.googleGeocoder = new google.maps.Geocoder()
 
         getGoogleCoordinates(this.googleGeocoder, this.address)
@@ -326,8 +342,9 @@ window.createMapUI = (data) => {
             })
           })
           .catch((error) => {
-            this.errorLoadingPreview = true
-            this.previewErrorMesasge = error
+            this.loadingPreview = false
+            this.googleErrorLoadingPreview = true
+            this.googlePreviewErrorMessage = error
           })
       },
       initMapboxMap() {
@@ -378,11 +395,16 @@ window.createMapUI = (data) => {
             })
           })
           .catch((error) => {
-            this.errorLoadingPreview = true
-            this.previewErrorMesasge = error
+            this.loadingPreview = false
+            this.mapboxErrorLoadingPreview = true
+            this.mapboxPreviewErrorMessage = error
           })
       },
       getUserOwnStyles() {
+        if (!this.isMapboxConfigurated) {
+          return
+        }
+
         getMapboxUserStyles(this.mapboxSecretToken, this.mapboxUsername)
           .then((styles) => {
             if (styles.length > 0) {
@@ -394,6 +416,12 @@ window.createMapUI = (data) => {
           })
       },
       generateMap() {
+        let location = null
+
+        if (!this.isGoogleProviderSelected && this.mapboxMap) {
+          location = this.mapboxMap.getCenter()
+        }
+
         window.postMessage('generateMap', {
           provider: this.currentProvider,
           address: this.address,
@@ -402,8 +430,7 @@ window.createMapUI = (data) => {
           mapboxStyle: this.mapboxStyle,
           mapboxUsername: this.mapboxUsernameForStyle,
           snazzy: this.snazzy,
-          location:
-            this.isGoogleProviderSelected ? null : this.mapboxMap.getCenter()
+          location
         })
       },
       saveSettings() {
@@ -415,10 +442,6 @@ window.createMapUI = (data) => {
         })
 
         this.areSettingsSaved = true
-
-        setTimeout(() => {
-          this.areSettingsSaved = false
-        }, 3000)
       }
     }
   })

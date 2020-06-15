@@ -13,6 +13,7 @@ import {
   fillLayer
 } from './common'
 
+const doc = sketch.getSelectedDocument()
 const webviewIdentifier = 'sketch-map-generator.webview'
 
 const closeWebView = () => {
@@ -24,25 +25,113 @@ const closeWebView = () => {
 
 // When the plugin is shutdown by Sketch (for example when the user disable the plugin)
 // we need to close the webview if it's open
-export function onShutdown() {
+export const onShutdown = () => {
   closeWebView()
 }
 
-export function onGoogleRun() {
+export const onGoogleRun = () => {
   createMapUI('google')
 }
 
-export function onMapboxRun() {
+export const onMapboxRun = () => {
   createMapUI('mapbox')
 }
 
-const createMapUI = (provider) => {
+export const onSettingsRun = () => {
+  createMapUI()
+}
+
+const saveSettings = (data) => {
+  Settings.setSettingForKey(
+    'google.token',
+    data.googleApiKey
+  )
+  Settings.setSettingForKey(
+    'mapbox.username',
+    data.mapboxUsername
+  )
+  Settings.setSettingForKey(
+    'mapbox.publictoken',
+    data.mapboxPublicToken
+  )
+  Settings.setSettingForKey(
+    'mapbox.token',
+    data.mapboxSecretToken
+  )
+}
+
+const generateMap = (data) => {
+  Settings.setSettingForKey(
+    'map.lastprovider',
+    data.provider
+  )
+  Settings.setSettingForKey(
+    'map.address',
+    data.address
+  )
+  Settings.setSettingForKey(
+    'map.zoom',
+    data.zoom
+  )
+  Settings.setSettingForKey(
+    'google.style',
+    data.googleStyle
+  )
+  Settings.setSettingForKey(
+    'mapbox.style',
+    data.mapboxStyle
+  )
+  Settings.setSettingForKey(
+    'google.snazzy',
+    data.snazzy
+  )
+  Settings.setSettingForKey(
+    'mapbox.location',
+    data.location
+  )
+
+  closeWebView()
+
+  const selection = doc.selectedLayers
+
+  if (!isOneLayerSelected(selection)) {
+    UI.message('⚠️ Please select one layer.')
+    return
+  }
+
+  const layer = selection.layers[0]
+
+  if (!isLayerShape(layer)) {
+    UI.message('⚠️ Please select a shape layer.')
+    return
+  }
+
+  const requestURL = makeProviderImageUrl(data.provider, data, layer)
+
+  if (!requestURL && data.provider === 'mapbox') {
+    UI.message('⚠️ Please make sure to enter a correct Mapbox secret token in the settings.')
+    return
+  }
+
+  UI.message('⏰ Generating map...')
+
+  getImageFromURL(requestURL)
+    .then((imageData) => {
+      fillLayer(layer, imageData)
+      setLayerName(layer, data.address, data.zoom)
+      UI.message('🎉 Map generated!')
+    })
+    .catch((error) => {
+      UI.message(`⚠️ ${error}`)
+    })
+}
+
+const createMapUI = (provider = '') => {
   if (!isSketchSupportedVersion()) {
     UI.message('⚠️ This plugin only works on Sketch 53 or above.')
     return
   }
 
-  const doc = sketch.getSelectedDocument()
   const googleApiKey = Settings.settingForKey('google.token')
   const mapboxUsername = Settings.settingForKey('mapbox.username')
   const mapboxPublicToken = Settings.settingForKey('mapbox.publictoken')
@@ -105,63 +194,7 @@ const createMapUI = (provider) => {
   })
 
   webContents.on('generateMap', (data) => {
-    Settings.setSettingForKey(
-      'map.lastprovider',
-      data.provider
-    )
-    Settings.setSettingForKey(
-      'map.address',
-      data.address
-    )
-    Settings.setSettingForKey(
-      'map.zoom',
-      data.zoom
-    )
-    Settings.setSettingForKey(
-      'google.style',
-      data.googleStyle
-    )
-    Settings.setSettingForKey(
-      'mapbox.style',
-      data.mapboxStyle
-    )
-    Settings.setSettingForKey(
-      'google.snazzy',
-      data.snazzy
-    )
-    Settings.setSettingForKey(
-      'mapbox.location',
-      data.location
-    )
-
-    closeWebView()
-
-    const selection = doc.selectedLayers
-
-    if (!isOneLayerSelected(selection)) {
-      UI.message('⚠️ Please select one layer.')
-      return
-    }
-
-    const layer = selection.layers[0]
-
-    if (!isLayerShape(layer)) {
-      UI.message('⚠️ Please select a shape layer.')
-      return
-    }
-
-    const requestURL = makeProviderImageUrl(data.provider, data, layer)
-
-    getImageFromURL(requestURL)
-      .then((imageData) => {
-        fillLayer(layer, imageData)
-        setLayerName(layer, data.address, data.zoom)
-        UI.message('🎉 Map generated!')
-      })
-      .catch((error) => {
-        console.log(error)
-        UI.message(`⚠️ ${error}`)
-      })
+    generateMap(data)
   })
 
   webContents.on('toggleRemember', (status) => {
@@ -172,22 +205,7 @@ const createMapUI = (provider) => {
   })
 
   webContents.on('saveSettings', (data) => {
-    Settings.setSettingForKey(
-      'google.token',
-      data.googleApiKey
-    )
-    Settings.setSettingForKey(
-      'mapbox.username',
-      data.mapboxUsername
-    )
-    Settings.setSettingForKey(
-      'mapbox.publictoken',
-      data.mapboxPublicToken
-    )
-    Settings.setSettingForKey(
-      'mapbox.token',
-      data.mapboxSecretToken
-    )
+    saveSettings(data)
   })
 
   webContents.executeJavaScript(
