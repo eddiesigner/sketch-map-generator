@@ -149,12 +149,14 @@ window.createMapUI = (data) => {
       },
       address(newValue) {
         if (newValue) {
-          if (!this[`${this.currentProvider}Map`]) {
-            if (!this.remember) {
-              this.initMap()
-            }
-
-            return
+          if (
+            !this[`${this.currentProvider}Map`] &&
+            (
+              !this.remember ||
+              this[`${this.currentProvider}ErrorLoadingPreview`]
+            )
+          ) {
+            this.initMap()
           }
 
           if (this.timer) {
@@ -162,23 +164,35 @@ window.createMapUI = (data) => {
           }
 
           this.timer = setTimeout(() => {
-            if (this.isGoogleProviderSelected) {
+            if (this.isGoogleProviderSelected && this.isGoogleConfigurated) {
               getGoogleCoordinates(this.googleGeocoder, newValue)
                 .then((location) => {
-                  this.googleMap.setCenter(location)
-                  this.googleMarker.setPosition(location)
+                  if (this.googleMap) {
+                    this.googleMap.setCenter(location)
+                    this.googleMarker.setPosition(location)
+                  } else {
+                    this.createGoogleMapInstance(location)
+                  }
                 })
                 .catch((error) => {
+                  this.loadingPreview = false
                   this.googleErrorLoadingPreview = true
                   this.googlePreviewErrorMessage = error
                 })
-            } else {
+            } else if (
+              !this.isGoogleProviderSelected && this.isMapboxConfigurated
+            ) {
               getMapboxCoordinates(this.mapboxSecretToken, newValue)
                 .then((location) => {
-                  this.mapboxMap.setCenter(location)
-                  this.mapboxMarker.setLngLat([location.lng, location.lat])
+                  if (this.mapboxMap) {
+                    this.mapboxMap.setCenter(location)
+                    this.mapboxMarker.setLngLat([location.lng, location.lat])
+                  } else {
+                    this.createMapboxMapInstance(location)
+                  }
                 })
                 .catch((error) => {
+                  this.loadingPreview = false
                   this.mapboxErrorLoadingPreview = true
                   this.mapboxPreviewErrorMessage = error
                 })
@@ -299,47 +313,7 @@ window.createMapUI = (data) => {
 
         getGoogleCoordinates(this.googleGeocoder, this.address)
           .then((location) => {
-            this.loadingPreview = false
-
-            const mapElement = document.getElementById('google-map')
-            let options
-
-            try {
-              options = {
-                center: location,
-                zoom: parseFloat(this.zoom),
-                mapTypeId: this.googleStyle,
-                streetViewControl: false,
-                mapTypeControl: false,
-                styles: this.snazzy.length > 0 ? JSON.parse(this.snazzy) : ''
-              }
-            } catch (error) {
-              console.log(error)
-              return
-            }
-
-            this.googleMap = new google.maps.Map(mapElement, options)
-
-            this.googleMarker = new google.maps.Marker({
-              map: this.googleMap,
-              position: location,
-              draggable: true,
-              title: 'Drag me!'
-            })
-
-            google.maps.event.addListener(this.googleMarker, 'dragend', () => {
-              getGoogleAddress(this.googleGeocoder, this.googleMarker)
-                .then((address) => {
-                  this.address = address
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            })
-
-            this.googleMap.addListener('zoom_changed', () => {
-              this.zoom = this.googleMap.getZoom()
-            })
+            this.createGoogleMapInstance(location)
           })
           .catch((error) => {
             this.loadingPreview = false
@@ -347,58 +321,108 @@ window.createMapUI = (data) => {
             this.googlePreviewErrorMessage = error
           })
       },
+      createGoogleMapInstance(location) {
+        this.loadingPreview = false
+        this.googleErrorLoadingPreview = false
+        this.googlePreviewErrorMessage = ''
+
+        const mapElement = document.getElementById('google-map')
+        let options
+
+        try {
+          options = {
+            center: location,
+            zoom: parseFloat(this.zoom),
+            mapTypeId: this.googleStyle,
+            streetViewControl: false,
+            mapTypeControl: false,
+            styles: this.snazzy.length > 0 ? JSON.parse(this.snazzy) : ''
+          }
+        } catch (error) {
+          console.log(error)
+          return
+        }
+
+        this.googleMap = new google.maps.Map(mapElement, options)
+
+        this.googleMarker = new google.maps.Marker({
+          map: this.googleMap,
+          position: location,
+          draggable: true,
+          title: 'Drag me!'
+        })
+
+        google.maps.event.addListener(this.googleMarker, 'dragend', () => {
+          getGoogleAddress(this.googleGeocoder, this.googleMarker)
+            .then((address) => {
+              this.address = address
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        })
+
+        this.googleMap.addListener('zoom_changed', () => {
+          this.zoom = this.googleMap.getZoom()
+        })
+      },
       initMapboxMap() {
         this.loadingPreview = true
 
         getMapboxCoordinates(this.mapboxSecretToken, this.address)
           .then((location) => {
-            this.loadingPreview = false
-
-            mapboxgl.accessToken = this.mapboxPublicToken
-
-            const options = {
-              container: 'mapbox-map',
-              style: this.mapboxCurrentStyle,
-              center: [location.lng, location.lat],
-              zoom: parseInt(this.zoom)
-            }
-
-            this.mapboxMap = new mapboxgl.Map(options)
-
-            setTimeout(() => {
-              window.dispatchEvent(new Event('resize'))
-            }, 10)
-
-            this.mapboxMap.addControl(
-              new mapboxgl.NavigationControl(),
-              'bottom-right'
-            )
-
-            this.mapboxMap.on('zoomend', () => {
-              this.zoom = parseInt(this.mapboxMap.getZoom())
-            })
-
-            this.mapboxMarker = new mapboxgl.Marker({
-              draggable: true
-            })
-              .setLngLat([location.lng, location.lat])
-              .addTo(this.mapboxMap)
-
-            this.mapboxMarker.on('dragend', () => {
-              getMapboxAddress(this.mapboxSecretToken, this.mapboxMarker)
-                .then((address) => {
-                  this.address = address
-                })
-                .catch((error) => {
-                  console.log(error)
-                })
-            })
+            this.createMapboxMapInstance(location)
           })
           .catch((error) => {
             this.loadingPreview = false
             this.mapboxErrorLoadingPreview = true
             this.mapboxPreviewErrorMessage = error
           })
+      },
+      createMapboxMapInstance(location) {
+        this.loadingPreview = false
+        this.mapboxErrorLoadingPreview = false
+        this.mapboxPreviewErrorMessage = ''
+
+        mapboxgl.accessToken = this.mapboxPublicToken
+
+        const options = {
+          container: 'mapbox-map',
+          style: this.mapboxCurrentStyle,
+          center: [location.lng, location.lat],
+          zoom: parseInt(this.zoom)
+        }
+
+        this.mapboxMap = new mapboxgl.Map(options)
+
+        setTimeout(() => {
+          window.dispatchEvent(new Event('resize'))
+        }, 10)
+
+        this.mapboxMap.addControl(
+          new mapboxgl.NavigationControl(),
+          'bottom-right'
+        )
+
+        this.mapboxMap.on('zoomend', () => {
+          this.zoom = parseInt(this.mapboxMap.getZoom())
+        })
+
+        this.mapboxMarker = new mapboxgl.Marker({
+          draggable: true
+        })
+          .setLngLat([location.lng, location.lat])
+          .addTo(this.mapboxMap)
+
+        this.mapboxMarker.on('dragend', () => {
+          getMapboxAddress(this.mapboxSecretToken, this.mapboxMarker)
+            .then((address) => {
+              this.address = address
+            })
+            .catch((error) => {
+              console.log(error)
+            })
+        })
       },
       getUserOwnStyles() {
         if (!this.isMapboxConfigurated) {

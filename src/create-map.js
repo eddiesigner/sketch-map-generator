@@ -109,13 +109,13 @@ const generateMap = (data) => {
   const requestURL = makeProviderImageUrl(data.provider, data, layer)
 
   if (!requestURL && data.provider === 'mapbox') {
-    UI.message('⚠️ Please make sure to enter a correct Mapbox secret token in the settings.')
+    UI.message('⚠️ Couldn\'t find the location. Please try another one and also check that your secret token is correct.')
     return
   }
 
   UI.message('⏰ Generating map...')
 
-  getImageFromURL(requestURL)
+  getImageFromURL(requestURL, data.provider)
     .then((imageData) => {
       fillLayer(layer, imageData)
       setLayerName(layer, data.address, data.zoom)

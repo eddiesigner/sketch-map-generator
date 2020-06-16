@@ -30,11 +30,11 @@ export const getGoogleCoordinates = (geocoder, address) => {
     }
 
     geocoder.geocode({ address }, (results, status) => {
-      if (status !== 'OK' || !results[0]) {
+      if (status !== 'OK' || results.length === 0) {
         reject(status)
+      } else {
+        resolve(results[0].geometry.location)
       }
-
-      resolve(results[0].geometry.location)
     })
   })
 }
@@ -60,7 +60,7 @@ export const getMapboxCoordinates = (secretToken, address) => {
             lng: result.features[0].center[0]
           })
         } else {
-          reject(result.message)
+          reject('Couldn\'t find the location. Please try another one and also check that your secret token is correct.')
         }
       })
       .catch((error) => {

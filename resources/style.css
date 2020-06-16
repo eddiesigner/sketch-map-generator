@@ -457,6 +457,11 @@ input, textarea {
   margin-right: 20px;
 }
 
+.small-message.in-preview {
+  max-width: 70%;
+  margin: 0 auto;
+}
+
 .donate {
   align-items: center;
   color: var(--link-color);

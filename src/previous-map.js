@@ -84,7 +84,7 @@ export default () => {
 
   UI.message('⏰ Generating map...')
 
-  getImageFromURL(requestURL)
+  getImageFromURL(requestURL, lastProvider)
     .then((imageData) => {
       fillLayer(layer, imageData)
       setLayerName(layer, data.address, data.zoom)

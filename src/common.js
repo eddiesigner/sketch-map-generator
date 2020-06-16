@@ -67,26 +67,32 @@ export const makeProviderImageUrl = (provider, data, layer) => {
   return requestURL
 }
 
-export const getImageFromURL = (url) => {
+export const getImageFromURL = (url, provider) => {
   return new Promise((resolve, reject) => {
     fetch(url)
       .then((response) => {
-        console.log(response)
         if (response.ok) {
           return response.blob()
-        } else {
-          return { error: response.text() }
+        }
+
+        if (provider === 'google') {
+          return { message: response.text() }
+        } else if (provider === 'mapbox') {
+          return response.json()
         }
       })
       .then((result) => {
-        if (!result.error) {
+        if (!result.message) {
           resolve(result)
+        } else {
+          if (provider === 'google') {
+            reject(result.message._value)
+          } else if (provider === 'mapbox') {
+            reject(result.message)
+          }
         }
-
-        reject(result.error._value)
       })
       .catch((error) => {
-        console.log(error)
         reject(error)
       })
   })

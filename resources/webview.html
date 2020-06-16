@@ -258,14 +258,14 @@
               <p
                 v-cloak
                 v-show="isGoogleProviderSelected && googlePreviewErrorMessage"
-                class="small-message"
+                class="small-message in-preview"
               >
                 {{ googlePreviewErrorMessage }}
               </p>
               <p
                 v-cloak
                 v-show="!isGoogleProviderSelected && mapboxPreviewErrorMessage"
-                class="small-message"
+                class="small-message in-preview"
               >
                 {{ mapboxPreviewErrorMessage }}
               </p>
