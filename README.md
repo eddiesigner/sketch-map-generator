@@ -10,7 +10,7 @@ If you find this plugin useful, please consider to make a donation to support it
 
 ## Preview
 
-![Preview](https://res.cloudinary.com/edev/image/upload/v1592419129/sketch-map-generator/2020-06-17_20.36.32.gif)
+<img src="/assets/preview.gif?raw=true">
 
 ## Important
 
