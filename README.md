@@ -30,7 +30,7 @@ To know how to generate your Google API Key and your Mapbox tokens please follow
 * 🗺 Generate maps with Mapbox
 * 🎨 If you use Mapbox, now you can use your own custom styles!
 * 🔥 Map preview! Now you can see a live preview before generating a map
-* 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish
+* 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort
 * 💅🏻 Snazzy styles support
 * ✨ A beautiful whole new UI
 * 🌓 Dark mode support
