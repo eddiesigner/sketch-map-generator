@@ -1,2 +1,16 @@
-assets/.DS_Store
+# build artefacts
+sketch-map-generator.sketchplugin
+
+# npm
+node_modules
+.npm
+npm-debug.log
+
+# mac
 .DS_Store
+
+# WebStorm
+.idea
+
+# sketch
+# sketch-assets

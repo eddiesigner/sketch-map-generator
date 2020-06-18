@@ -1,90 +1,103 @@
-# Map Generator 3.5 - Sketch App Plugin
+# 🗺 Sketch Map Generator 4
 
-Map Generator better than ever!
+Map Generator better than ever! ✨
 
-Design beautiful map interfaces, mobile applications and more in less time with Map Generator 3.5. Now powered by Google and Mapbox.
+Design beautiful map interfaces, mobile applications and more in less time with Map Generator. Now powered by Google and Mapbox. 
 
 If you find this plugin useful, please consider to make a donation to support its development! 🙏🏼
 
 <a href="https://www.buymeacoffee.com/eddiesigner" target="_blank"><img src="https://res.cloudinary.com/edev/image/upload/v1583011476/button_y8hgt8.png" alt="Donate" style="width: 250px !important; height: 60px !important;" width="250" height="60"></a>
 
-### Mapbox
+## Preview
 
-![Mapbox](/assets/mapbox.gif?raw=true "Map Generator using Mapbox")
+<img src="/assets/preview.gif?raw=true">
 
-### Google Maps
+## Important
 
-![Google Maps](/assets/google.gif?raw=true "Map Generator using Google Maps")
+You will need to provide your own Google Maps API Key or your own Mapbox tokens so that the plugin can work properly.
 
-## Important, read carefully
+To know how to generate your Google API Key and your Mapbox tokens please follow the steps described in these guides:
 
-From now on you will have to generate your own Google Maps key and your own Mapbox token so that the plugin can generate maps.
+* [How to generate a Google Maps API Key](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-generate-a-Google-Maps-key)
 
-During all this time the plugin has used my own Google Maps key and my own Mapbox token but due to the increasing number of people using it, has reached the point where I had to pay more and more in the case of Google Maps, while in the case of Mapbox, over time there have been more failed map requests because the limit of use is exceeded relatively quickly.
+* [How to get your Mapbox tokens](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-get-your-Mapbox-tokens)
 
-Having said that and taking into account that the plugin is completely free, I have made the decision that from now on the plugin will only work if each user provides their own key or their own token. Although this change at first may seem negative, it also brings with it the following benefits:
+**If you already use this plugin please backup your Google API Key, Mapbox tokens and map settings. The plugin will try to use the data you have saved but if something unexpected happens, it is better to have that data at hand.**
 
-* In the case of Mapbox there should no longer be failed requests for reaching the limit allowed because it will no longer be distributed by all users of the plugin, you and only you will use your own token, this will make it virtually impossible to reach that limit.
+## Features
 
-* In the case of Google Maps also virtually eliminates the risk of reaching the limit per day that currently exists. You can also generate maps up to 1280x1280 pixels.
-
-The only drawback to take into account is that in order to generate a key for Google Maps, you will have to enter credit card details in the Google Cloud Console. But don't worry, it will be very difficult to pay even a single cent because only you will be using your own key.
-
-In order to help you here you have some guides on how to generate a Google Maps key and a Mapbox token:
-
-[How to generate a Google Maps key](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-generate-a-Google-Maps-key)
-
-[How to get your Mapbox tokens](https://github.com/eddiesigner/sketch-map-generator/wiki/How-to-get-your-Mapbox-tokens)
-
-**The Google Maps key API and the Mapbox token that the plugin has used so far will stop working on September 30th.**
+* 🗺 Generate maps with Google Maps
+* 🗺 Generate maps with Mapbox
+* 🎨 If you use Mapbox, now you can use your own custom styles!
+* 🔥 Map preview! Now you can see a live preview before generating a map
+* 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort
+* 💅🏻 Snazzy styles support
+* ✨ A beautiful whole new UI
+* 🌓 Dark mode support
+* 🤙🏻 An improved user experience
+* 🛠 Several improvements and bugfixes
 
 ## How it works?
 
-Create a shape and select it.
-<br>
-Run the Map Generator Plugin:
+1) Save your Google API Key or your Mapbox tokens in the plugin settings.
+
+2) Create a shape and select it.
+
+3) Set your map settings:
+
 ##### Google Maps
-Plugins > Map Generator > Generate a Map using Google Maps
-<br>
-Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
+_Plugins > Sketch Map Generator > Generate a map using Google Maps..._ or press <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
+
 ##### Mapbox
-Plugins > Map Generator > Generate a Map using Mapbox
-<br>
-Shortcut: <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
-<br><br>
-Choose the location, styling and zoom.
-<br>
-Voila! Your shape will be filled with a map.
+_Plugins > Sketch Map Generator > Generate a map using Mapbox..._ or press <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
 
-## What’s new?
+4) Press the button to generate the map and _voila_! Your shape will be filled with a beautiful map.
 
-* ⚡️ You can generate with a single command the last map you created. Just hit <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd> and you're done.
-* 👉🏼 If you use Mapbox, now you can use your own custom styles!
-* 🔥 Map preview! Now you can see a live preview before generating a map.
-* 📍 You can move the map preview, drag a pin to pick a location and change the zoom  with no effort. You can still change the address settings as before if you wish.
-* 💅🏼 A whole new UI.
-* 🌓 Dark mode support.
-* 🛠 Improvements and bugfixes.
-* Thanks to [Guillermo](https://guillermoseis.com/) for the logo!
+You can also generate with a single command the last map you created:
+
+_Plugins > Sketch Map Generator > Generate previous map_ or press <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
 
 ## Installation
 
-[![Install Sketch Map Generator with Sketchpacks](/assets/sketchpacks.png?raw=true "Install Sketch Map Generator with Sketchpacks")](https://sketchpacks.com/eddiesigner/sketch-map-generator/install)
-
-#### Install with Sketch Runner
-With Sketch Runner, just go to the `install` command and search for `Map Generator`. Runner allows you to manage plugins and do much more to speed up your workflow in Sketch. [Download Runner here](http://www.sketchrunner.com).
-
-![Sketch Runner screenshot](https://res.cloudinary.com/edev/image/upload/v1511169425/Screen_Shot_2017-11-20_at_10.16.49_AM_oiwp2j.png)
-
 #### Manual
 
-1. [Download the Zip](https://github.com/eddiesigner/sketch-map-generator/archive/master.zip) and unzip the package
-2. Double click on `Map Generator.sketchplugin` for auto installation
+1) [Download the latest release of the plugin](https://github.com/eddiesigner/sketch-map-generator/releases/latest/download/sketch-map-generator.sketchplugin.zip) and unzip the file
 
-## Compatibility
+2) Double click on `sketch-map-generator.sketchplugin` and you're ready to go
 
-The plugin is compatible with Sketch 4+.
+#### Install with Sketch Runner
+
+Open Sketch Runner and run the `Install` command, then search for `Map Generator` and hit the `Get` button.
+
+## FAQ
+
+**What versions of Sketch are supported?**
+
+The plugin is compatible with Sketch 53+
+
+**Does this plugin need an API Key or API token?**
+
+Yes. You need to provide an API Key for Google Maps and you also need to provide a public and a secret token for Mapbox.
+
+**Do I have to pay to use this plugin?**
+
+No.
+Although a credit card is required to get a Google Maps API key. Don't worry, it will be almost impossible for you to have to pay a single penny.
+
+**Does this plugin support retina?**
+Yes.
+
+**There are some size limitations?**
+
+Yes.
+Currently Google Maps images can be returned in any size up to [640 x 640 px](https://developers.google.com/maps/documentation/maps-static/usage-and-billing#image-sizes).
+Currently Mapbox images can be returned in any size up to [1280 x 1280 px](https://docs.mapbox.com/help/how-mapbox-works/static-maps/#high-resolution-images).
+
 
 ## Issues
 
 If you have any questions or troubles with this product, please feel free to open an issue [here](https://github.com/eddiesigner/sketch-map-generator/issues).
+
+## Credits
+
+Thanks to [Guillermo](https://dribbble.com/guillermoseis) for the icon!
