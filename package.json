@@ -1,7 +1,7 @@
 {
   "name": "sketch-map-generator",
   "description": "Plugin to fill a shape with a map generated from a location (Google Maps and Mapbox)",
-  "version": "3.5.4",
+  "version": "4.0.0",
   "engines": {
     "sketch": ">=53.0"
   },
