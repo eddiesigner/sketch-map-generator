@@ -1,7 +1,7 @@
 {
   "name": "sketch-map-generator",
-  "description": "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)",
-  "version": "2.3.0",
+  "description": "Plugin to fill a shape with a map generated from a location (Google Maps and Mapbox)",
+  "version": "3.5.4",
   "engines": {
     "sketch": ">=53.0"
   },
@@ -32,7 +32,7 @@
   "dependencies": {
     "sketch-module-web-view": "^3.4.1"
   },
-  "author": "Eduardo Gomez",
+  "author": "Eduardo Gómez",
   "homepage": "https://github.com/eddiesigner/sketch-map-generator",
   "repository": {
     "type": "git",

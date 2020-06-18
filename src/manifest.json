@@ -60,5 +60,5 @@
   "homepage": "https://github.com/eddiesigner/sketch-map-generator",
   "identifier": "io.eduardogomez.sketch.map-generator",
   "name": "Sketch Map Generator",
-  "description": "Plugin to fill a layer with a map generated from a location (Google Maps and Mapbox)."
+  "description": "Plugin to fill a shape with a map generated from a location (Google Maps and Mapbox)."
 }
