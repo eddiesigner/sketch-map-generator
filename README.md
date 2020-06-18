@@ -77,6 +77,11 @@ The plugin is compatible with Sketch 53+
 
 Yes. You need to provide an API Key for Google Maps and you also need to provide a public and a secret token for Mapbox.
 
+**Do I have to pay to use this plugin?**
+
+No.
+Although a credit card is required to get a Google Maps API key. Don't worry, it will be almost impossible for you to have to pay a single penny.
+
 **Does this plugin support retina?**
 Yes.
 
