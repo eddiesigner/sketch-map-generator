@@ -61,7 +61,7 @@ _Plugins > Sketch Map Generator > Generate previous map_ or press <kbd>Cmd</kbd>
 
 #### Manual
 
-1) [Download the latest release of the plugin](https://github.com/eddiesigner/sketch-map-generator/releases/latest/download/Map Generator.sketchplugin.zip) and unzip the file
+1) [Download the latest release of the plugin](https://github.com/eddiesigner/sketch-map-generator/releases/latest/download/Map.Generator.sketchplugin.zip) and unzip the file
 
 2) Double click on `Map Generator.sketchplugin` and you're ready to go
 
