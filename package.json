@@ -6,9 +6,9 @@
     "sketch": ">=53.0"
   },
   "skpm": {
-    "name": "sketch-map-generator",
+    "name": "Map Generator",
     "manifest": "src/manifest.json",
-    "main": "sketch-map-generator.sketchplugin",
+    "main": "Map Generator.sketchplugin",
     "assets": [
       "assets/**/*"
     ],

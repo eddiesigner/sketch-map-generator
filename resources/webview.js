@@ -313,6 +313,7 @@ window.createMapUI = (data) => {
 
         getGoogleCoordinates(this.googleGeocoder, this.address)
           .then((location) => {
+            this.loadingPreview = false
             this.createGoogleMapInstance(location)
           })
           .catch((error) => {
@@ -371,6 +372,7 @@ window.createMapUI = (data) => {
 
         getMapboxCoordinates(this.mapboxSecretToken, this.address)
           .then((location) => {
+            this.loadingPreview = false
             this.createMapboxMapInstance(location)
           })
           .catch((error) => {
