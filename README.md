@@ -46,16 +46,16 @@ To know how to generate your Google API Key and your Mapbox tokens please follow
 3) Set your map settings:
 
 ##### Google Maps
-_Plugins > Sketch Map Generator > Generate a map using Google Maps..._ or press <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
+_Plugins > Sketch Map Generator > Generate a map using Google Maps..._ or press <kbd>^</kbd>+<kbd>Cmd</kbd>+<kbd>M</kbd>
 
 ##### Mapbox
-_Plugins > Sketch Map Generator > Generate a map using Mapbox..._ or press <kbd>Shift</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
+_Plugins > Sketch Map Generator > Generate a map using Mapbox..._ or press <kbd>^</kbd>+<kbd>Cmd</kbd>+<kbd>B</kbd>
 
 4) Press the button to generate the map and _voila_! Your shape will be filled with a beautiful map.
 
 You can also generate with a single command the last map you created:
 
-_Plugins > Sketch Map Generator > Generate previous map_ or press <kbd>Cmd</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
+_Plugins > Sketch Map Generator > Generate previous map_ or press <kbd>^</kbd> + <kbd>Cmd</kbd> + <kbd>P</kbd>
 
 ## Installation
 
