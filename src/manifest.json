@@ -6,10 +6,10 @@
   "icon": "icon.png",
   "commands": [
     {
-      "name": "Generate a map using Google Maps...",
+      "name": "Generate a Map Using Google Maps...",
       "identifier": "sketch-map-generator.create-map-google",
       "script": "./create-map.js",
-      "shortcut": "shift cmd m",
+      "shortcut": "control cmd g",
       "handlers": {
         "run": "onGoogleRun",
         "actions": {
@@ -18,10 +18,10 @@
       }
     },
     {
-      "name": "Generate a map using Mapbox...",
+      "name": "Generate a Map Using Mapbox...",
       "identifier": "sketch-map-generator.create-map-mapbox",
       "script": "./create-map.js",
-      "shortcut": "shift cmd b",
+      "shortcut": "control cmd b",
       "handlers": {
         "run": "onMapboxRun",
         "actions": {
@@ -30,13 +30,13 @@
       }
     },
     {
-      "name": "Generate previous map",
+      "name": "Generate Previous Map",
       "identifier": "sketch-map-generator.create-previous-map",
       "script": "./previous-map.js",
-      "shortcut": "shift cmd p"
+      "shortcut": "control cmd p"
     },
     {
-      "name": "Open Map Generator settings...",
+      "name": "Open Map Generator Settings...",
       "identifier": "sketch-map-generator.open-settings",
       "script": "./create-map.js",
       "handlers": {
